@@ -1,0 +1,13 @@
+# Prototype yard layout subsystem
+
+Reviewed: 2026-09-24, implementation introduced alongside this spec.
+
+`scripts/level/yard_layout.gd` is a RefCounted data factory. `create_layout(variant: int = 0) -> Dictionary` returns fresh caller-owned data; variants wrap modulo two. World bounds are `Rect2(0, 0, 1200, 480)`, ground top is 440, crane anchor is `(200, 45)`, and pickup bounds are `Rect2(85, 350, 350, 90)`.
+
+`scrap` contains six dictionaries with unique integer `id`, StringName `material` (`copper`, `rubber`, `steel`), enlarged PNG `texture` path, center `position`, bounding-rectangle `size`, and positive `mass`. Positions are spaced across the pickup area. `bins` contains three dictionaries with material, center position, bounding size and texture path; they are centered at x650/850/1050, y390, size150×100. The second variant rearranges scrap and bin categories. No shared mutable state or random generator is involved.
+
+These dimensions, masses and material assignments are **diagnostic prototype fixtures**, not approved gameplay objects or physically inferred art bounds. The caller decides whether to build any collision, sensor or gameplay object from the data. Texture transparency is not converted into geometry. No physics body, scoring, timer, magnet or scene transition is owned here.
+
+`scripts/level/yard_backdrop.gd` is a Node2D presentation helper; `configure(layout)` copies layout data and redraws the yard floor, wall and rail with linear sampling of existing 8× art. It supplies no collision. Callers place their own scrap/bin objects above it. `labs/level/main.tscn` demonstrates the data without physics, preserves each scrap sprite's aspect ratio within its diagnostic rectangle, fits the stage to the window, and switches variants through a button or Tab. It does not alter the main scene.
+
+`tests/level_test.gd` verifies deterministic independent data, spawn separation and bounds, positive masses, unique IDs, represented materials, bin separation and floor alignment, resource availability, and instantiated lab switching. Run through the shared Godot Podman wrapper after editor import. These checks establish no reachability or fun claim; integration playtests must evaluate pickup reliability, lift clearance, material recognition and drop accuracy.
