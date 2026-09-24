@@ -1,6 +1,6 @@
 # Repository Structure
 
-Reviewed: 2026-09-24. Implementation revision: `be7e1eb`. Reference conventions: Jam Sync `d2c801a`.
+Reviewed: 2026-09-24. Implementation revision: `08eed65`. Reference conventions: Jam Sync `d2c801a`, with the user's direct-main collaboration rules.
 
 ## Current contract
 

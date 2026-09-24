@@ -1,6 +1,6 @@
 # Random Game Specs Map
 
-Reviewed: 2026-09-24. Implementation revision: `be7e1eb`. Reference conventions: Jam Sync `d2c801a`.
+Reviewed: 2026-09-24. Implementation revision: `08eed65`. Reference conventions: Jam Sync `d2c801a`, with the user's direct-main collaboration rules.
 
 `specs/` is committed project memory for current intent and implementation. Read the relevant spec before changing its owning behavior, contract, boundary, source area, or verification flow, and update it with the implementation.
 
