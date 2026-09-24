@@ -13,6 +13,8 @@ import tarfile
 import tempfile
 import time
 import zipfile
+import platform
+import zlib
 
 ROOT = Path(__file__).resolve().parents[2]
 TARGETS = {
@@ -59,7 +61,7 @@ def inside(args):
             os.utime(path, (epoch, epoch))
     engine = command(['godot', '--version'])
     templates = Path('/opt/godot-export-templates/4.7.stable')
-    info = {'engine': engine, 'templates': {key: digest(templates / TARGETS[key][2]) for key in args.targets}}
+    info = {'engine': engine, 'engine_sha256': digest(Path(shutil.which('godot'))), 'python': platform.python_version(), 'zlib': zlib.ZLIB_VERSION, 'templates': {key: digest(templates / TARGETS[key][2]) for key in args.targets}}
     subprocess.run(['godot', '--headless', '--editor', '--import', '--quit'], check=True)
     for key in args.targets:
         preset, filename, _ = TARGETS[key]
@@ -134,7 +136,7 @@ def main():
                       [(str(path.relative_to(folder)), path.read_bytes(), path.stat().st_mode) for path in folder.rglob('*') if path.is_file()], epoch)
         manifest = {'version': version, 'source_commit': source, 'source_date_epoch': epoch,
                     'startup_scene': 'res://labs/salvage/lab.tscn', 'image_reference': args.image,
-                    'toolchain': toolchain, 'targets': args.targets,
+                    'toolchain': toolchain, 'packager': {'python': platform.python_version(), 'zlib': zlib.ZLIB_VERSION}, 'targets': args.targets,
                     'reproducibility': 'two-clean-snapshots-identical' if args.verify else 'not-compared',
                     'sha256': hashes(staging)}
         (staging / 'manifest.json').write_text(json.dumps(manifest, indent=2, sort_keys=True) + '\n')
