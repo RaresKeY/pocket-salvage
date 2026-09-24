@@ -5,6 +5,8 @@ signal restart_requested
 signal pause_requested
 
 const ArtLab = preload("res://labs/pixel_scaling/lab.gd")
+const CONTROL_HINTS := "A / D move   ·   W / S raise / lower   ·   Space magnet   ·   P pause   ·   R restart"
+var hints_label: Label
 var score_label: Label
 var time_label: Label
 var progress_label: Label
@@ -62,8 +64,8 @@ func _ready() -> void:
 	bottom.add_child(foot)
 	feedback_label = _label(foot, "")
 	feedback_label.add_theme_color_override("font_color", Color("a1e8c1"))
-	var hints := _label(foot, "A / D move   ·   W / S raise / lower   ·   Space magnet   ·   P pause   ·   R restart")
-	hints.add_theme_font_size_override("font_size", 14)
+	hints_label = _label(foot, CONTROL_HINTS)
+	hints_label.add_theme_font_size_override("font_size", 14)
 	modal = ColorRect.new()
 	modal.color = Color(0.03, 0.06, 0.08, 0.80)
 	modal.set_anchors_and_offsets_preset(PRESET_FULL_RECT)
@@ -107,6 +109,8 @@ func _ignore_decoration(node: Node) -> void:
 func present(data: Dictionary) -> void:
 	_pending = data.duplicate()
 	if not is_node_ready(): return
+	var navigation := str(data.get("navigation_hint", ""))
+	hints_label.text = CONTROL_HINTS + ("   ·   " + navigation if not navigation.is_empty() else "")
 	var previous := state
 	state = str(data.get("state", "ready"))
 	var seconds := maxi(0, ceili(float(data.get("time_left", 0.0))))

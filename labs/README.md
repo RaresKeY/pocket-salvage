@@ -9,3 +9,5 @@
 [Sprite playground](sprite_playground/README.md) displays the 8× Bitwright derivatives at smaller runtime sizes, with a grabbable physics sprite.
 
 Subsystem proving scenes: `crane/lab.tscn`, `sorting/lab.tscn`, `hud/lab.tscn`, and `level/main.tscn`. Each has focused design/spec documentation and independent tests.
+
+[Playable salvage integration](salvage/README.md) composes these modules into a two-minute round; launch from the main scene’s Play prototype button.

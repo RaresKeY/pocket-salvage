@@ -17,12 +17,21 @@ var anchor_world := ART_SIZE * 0.5
 var dragging := false
 var drag_button := MOUSE_BUTTON_NONE
 var initialized := false
+var play_button: Button
 
 func _ready() -> void:
 	resized.connect(_fit_stage)
 	_fit_stage()
 	set_process(not Engine.is_editor_hint())
 	set_process_input(not Engine.is_editor_hint())
+	if not Engine.is_editor_hint():
+		play_button = Button.new()
+		play_button.text = "Play prototype"
+		play_button.custom_minimum_size = Vector2(132,40)
+		play_button.pressed.connect(func() -> void: get_tree().change_scene_to_file("res://labs/salvage/lab.tscn"))
+		var row := $Presentation/HUD/Header/Row
+		row.add_child(play_button)
+		row.move_child(play_button,1)
 
 func _fit_stage() -> void:
 	stage.position = Vector2.ZERO
@@ -71,6 +80,7 @@ func _apply_camera() -> void:
 	viewport.canvas_transform = Transform2D(0.0, Vector2.ONE * zoom, 0.0, size * 0.5 - center * zoom)
 
 func _input(event: InputEvent) -> void:
+	if event is InputEventMouseButton and is_instance_valid(play_button) and play_button.get_global_rect().has_point(event.position): return
 	if event is InputEventMouseButton:
 		if event.button_index in [MOUSE_BUTTON_WHEEL_UP, MOUSE_BUTTON_WHEEL_DOWN] and event.pressed:
 			zoom_at(event.position, (1.0 if event.button_index == MOUSE_BUTTON_WHEEL_UP else -1.0) * event.factor)

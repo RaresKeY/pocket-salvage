@@ -1,0 +1,19 @@
+# Playable subsystem integration
+
+Reviewed: 2026-09-24, implementation introducing the combined playable lab.
+
+User direction: delegate independent subsystem work to worktrees, commit/push progress, test the result, and report readiness. This follows the subsystem/lab workflow and previously identified missing crane, sorting, round, UI and level work. Concrete parameters below are prototype decisions; reusable component contracts remain separately documented.
+
+`labs/salvage/lab.tscn` composes crane suspension, round/bin, HUD and level layout modules without replacing the static yard preview. `scripts/scene/yard_preview.gd` adds Play prototype; F2 returns. Each subsystem retains its own lab and verification. The full game is not yet declared finished.
+
+The fixture has six caller-configured RigidBody2D items, three bins and a 120-second round. Materials are copper/rubber/steel; the arcade pickup accepts any material within 62 world units of its top attachment point, with a wall ray check, and holds at most one item. Solids layer1, scrap layer2, magnet layer4. Payloads use independent rectangle shapes and stored 8× art with uniform linear-filtered visual scaling. Bin artwork remains axis-aligned; masks are not integrated into this prototype.
+
+A/D or left/right moves the trolley at220 units/s within x80–1120; W/S or up/down changes cable length at130 units/s within50–335. Magnet endpoint uses the reusable collision-aware suspension and mild caller-owned horizontal damping. Space toggles pickup/release. The attached body remains dynamic and receives spring forces. No load-force feedback into the trolley, terrain-wrap polygons, or real-world magnetic material simulation is configured. These are prototype boundaries, not new guarantees for the rope subsystem.
+
+Round state starts ready; Start/Enter begins, P/Escape toggles pause, R rebuilds all transient world objects and restarts. Focus loss pauses. Pausing disables world simulation while retaining timer, object state and attachment; resuming restores it. Delivery sensors accept only released items once, update +100 correct or −25 wrong (floor0), then retire the item deferred. All sorted or time zero ends the round, releases the load, disables bin acceptance and exposes results/replay. HUD receives snapshots, never owns score/time state.
+
+The world is rendered into a native-resolution SubViewport between the HUD bands, fitting1200×480 world units with preserved aspect ratio. All layout placements are supplied by the configurable layout module. The prototype uses variant0; the independent level lab demonstrates both variants.
+
+Verification: the integration test drives all six pickups, lifts, transports and deliveries through physics (no payload teleporting), gets600 points, verifies pause while carrying, early completion, clean restart, timeout release and disabled end-state sensors. The full check suite retains independent module and prior lab checks. Hardware screenshots and interaction captures are separate from headless behavior tests. Tests establish deterministic playability; human playtesting still decides whether the handling is fun.
+
+2026-09-24 validation: full `./tests/check` passes. The control-driven physics scenario completes all six correct deliveries for600 points in91.17 simulated seconds, without teleporting payloads. Navigation test verifies main-scene mouse launch/start, Space magnet, P pause, mouse resume, R restart and F2 return. Background Gamescope captures cover1920×1080,1280×720,960×540,854×480,768×480 and ready/paused/finished/carrying states on NVIDIA GeForce RTX2080Ti. This is functional/visual evidence, not a performance benchmark or human fun assessment.

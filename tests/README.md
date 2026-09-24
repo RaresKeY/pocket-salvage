@@ -13,3 +13,5 @@ Use [the background capture flow](../labs/pixel_scaling/README.md) for hardware-
 `sprite_playground_test.gd` verifies all 75 exact 8× derivatives and provenance, gallery count, gravity/floor collision, matching sprite/collision size, filtering, mouse picking/grab/release and reset. `./labs/capture sprite_playground` supplies separate GPU captures.
 
 `yard_camera_test.gd` checks the scene’s enlarged texture bindings, tile regions, native viewport, smooth pointer-anchored zoom, limits, left/middle panning, release/focus cancellation, reset and resize.
+
+`crane_test.gd`, `round_test.gd`, `hud_test.gd` and `level_test.gd` cover the independent subsystems. `salvage_test.gd` drives all six real-physics deliveries through the combined lab, then checks carrying pause, end-state, restart and timeout release. This proves deterministic playability, not human enjoyment.

@@ -17,3 +17,5 @@ Top status and bottom hints leave the center clear during running. At the minimu
 `labs/hud/lab.tscn` proves the module with synthetic data: 1 ready, 2 running, 3 paused, 4 finished; P toggles pause, R returns to ready. These are lab shortcuts, not module shortcuts. `--capture PATH --state STATE` supports automated hardware captures.
 
 `tests/hud_test.gd` checks buffered presentation, counters, modal states, actual mouse activation of start/pause/resume/replay, focus release and action bounds at 768×480 and 1280×720. Headless checks prove behavior, not hardware rendering. Visual checks use the shared runner under Gamescope headless and inspect screenshots.
+
+Optional `navigation_hint` appends caller-owned navigation guidance to the controls footer; the playable integration uses F2 preview.

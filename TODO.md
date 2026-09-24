@@ -1,6 +1,6 @@
 # Deferred Work
 
-- [ ] Build the Pocket Salvage timed sorting round on the reusable rope and object-physics experiments.
+- [ ] Human-playtest the first combined salvage lab; tune handling, round length and difficulty from observations.
 - [ ] Select the visual direction and references before the first image-generation request.
 - [ ] Playtest crane handling and choose the final object set and sorting rules with collaborators.
 - [ ] Add `0.0.0+<short-sha>` identity when the first local reproducible build workflow is introduced.

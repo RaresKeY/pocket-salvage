@@ -2,9 +2,9 @@
 
 Control a magnetic crane, collect scrap, and sort it before the timer expires. Pocket Salvage is a small Godot 4.7 collaboration experiment, organized around Jam Sync's conventions. The repository and upstream remain **`random-game`**.
 
-Run the project to see the [scrapyard scene preview](specs/scene_preview.md), arranging the contributed crane, scrap and sorting-bin sprites. It is a static composition; the timed game loop remains to be built. Open the [rope lab](labs/rope/README.md) to experiment with slack, reeling and terrain wrapping, or the [pixel-scaling lab](labs/pixel_scaling/README.md) to compare sampling. The [reusable rope component](scripts/rope/README.md) combines copied White Approach physics with Plug & Prosper's refined cable drawing.
+Run the project to see the [scrapyard scene preview](specs/scene_preview.md), arranging the contributed crane, scrap and sorting-bin sprites. Choose **Play prototype** to try the [two-minute salvage round](labs/salvage/README.md): operate the crane, lift six pieces of scrap and release them into matching bins. The yard composition remains separately inspectable. Open the [rope lab](labs/rope/README.md) to experiment with slack, reeling and terrain wrapping, or the [pixel-scaling lab](labs/pixel_scaling/README.md) to compare sampling. The [reusable rope component](scripts/rope/README.md) combines copied White Approach physics with Plug & Prosper's refined cable drawing.
 
-The [object-physics components](scripts/physics/README.md) provide caller-authored solid shapes, separate sensors and visual occlusion masks. The [mask and collision fixture](labs/physics/README.md) demonstrates their independence. Concrete magnet/scrap objects and their boxes remain deferred.
+The [object-physics components](scripts/physics/README.md) provide caller-authored solid shapes, separate sensors and visual occlusion masks. The [mask and collision fixture](labs/physics/README.md) demonstrates their independence. The playable lab supplies provisional concrete geometry; the reusable physics components remain independent.
 
 ## Start here
 

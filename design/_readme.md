@@ -16,5 +16,6 @@ Design captures evolving intent. Every design document distinguishes explicit **
 | [Sorting and rounds](round.md) | Provisional sorting/round rules | Changing scoring or round intent |
 | [Round HUD](round_hud.md) | Independent state-driven UI | Extending playable feedback |
 | [Level layouts](level_layout.md) | Provisional yard arrangements | Designing prototype layouts |
+| [Playable integration](salvage_prototype.md) | First combined playable experiment | Revising prototype rules or integration intent |
 
 Current behavior lives in [specs/](../specs/_readme.md); deferred work lives in [TODO.md](../TODO.md).
