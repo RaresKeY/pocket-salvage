@@ -1,0 +1,53 @@
+[
+  {
+    "project": "white_approach",
+    "source": "scripts/rope.gd",
+    "revision": "909afd7bd778b0c549246ab03d2784a10cdaef77",
+    "source_sha256": "96371b0f754813c6091ba8df35dcaf059c5675f9852618bc58c936f0a2d8bd3d",
+    "snapshot": "vendored/rope_sources/white_approach/rope.gd",
+    "snapshot_sha256": "96371b0f754813c6091ba8df35dcaf059c5675f9852618bc58c936f0a2d8bd3d",
+    "line_ranges": null,
+    "source_modified": false
+  },
+  {
+    "project": "white_approach",
+    "source": "scripts/rope_path.gd",
+    "revision": "909afd7bd778b0c549246ab03d2784a10cdaef77",
+    "source_sha256": "242f70bf52dfaf48cef4dccf95d2c5822d7e00cd98e157be02f413ce6cbc135f",
+    "snapshot": "vendored/rope_sources/white_approach/rope_path.gd",
+    "snapshot_sha256": "242f70bf52dfaf48cef4dccf95d2c5822d7e00cd98e157be02f413ce6cbc135f",
+    "line_ranges": null,
+    "source_modified": false
+  },
+  {
+    "project": "plug_and_prosper",
+    "source": "game/main.gd",
+    "revision": "df26cc5d654aa0bd454387f8427df38ff16967f7",
+    "source_sha256": "c7fdc310d096eeca24d83dad664e91fcea673bc08f8f1e1cb8265bc6addeab91",
+    "snapshot": "vendored/rope_sources/plug_and_prosper/cable_excerpt.gd",
+    "snapshot_sha256": "48255d0174a481255cd436259453683caf9dbc3c36648b570cd7f9e02fa23880",
+    "line_ranges": [
+      [
+        396,
+        396
+      ],
+      [
+        437,
+        441
+      ],
+      [
+        9012,
+        9028
+      ],
+      [
+        9120,
+        9163
+      ],
+      [
+        14390,
+        14446
+      ]
+    ],
+    "source_modified": false
+  }
+]

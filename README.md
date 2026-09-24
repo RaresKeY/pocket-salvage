@@ -1,6 +1,8 @@
-# Random Game
+# Pocket Salvage
 
-A small Godot 4.7 project for a collaboration experiment, organized around Jam Sync's conventions. The project currently opens a [pixel-scaling comparison lab](labs/pixel_scaling/README.md); the game concept and mechanics are still open.
+Control a magnetic crane, collect scrap, and sort it before the timer expires. Pocket Salvage is a small Godot 4.7 collaboration experiment, organized around Jam Sync's conventions. The repository and upstream remain **`random-game`**.
+
+The game loop is selected; implementation currently consists of technical labs. Open the [rope lab](labs/rope/README.md) to experiment with slack, reeling and terrain wrapping. The [pixel-scaling lab](labs/pixel_scaling/README.md) remains the default startup scene. The [reusable rope component](scripts/rope/README.md) combines copied White Approach physics with Plug & Prosper's refined cable drawing.
 
 ## Start here
 
@@ -24,11 +26,11 @@ The repository is private on GitHub at [RaresKeY/random-game](https://github.com
 | [docs/](docs/README.md), [research/](research/README.md) | Contributor documentation and source-backed investigations. |
 | [prototype/](prototype/README.md), [prompts/](prompts/README.md) | Visual candidates, input references, exact prompt records, and selection lineage. |
 | [marketing/](marketing/README.md), [artifacts/](artifacts/README.md) | Intentional promotional deliverables and temporary working material. |
-| [vendored/](vendored/_readme.md) | Third-party dependency provenance; empty of dependencies initially. |
+| [vendored/](vendored/_readme.md) | Dependency and copied-source provenance, including the original rope implementations. |
 | [tests/](tests/README.md), [tools/](tools/README.md) | Verification and one-shot creation utilities, respectively. |
-| [labs/](labs/README.md) | Runnable technical experiments and showcases; pixel scaling is the current entry point. |
+| [labs/](labs/README.md) | Runnable rope and pixel-scaling showcases; pixel scaling is the current entry point. |
 | [examples_agents/](examples_agents/README.md), [examples/](examples/README.md) | Portable instruction examples and clearly labeled convention illustrations. |
-| [scenes/](scenes/README.md), [scripts/](scripts/README.md), [assets/](assets/README.md), [data/](data/README.md), [shaders/](shaders/README.md), [native/](native/README.md) | Source boundaries; the game scene is empty, with shared pixel-scaling logic and diagnostic media for the lab. |
+| [scenes/](scenes/README.md), [scripts/](scripts/README.md), [assets/](assets/README.md), [data/](data/README.md), [shaders/](shaders/README.md), [native/](native/README.md) | Source boundaries; reusable rope and pixel-scaling modules, diagnostic media, and a reserved game scene. |
 
 Directory guides establish ownership without implying that gameplay, dependencies, art, or coordination tooling already exist. Journals and plans remain optional and have no required shared directory.
 
@@ -48,4 +50,4 @@ With local Godot 4.7 and Python 3 on another machine, subject to its execution r
 python3 tests/run_checks.py
 ```
 
-These are import and startup checks, not visual or hardware-renderer validation.
+These include deterministic subsystem checks, but do not establish visual or hardware-renderer quality. `./labs/capture rope` performs the separate background GPU showcase check.

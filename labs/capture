@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+set -euo pipefail
+project_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+runner="${GODOT_PODMAN_RUNNER:-$project_root/../godot-podman/bin/godot-podman}"
+cd "$project_root"
+lab="${1:-rope}"
+if [[ "$lab" != rope && "$lab" != physics ]]; then
+    echo 'Usage: labs/capture rope|physics [WIDTHxHEIGHT ...]' >&2
+    exit 2
+fi
+if [[ "${POCKET_SALVAGE_CAPTURE_LOCKED:-0}" != 1 ]]; then
+    exec "$runner" lock --project "$project_root" -- env POCKET_SALVAGE_CAPTURE_LOCKED=1 "$0" "$@"
+fi
+if (( $# > 0 )); then shift; fi
+sizes=("$@")
+if (( ${#sizes[@]} == 0 )); then sizes=(1920x1080 1280x720 960x540 854x480); fi
+mkdir -p "artifacts/generated/$lab"
+for size in "${sizes[@]}"; do
+    [[ "$size" =~ ^[0-9]+x[0-9]+$ ]] || exit 2
+    width="${size%x*}"
+    height="${size#*x}"
+    gamescope --backend headless --force-windows-fullscreen -W "$width" -H "$height" -w "$width" -h "$height" -- \
+        "$runner" run --project "$project_root" --purpose "$lab-lab-visual" --no-lock --display host -- \
+        godot --path /workspace --scene "res://labs/$lab/lab.tscn" --rendering-method gl_compatibility \
+        --audio-driver Dummy --resolution "$size" --quit-after 600 -- \
+        --capture "res://artifacts/generated/$lab/$size.png" 2>&1 | tee "artifacts/generated/$lab/$size.log"
+    test -s "artifacts/generated/$lab/$size.png"
+    rg -q 'LAB_CAPTURE result=0 renderer=.+' "artifacts/generated/$lab/$size.log"
+    if rg -qi 'SCRIPT ERROR:|^ERROR:|renderer=.*(llvmpipe|softpipe|lavapipe|software)' "artifacts/generated/$lab/$size.log"; then exit 1; fi
+done

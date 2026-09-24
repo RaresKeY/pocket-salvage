@@ -1,9 +1,9 @@
-# Random Game — Example Local Instructions
+# Pocket Salvage — Example Local Instructions
 
 Adapt these rules into a local `AGENTS.md` or `CLAUDE.md`; add your own environment constraints. This example is portable guidance, not an automatically loaded instruction file.
 
 - Read `specs/_readme.md` and relevant specs before editing. Update specs alongside implementation, recording the review date and implementation commit reviewed.
-- Read `design/_readme.md` before adding behavior. Separate explicit user input and contributor decisions from AI-inferred proposals. The game concept and art direction remain undecided.
+- Read `design/_readme.md` before adding behavior. Separate explicit user input and contributor decisions from AI-inferred proposals. Pocket Salvage uses a magnetic crane to collect and sort scrap before time expires. Keep the repository/upstream as `random-game`; final art direction remains undecided.
 - Use `TODO.md` for deferred work. Plans and journals are optional and separate from implementation specs.
 - Commit directly to `main` in your own clone; use experimental branches or external worktrees only when separation helps. Follow `docs/collaboration.md`. Preserve unfinished work; automatic task/lane locks are not implemented or required.
 - Before every push to private GitHub `origin`, fetch and rebase unpublished commits onto the current remote, resolve compatible conflicts, inspect, and validate. Push normally without PRs or release tags. Preserve shared history and use bisect plus corrective/revert commits for recovery.

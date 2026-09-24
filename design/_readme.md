@@ -4,7 +4,8 @@ Design captures evolving intent. Every design document distinguishes explicit **
 
 | Document | Scope | Read when |
 |---|---|---|
-| [Game direction](game.md) | Confirmed collaboration intent and undecided gameplay | Proposing the first playable loop |
+| [Game direction](game.md) | Pocket Salvage's crane, scrap and timed sorting loop | Extending the playable design |
+| [Rope module](rope.md) | Copied source foundations and reusable crane rope | Changing the rope or its showcase |
 | [Visual direction](visual-style.md) | Art-direction decisions required before image generation | Producing mockups, prompts, assets, or UI |
 | [Pixel-scaling experiment](pixel_scaling_lab.md) | Integer scaling tool, art conventions, and diagnostic showcase | Extending the technical art lab |
 | [Collaboration design](collaboration.md) | External worktree lanes, ownership, and serial integration | Planning parallel work or coordination tooling |

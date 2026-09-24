@@ -39,7 +39,7 @@ func _ready() -> void:
 	page.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	page.add_theme_constant_override("separation", 14)
 	scroll.add_child(page)
-	page.add_child(label("RANDOM GAME  /  ART LAB 01", 13, MINT))
+	page.add_child(label("POCKET SALVAGE  /  ART LAB 01", 13, MINT))
 	page.add_child(label("Every pixel, intact.", 30))
 	page.add_child(label("Compare integer scaling, fractional sampling, and a baked enlargement. Source colors and alpha stay visible.", 16, MUTED, true))
 	var controls := HFlowContainer.new()

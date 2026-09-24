@@ -1,6 +1,6 @@
 # Visual-Style Record Example
 
-AI-authored illustration adapted from Jam Sync's visual-style example at `d2c801a`. This is not approved Random Game design, and the prompt below has not been sent to a generation tool.
+AI-authored illustration adapted from Jam Sync's visual-style example at `d2c801a`. This is not approved Pocket Salvage design, and the prompt below has not been sent to a generation tool.
 
 | Aspect | Illustrative direction |
 |---|---|

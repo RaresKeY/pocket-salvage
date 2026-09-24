@@ -4,12 +4,13 @@ Reviewed: 2026-09-24. Implementation revision: `2cff8e5`.
 
 ## Status and scope
 
-Random Game is a Godot 4.7 collaboration experiment. `project.godot` currently opens `labs/pixel_scaling/lab.tscn`, an interactive art-sampling comparison. `scenes/main.tscn` remains an empty future-game scene. There is no gameplay yet. The genre, mechanics, game art direction, and delivery platforms remain undecided.
+Pocket Salvage is the official game name; its private GitHub repository remains `random-game`. The selected loop is a magnetic crane collecting and sorting scrap before time expires. Godot 4.7 currently opens `labs/pixel_scaling/lab.tscn`; `labs/rope/lab.tscn` showcases the reusable rope. `scenes/main.tscn` remains an empty future-game scene. The timed round, game art direction and delivery platforms are not implemented/selected yet.
 
 ## Source ownership
 
 - `project.godot` owns engine features, project identity, startup scene, and renderer settings.
 - `labs/pixel_scaling/` owns the temporary entry point; [the art module](art/_readme.md) owns its scaling/filtering contract and related creation tool.
+- `scripts/rope/` and `labs/rope/` own the [rope subsystem and showcase](rope.md); `vendored/rope_sources/` preserves original copied source.
 - `tests/check` runs `tests/run_checks.py` through the external shared Godot Podman runner. It resolves the runner from a sibling checkout or `GODOT_PODMAN_RUNNER`.
 - [Repository structure](repository.md) describes project memory, collaboration, file handling, and the source layout.
 

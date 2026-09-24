@@ -1,8 +1,8 @@
 # Deferred Work
 
-- [ ] Agree on the first playable loop and record explicit contributor decisions in [game direction](design/game.md).
+- [ ] Build the Pocket Salvage timed sorting round on the reusable rope and object-physics experiments.
 - [ ] Select the visual direction and references before the first image-generation request.
-- [ ] Add behavior-specific tests when the first mechanic is implemented; current checks only import and start the empty scene.
+- [ ] Playtest crane handling and choose the final object set and sorting rules with collaborators.
 - [ ] Add `0.0.0+<short-sha>` identity when the first local reproducible build workflow is introduced.
 
 Revisit the optional coordination-lock design only if real collaboration friction warrants it.
