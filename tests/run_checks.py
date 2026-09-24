@@ -9,6 +9,7 @@ checks = [
     (BASE + ["--editor", "--import", "--quit"], None),
     (BASE + ["--script", "tests/salvage_navigation_test.gd", "--max-fps", "60", "--quit-after", "300"], "SALVAGE_NAVIGATION_TEST_OK"),
     (BASE + ["--script", "tests/salvage_test.gd", "--fixed-fps", "60", "--quit-after", "10000"], "SALVAGE_TEST_OK"),
+    (BASE + ["--script", "tests/physical_suspension_test.gd", "--fixed-fps", "60", "--quit-after", "1800"], "PHYSICAL_SUSPENSION_TEST_OK"),
     (BASE + ["--script", "tests/crane_test.gd", "--quit-after", "900", "--max-fps", "60"], "CRANE_TEST_OK"),
     (BASE + ["--script", "tests/round_test.gd", "--quit-after", "900", "--max-fps", "60"], "ROUND_TEST_OK"),
     (BASE + ["--script", "tests/hud_test.gd", "--quit-after", "900", "--max-fps", "60"], "HUD_TEST_OK"),

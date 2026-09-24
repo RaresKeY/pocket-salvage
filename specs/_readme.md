@@ -15,7 +15,7 @@ Reviewed: 2026-09-24 integrating the scene preview with the physics components a
 | [Rope module](rope.md) | `scripts/rope/`, `labs/rope/`, `labs/shared/`, `vendored/rope_sources/` | Slack, tension, static wrapping, rendering, reuse and verification | Changing rope physics or the showcase |
 | [Object physics and masks](physics.md) | `scripts/physics/`, `shaders/occlusion_mask.gdshader`, `labs/physics/` | Separate caller-authored solids, sensors and visual occlusion | Adding objects, masks or physics shapes |
 | [Repository structure](repository.md) | `README.md`, directory guides, `.gitignore`, `.gitattributes`, `docs/`, `examples_agents/` | Source ownership, project memory, collaboration boundaries, and provenance | Changing the layout, contribution workflow, or file handling |
-| [Crane suspension](crane.md) | `scripts/crane/`, `labs/crane/` | Collision-aware cable endpoint and force attachment | Integrating crane suspension |
+| [Crane suspension](crane.md) | `scripts/crane/`, `labs/crane/` | Rigid-body pivot, tension-only cable and load reaction | Integrating crane suspension |
 | [Sorting and rounds](round.md) | `scripts/round/`, `labs/sorting/` | Delivery sensors, scoring, timer and round lifecycle | Changing sorting or round rules |
 | [Round HUD](round_hud.md) | `scripts/ui/`, `labs/hud/` | State-driven counters, feedback and modal actions | Changing round presentation |
 | [Level layouts](level_layout.md) | `scripts/level/`, `labs/level/` | Configurable prototype placements and backdrop | Changing playable layout fixtures |

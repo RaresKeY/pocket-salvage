@@ -1,8 +1,9 @@
 extends "res://labs/shared/lab_page.gd"
+const CableBody = preload("res://scripts/crane/cable_body_2d.gd")
 const Suspension = preload("res://scripts/crane/suspension_2d.gd")
 const Parts = preload("res://scripts/physics/collision_parts_2d.gd")
 var suspension: Suspension
-var tip: CharacterBody2D
+var tip: CableBody
 var payload: RigidBody2D
 
 func _ready() -> void:
@@ -19,7 +20,12 @@ func _ready() -> void:
 	floor_art.polygon = PackedVector2Array([Vector2(0,440), Vector2(1200,440), Vector2(1200,460), Vector2(0,460)])
 	floor_art.color = Color("334953")
 	world.add_child(floor_art)
-	tip = CharacterBody2D.new()
+	tip = CableBody.new()
+	tip.mass = 3.0
+	tip.linear_damp = 0.35
+	tip.angular_damp = 1.8
+	tip.continuous_cd = RigidBody2D.CCD_MODE_CAST_SHAPE
+	tip.z_index = 2
 	tip.collision_layer = 4
 	tip.collision_mask = 1
 	var circle := CircleShape2D.new()

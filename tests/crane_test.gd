@@ -11,7 +11,7 @@ func run() -> void:
 	lab.suspension.cable_length = 170
 	for frame in 150: await physics_frame
 	assert(lab.payload.position.y < initial_y - 100, "Spring must lift physical load")
-	assert(lab.tip.global_position.distance_to(lab.suspension.anchor) <= 171, "Tip respects rope length")
+	assert(lab.suspension.pivot_world().distance_to(lab.suspension.anchor) <= 175, "Tip respects rope length")
 	lab.suspension.detach()
 	assert(lab.suspension.attached_body == null)
 	for frame in 120: await physics_frame

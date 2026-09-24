@@ -1,6 +1,7 @@
 extends Control
 ## Playable integration fixture. Subsystems retain their independent labs.
 const Parts = preload("res://scripts/physics/collision_parts_2d.gd")
+const CableBody = preload("res://scripts/crane/cable_body_2d.gd")
 const Suspension = preload("res://scripts/crane/suspension_2d.gd")
 const Payload = preload("res://labs/salvage/payload.gd")
 const Layout = preload("res://scripts/level/yard_layout.gd")
@@ -14,7 +15,7 @@ var world: Node2D
 var hud: Control
 var round_state: Node
 var suspension: Node2D
-var tip: CharacterBody2D
+var tip: CableBody
 var trolley: Sprite2D
 var magnet_sprite: Sprite2D
 var payloads: Array[RigidBody2D] = []
@@ -77,6 +78,7 @@ func _build_world() -> void:
 	viewport.add_child(world)
 	var layout: Dictionary = Layout.create_layout(level_variant)
 	var backdrop := Backdrop.new()
+	backdrop.z_index = -10
 	world.add_child(backdrop)
 	backdrop.configure(layout)
 	add_wall(Vector2(600,455),Vector2(1200,30))
@@ -100,7 +102,12 @@ func _build_world() -> void:
 		label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		label.add_theme_font_size_override("font_size",20)
 		world.add_child(label)
-	tip = CharacterBody2D.new()
+	tip = CableBody.new()
+	tip.mass = 3.0
+	tip.linear_damp = 0.35
+	tip.angular_damp = 1.8
+	tip.continuous_cd = RigidBody2D.CCD_MODE_CAST_SHAPE
+	tip.z_index = 2
 	tip.collision_layer = 4
 	tip.collision_mask = 1
 	tip.position = layout.crane_anchor + Vector2(0,160)
@@ -117,6 +124,7 @@ func _build_world() -> void:
 	trolley.texture = preload("res://assets/bitwright_8x/crane_trolley.png")
 	trolley.scale = Vector2.ONE * 0.2
 	trolley.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
+	trolley.z_index = 2
 	world.add_child(trolley)
 	suspension = Suspension.new()
 	world.add_child(suspension)
@@ -174,7 +182,6 @@ func _physics_process(delta: float) -> void:
 	refresh_hud()
 
 func move_crane(horizontal: float, reel: float, delta: float) -> void:
-	tip.velocity.x = move_toward(tip.velocity.x,0.0,140.0*delta)
 	suspension.anchor.x = clampf(suspension.anchor.x + horizontal * 220 * delta,80,1120)
 	suspension.cable_length = clampf(suspension.cable_length + reel * 130 * delta,50,335)
 	trolley.position = suspension.anchor
@@ -194,9 +201,9 @@ func try_pickup() -> void:
 	for body in payloads:
 		if not is_instance_valid(body) or body.delivered or body.held: continue
 		var grip: Vector2 = body.to_global(Vector2(0,-body.dimensions.y*0.5))
-		var distance := tip.global_position.distance_to(grip)
+		var distance := tip.to_global(suspension.load_mount_local).distance_to(grip)
 		if distance >= nearest: continue
-		var ray := PhysicsRayQueryParameters2D.create(tip.global_position,grip,1)
+		var ray := PhysicsRayQueryParameters2D.create(tip.to_global(suspension.load_mount_local),grip,1)
 		if not world.get_world_2d().direct_space_state.intersect_ray(ray).is_empty(): continue
 		candidate = body
 		nearest = distance

@@ -15,3 +15,5 @@ Use [the background capture flow](../labs/pixel_scaling/README.md) for hardware-
 `yard_camera_test.gd` checks the scene’s enlarged texture bindings, tile regions, native viewport, smooth pointer-anchored zoom, limits, left/middle panning, release/focus cancellation, reset and resize.
 
 `crane_test.gd`, `round_test.gd`, `hud_test.gd` and `level_test.gd` cover the independent subsystems. `salvage_test.gd` drives all six real-physics deliveries through the combined lab, then checks carrying pause, end-state, restart and timeout release. This proves deterministic playability, not human enjoyment.
+
+`physical_suspension_test.gd` verifies rigid-body pivot tilt, angular stops, inertial lag, slack tension, load feedback and cable draw order. Rope tests separately retain moving/reeling history through taut-to-slack transitions.
