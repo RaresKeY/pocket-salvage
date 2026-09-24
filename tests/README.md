@@ -6,7 +6,7 @@ Run `./tests/check` from the repository root on the shared workstation. The scri
 
 Use [the background capture flow](../labs/pixel_scaling/README.md) for hardware-rendered comparisons. Its image metadata records when an on-screen native-integer/baked comparison was actually checked; offscreen pairs are not counted as proof.
 
-`rope_test.gd` checks actual slack, tension and wrapped-route behavior as well as renderer isolation. The suite also runs the rope lab for 120 physics ticks. Use `./labs/capture rope` for its separate hardware-rendered check. Refer to tests and input files with project-relative paths, so records remain useful across machines and worktree lanes. Full timed-round gameplay is not implemented yet.
+`rope_test.gd` checks actual slack, tension and wrapped-route behavior as well as renderer isolation. The suite also runs the rope lab for 120 physics ticks. Use `./labs/capture rope` for its separate hardware-rendered check. Refer to tests and input files with project-relative paths, so records remain useful across machines and worktree lanes. The combined timed-round test is described below.
 
 `physics_parts_test.gd` checks real ray hits, filtered Area2D overlap, private shape ownership, independently enabled parts, and visual-mask material lifetime. The physics lab startup is also checked. `./labs/capture physics` verifies rendered alpha and observes contacts/sensors on the GPU. Its boxes are diagnostic fixtures, not game object definitions.
 
@@ -17,3 +17,5 @@ Use [the background capture flow](../labs/pixel_scaling/README.md) for hardware-
 `crane_test.gd`, `round_test.gd`, `hud_test.gd` and `level_test.gd` cover the independent subsystems. `salvage_test.gd` drives all six real-physics deliveries through the combined lab, then checks carrying pause, end-state, restart and timeout release. This proves deterministic playability, not human enjoyment.
 
 `physical_suspension_test.gd` verifies rigid-body pivot tilt, angular stops, inertial lag, slack tension, load feedback and cable draw order. Rope tests separately retain moving/reeling history through taut-to-slack transitions.
+
+`rope_interpolation_test.gd` samples render frames between physics ticks and checks endpoint interpolation, physics-history isolation, pause and reset. Reproducible exports are verified separately with `python3 tools/build/build_all.py --verify`.

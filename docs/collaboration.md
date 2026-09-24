@@ -34,9 +34,9 @@ Use `git bisect` to locate regressions and add a corrective or revert commit on 
 
 ## Build identity
 
-Private development does not increment release versions. Local reproducible builds use a clean committed source tree and the label `0.0.0+<short-sha>`, where the SHA is resolved after rebasing. Do not identify dirty source as an unchanged commit build.
+Private development does not automatically increment release versions. Build from a clean committed source tree, resolving the source SHA after rebasing. Do not identify dirty source as an unchanged commit build.
 
-Set an explicit in-game version when building a public release, without creating release tags. The tracked `project.godot` currently holds `0.0.0`; no export or SHA-stamping automation exists yet. Add stamping with the first build workflow, keeping the generated result outside tracked source. Local reproducible builds are permitted for development; keep generated outputs ephemeral.
+The user explicitly requested prototype version `0.1.0`; `project.godot` supplies the in-game label. The [build script](../specs/builds.md) records the full source commit and toolchain hashes in each candidate manifest and verifies repeat builds on request. No release tags are created. Keep the current requested candidate locally and generated outputs ephemeral otherwise.
 
 ## Proposed automation
 

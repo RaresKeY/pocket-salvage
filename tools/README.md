@@ -5,3 +5,5 @@ Reserve this directory for one-shot utilities that create or transform project m
 Prototype and orchestrate in Python; use native code for measured bottlenecks. Follow local execution boundaries. Generated output belongs in its owning source area or an appropriate ignored artifact bucket.
 
 [superscale](superscale) enlarges pixel PNGs through the shared Godot runner; [pixel_art/](pixel_art/README.md) owns the portable CLI and diagnostic-image construction. Verification lives in [tests/check](../tests/check); interactive comparisons live in [labs/](../labs/README.md).
+
+[build/build_all.py](build/build_all.py) exports the standalone prototype from clean source; [build contract](../specs/builds.md).

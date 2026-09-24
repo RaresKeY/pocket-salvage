@@ -21,6 +21,8 @@ Reviewed: 2026-09-24 integrating the scene preview with the physics components a
 | [Level layouts](level_layout.md) | `scripts/level/`, `labs/level/` | Configurable prototype placements and backdrop | Changing playable layout fixtures |
 | [Playable integration](salvage_prototype.md) | `labs/salvage/` | Combined crane, sorting, round, UI and level prototype | Changing playable integration or controls |
 
+| [Standalone builds](builds.md) | `tools/build/`, `export_presets.cfg` | Clean-source multi-platform exports and reproducibility | Building the versioned prototype |
+
 ## Maintenance
 
 - Keep specs compact, evidence-based, and current.
