@@ -8,17 +8,39 @@ The collaboration remote is private GitHub `origin`. Access requires a separate 
 
 ## Current manual workflow
 
-1. Agree on one task and its owner. Use a focused `feature/<topic>` or `fix/<topic>` branch from current `main` in a separate clone or worktree.
-2. For parallel work, prefer stable worktree lanes outside the repository. Agree on ownership before use. Only prepare a clean lane; preserve unfinished or failed work. Automatic ownership locks are not implemented.
-3. Keep code and its matching specs together. Preserve explicit user design separately from AI inference. Put deferred work in `TODO.md`; use optional local journals or plans only when useful.
-4. Run relevant checks, preserve the resulting commits, and open a pull request into `main`. State the behavior change, verification, limitations, and any handoff the integrator needs. Never share a dirty checkout between concurrent workers.
-5. A designated integrator reviews and merges one branch at a time, resolves conflicts, and validates the combined result. Preserve task commits, validation results, and handoff before releasing a lane. Do not reset or delete someone else's unfinished work.
+The user's direct-commit rules supersede the initial bootstrap's pull-request workflow. Keep collaboration freeform and asynchronous: agree on the design first, then implement a small MVP as contributors have time.
 
-There is no permanent `develop` branch or release branch at this stage. Introduce release tags and release-specific checks when an actual release workflow exists.
+1. Work on `main` in your own clone. Use an experimental branch and separate worktree only when isolation is useful. Never share a dirty checkout between concurrent workers.
+2. Make focused commits and checkpoints as needed. Keep matching specs synchronized, separate explicit user design from AI inference, and record deferred work in `TODO.md`.
+3. Before each push, commit the work being preserved, fetch the latest remote, and rebase unpublished commits onto it. Resolve conflicts, inspect the resulting diff, and run relevant checks. Push normally; if another contributor has pushed first, fetch and rebase again.
+4. Push directly to `main`, with verification and limitations recorded in commit messages or the handoff. No pull requests, release tags, or mandatory feature branches. Preserve published history; do not force-push shared `main`.
+
+The normal sequence after making local commits is:
+
+```sh
+git fetch origin
+git rebase origin/main
+# Inspect the combined change and run the relevant checks before pushing.
+git push origin main
+```
+
+Configure `git config --local pull.rebase true` in each clone so ordinary pulls also rebase. That setting does not automatically fetch or rebase when pushing; the pre-push sequence remains explicit.
+
+## Conflicts and recovery
+
+Keep all contributors' work. AI can resolve mechanical conflicts when both intentions are compatible; inspect the combined result and rerun relevant checks. When intentions overlap or contradict one another, preserve both versions and ask the contributors to choose before resolving that conflict. Abort an in-progress rebase if necessary to return to the preserved local commits; never discard work just to make a push succeed.
+
+Use `git bisect` to locate regressions and add a corrective or revert commit on top. Checkpoints provide recovery points; they are not release markers. Add a more elaborate coordination policy only if actual conflicts make it necessary.
+
+## Build identity
+
+Private development does not increment release versions. Local reproducible builds use a clean committed source tree and the label `0.0.0+<short-sha>`, where the SHA is resolved after rebasing. Do not identify dirty source as an unchanged commit build.
+
+Set an explicit in-game version when building a public release, without creating release tags. The tracked `project.godot` currently holds `0.0.0`; no export or SHA-stamping automation exists yet. Add stamping with the first build workflow, keeping the generated result outside tracked source. Local reproducible builds are permitted for development; keep generated outputs ephemeral.
 
 ## Proposed automation
 
-[The collaboration design](../design/collaboration.md) defines task, lane, and integration locks; ownership tokens; and explicit stale-lock recovery. Until implemented, coordinate manually. Worktree separation and the engine runner's project lock are not substitutes for those ownership checks.
+[The collaboration design](../design/collaboration.md) retains Jam Sync's task, lane, and integration lock ideas as optional future work. They are neither installed tooling nor a prerequisite for this experiment. Worktree separation and the engine runner's project lock are not substitutes for ownership checks.
 
 ## Execution and records
 

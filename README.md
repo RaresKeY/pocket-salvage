@@ -7,8 +7,10 @@ A small Godot 4.7 project for a collaboration experiment, organized around Jam S
 - Open `project.godot` with Godot 4.7.
 - Read [the specs map](specs/_readme.md) for implemented reality and [the design map](design/_readme.md) for evolving intent.
 - Read [the collaboration guide](docs/collaboration.md), and adapt [the instruction example](examples_agents/random-game.md) into your own ignored `AGENTS.md` or `CLAUDE.md` when useful.
-- Use a short-lived `feature/<topic>` or `fix/<topic>` branch for one focused change, then open a pull request into `main`.
-- Keep the relevant specs updated with implementation changes and include verification results in the pull request.
+- Commit directly to `main`; use an experimental branch only when separation helps. Rebase unpublished commits onto the latest remote before every push. No pull requests or release tags.
+- Keep the relevant specs updated with implementation changes and record verification with the commits. Start with a shared design spike, then implement a small MVP.
+
+Private development has no release-version increments. Reproducible local builds should identify their clean source commit as `0.0.0+<short-sha>`; assign an explicit in-game release version only when building a public release. The current project version is the neutral `0.0.0` base; build-time SHA stamping is not implemented yet.
 
 The repository is private on GitHub at [RaresKeY/random-game](https://github.com/RaresKeY/random-game). Collaborators need repository access before cloning. The [Jam Sync alignment map](docs/jam-sync-alignment.md) connects every source convention to its location and current status here.
 

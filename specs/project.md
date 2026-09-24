@@ -15,7 +15,9 @@ Random Game is an initial Godot 4.7 scaffold for a collaboration experiment. `pr
 
 ## Collaboration contract
 
-The private GitHub repository uses `main` as the integration branch and focused feature or fix branches for contributions. The [collaboration guide](../docs/collaboration.md) describes the manual workflow; the [coordination design](../design/collaboration.md) distinguishes proposed lock automation from current capabilities. The scaffold version is not a published game release. No project license has been selected.
+The private GitHub repository uses direct commits to `main`, rebasing unpublished work onto the latest remote before pushing. Experimental branches are optional; pull requests and release tags are not part of the current workflow. The [collaboration guide](../docs/collaboration.md) owns conflict, recovery, and build-identity rules. Optional future coordination automation lives in [design](../design/collaboration.md).
+
+`project.godot` uses the private-development base `0.0.0`. Local reproducible builds are intended to carry `0.0.0+<short-sha>` from their clean, rebased source commit; build-time stamping is not implemented. Explicit release versions are assigned in-game only for public builds. No project license has been selected.
 
 ## Verification
 

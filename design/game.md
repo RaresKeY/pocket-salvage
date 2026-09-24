@@ -6,6 +6,8 @@ The user requested a new repository named along the lines of `random-game` for a
 
 The user has not selected a genre, game loop, audience, setting, or delivery platform.
 
+The next agreed phase is a lightweight shared design spike, followed by a small MVP. Contributors work freeform as time allows. Preserve explicit user decisions separately from AI proposals as the game takes shape.
+
 ## AI-inferred design
 
 The initial scaffold uses Godot 4.7 based on the preceding engine discussion. This is an implemented bootstrap choice, not a user-authored game concept. No gameplay design is inferred yet.

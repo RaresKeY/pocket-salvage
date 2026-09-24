@@ -2,13 +2,15 @@
 
 ## User design
 
-The requested Jam Sync alignment includes its preferred worktree workflow: one task branch per owned lane outside the repository, atomic task and lane ownership, serial integration, explicit stale-lock recovery, and preserved task evidence. This is a coordination design, not an installed tool.
+The user selected direct commits to `main`, optional experimental branches, continuous spec synchronization, checkpoints as useful, rebase before every push, no release tags, and recovery through bisect and corrective commits. Work is freeform and asynchronous, starting with a shared design spike before an MVP. Preserve all work during conflicts; AI can resolve compatible edits, while conflicting intent needs contributor agreement. See [the exact directives](../prompts/source/collaboration-rules.md).
+
+Jam Sync's owned-worktree and locking ideas remain an optional future design. They do not impose mandatory task branches or integration ceremony on this experiment.
 
 ## AI-inferred design
 
-Use the existing manual branch-and-pull-request workflow while the team decides whether to implement automation. [The contributor guide](../docs/collaboration.md) describes what can be done now. A lane means an external Git worktree assigned to one contributor and task.
+Use independent clones for ordinary concurrent work on `main`. Reach for experimental branches and external worktree lanes only when isolation helps. [The contributor guide](../docs/collaboration.md) describes the current direct-push workflow. A lane means an external Git worktree assigned to one contributor and task.
 
-## Proposed ownership contract
+## Optional future ownership contract
 
 - Acquire the task and lane atomically before preparing a clean worktree. Keep task locks separate from lane locks; use a separate integration lock to serialize merges.
 - Record the owner, task, branch, base commit, and ownership token. A PID alone cannot establish ownership or staleness.

@@ -22,6 +22,6 @@ The repository implements Jam Sync's organizational conventions through tracked 
 
 ## Collaboration and verification
 
-The private GitHub `origin` is the collaboration remote. Contributors use focused task branches and reviewed integration into `main`. Stable external worktree lanes and atomic ownership locks are documented as a preferred design; the repository has no lock manager or automatic ownership recovery. No branch protection or access changes are part of this bootstrap.
+The private GitHub `origin` is the collaboration remote. Contributors commit directly to `main`, rebase unpublished commits before every push, preserve work during conflicts, and recover with bisect and corrective commits. Experimental branches and external worktrees are optional. Pull requests and release tags are not used. Atomic ownership locks remain an optional future design; no lock manager or automatic recovery is implemented. No branch protection or access changes are part of this bootstrap.
 
 Check Markdown links, the tracked/ignored boundary, Git attributes, and `git diff --check` after structure changes. Run `./tests/check` when engine sources or the check entry point change. Keep current behavior in specs and unfinished implementation work in `TODO.md`.
