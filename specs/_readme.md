@@ -1,6 +1,6 @@
 # Random Game Specs Map
 
-Reviewed: 2026-09-24. Runtime baseline: `d41fa0a`; the repository structure is being bootstrapped from Jam Sync `d2c801a`.
+Reviewed: 2026-09-24. Implementation revision: `be7e1eb`. Reference conventions: Jam Sync `d2c801a`.
 
 `specs/` is committed project memory for current intent and implementation. Read the relevant spec before changing its owning behavior, contract, boundary, source area, or verification flow, and update it with the implementation.
 

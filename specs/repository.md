@@ -1,6 +1,6 @@
 # Repository Structure
 
-Reviewed: 2026-09-24. Initial runtime revision: `d41fa0a`; Jam Sync reference revision: `d2c801a`. This structure is being bootstrapped.
+Reviewed: 2026-09-24. Implementation revision: `be7e1eb`. Reference conventions: Jam Sync `d2c801a`.
 
 ## Current contract
 

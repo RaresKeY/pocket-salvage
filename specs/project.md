@@ -1,6 +1,6 @@
 # Project Contract
 
-Reviewed: 2026-09-24. Runtime baseline: `d41fa0a`; the check entry point is being relocated in this bootstrap.
+Reviewed: 2026-09-24. Implementation revision: `be7e1eb`.
 
 ## Status and scope
 
