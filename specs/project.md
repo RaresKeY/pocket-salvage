@@ -20,7 +20,9 @@ Pocket Salvage is the official game name; its private GitHub repository remains 
 
 The private GitHub repository uses direct commits to `main`, rebasing unpublished work onto the latest remote before pushing. Experimental branches are optional; pull requests and release tags are not part of the current workflow. The [collaboration guide](../docs/collaboration.md) owns conflict, recovery, and build-identity rules. Optional future coordination automation lives in [design](../design/collaboration.md).
 
-`project.godot` uses the private-development base `0.0.0`. Local reproducible builds are intended to carry `0.0.0+<short-sha>` from their clean, rebased source commit; build-time stamping is not implemented. Explicit release versions are assigned in-game only for public builds. No project license has been selected.
+`project.godot` declares the user-requested prototype version `0.1.0`. No project license has been selected.
+
+Physics runs at 60 Hz with native 2D physics interpolation enabled. Physical bodies and the hoist move on physics ticks; custom cable geometry interpolates its previous/current particle positions at render cadence without modifying the solver. Explicit restart/spawn teleports reset interpolation history.
 
 ## Verification
 

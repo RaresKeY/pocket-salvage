@@ -67,6 +67,7 @@ func reset(tip_position: Vector2) -> void:
 	endpoint.rotation = 0
 	endpoint.linear_velocity = Vector2.ZERO
 	endpoint.angular_velocity = 0
+	endpoint.reset_physics_interpolation()
 	endpoint.sleeping = false
 	_previous_anchor = anchor
 	_previous_length = cable_length
