@@ -21,6 +21,8 @@ The lab renders at native window resolution with no root stretch. Integer and ba
 
 The lab loads decoded source PNGs directly, before importer processing, to isolate scaling behavior. It is a developer lab for the source checkout; no exported-game packaging of raw comparison files is implemented.
 
+Visual occlusion masks in the [object subsystem](../physics.md) use alpha-only coverage, nearest filtering and repeat disabled. Their transforms are independent from physical shapes. The diagnostic physics fixture fits its whole world fractionally when needed; this is a lab exception, not the selected gameplay pixel viewport.
+
 ## Pixel-art contract for future gameplay
 
 Choose an authored base resolution with the game's design. A low-resolution pixel-art world should use an integer-scaled viewport and preserved aspect ratio, accepting unused screen margins rather than fractional stretching. A 3D world with pixel UI may instead isolate that UI in its own integer-scaled layer. This gameplay viewport setup is a convention to apply when gameplay exists, not a setting already selected by this lab.

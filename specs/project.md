@@ -11,6 +11,7 @@ Pocket Salvage is the official game name; its private GitHub repository remains 
 - `project.godot` owns engine features, project identity, startup scene, and renderer settings.
 - `labs/pixel_scaling/` owns the temporary entry point; [the art module](art/_readme.md) owns its scaling/filtering contract and related creation tool.
 - `scripts/rope/` and `labs/rope/` own the [rope subsystem and showcase](rope.md); `vendored/rope_sources/` preserves original copied source.
+- `scripts/physics/`, `shaders/occlusion_mask.gdshader` and `labs/physics/` own [separate visual mask, solid and sensor capabilities](physics.md). Concrete game objects remain deferred.
 - `tests/check` runs `tests/run_checks.py` through the external shared Godot Podman runner. It resolves the runner from a sibling checkout or `GODOT_PODMAN_RUNNER`.
 - [Repository structure](repository.md) describes project memory, collaboration, file handling, and the source layout.
 

@@ -10,6 +10,6 @@ The next agreed phase is a lightweight shared design spike, followed by a small 
 
 ## AI-inferred design
 
-Use Godot 4.7 and initially explore a 2D crane, following the reusable rope source games. A rope showcase precedes an object/magnet physics lab; the timed sorting round remains the eventual MVP. See [rope design](rope.md). The lab presentation does not select final game art.
+Use Godot 4.7 and initially explore a 2D crane, following the reusable rope source games. A rope showcase precedes reusable [mask and collision support](physics.md); concrete object/box definitions are deferred per the user's clarification. The timed sorting round remains the eventual MVP. See [rope design](rope.md). The lab presentation does not select final game art.
 
 Record proposed concepts here with their author and approval status before growing the prototype. Keep the initial experiment small enough that contributors can review one coherent change at a time.

@@ -10,6 +10,8 @@ checks = [
     (BASE + ["--script", "tests/pixel_scaling_test.gd"], "PIXEL_SCALING_TEST_OK"),
     (BASE + ["--script", "tests/rope_test.gd"], "ROPE_TEST_OK"),
     (BASE + ["--script", "tests/rope_lab_test.gd"], "ROPE_LAB_TEST_OK"),
+    (BASE + ["--script", "tests/physics_parts_test.gd"], "PHYSICS_PARTS_TEST_OK"),
+    (BASE + ["--scene", "res://labs/physics/lab.tscn", "--quit-after", "120"], None),
     (BASE + ["--scene", "res://labs/rope/lab.tscn", "--quit-after", "120"], None),
     ([sys.executable, "tests/test_superscale_cli.py"], None),
     (BASE + ["--quit-after", "60", "--", "--self-test"], "PIXEL_LAB_TEST_OK"),

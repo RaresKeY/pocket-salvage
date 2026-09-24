@@ -4,6 +4,8 @@ Control a magnetic crane, collect scrap, and sort it before the timer expires. P
 
 The game loop is selected; implementation currently consists of technical labs. Open the [rope lab](labs/rope/README.md) to experiment with slack, reeling and terrain wrapping. The [pixel-scaling lab](labs/pixel_scaling/README.md) remains the default startup scene. The [reusable rope component](scripts/rope/README.md) combines copied White Approach physics with Plug & Prosper's refined cable drawing.
 
+The [object-physics components](scripts/physics/README.md) provide caller-authored solid shapes, separate sensors and visual occlusion masks. The [mask and collision fixture](labs/physics/README.md) demonstrates their independence. Concrete magnet/scrap objects and their boxes remain deferred.
+
 ## Start here
 
 - Open `project.godot` with Godot 4.7.
@@ -13,6 +15,8 @@ The game loop is selected; implementation currently consists of technical labs. 
 - Keep the relevant specs updated with implementation changes and record verification with the commits. Start with a shared design spike, then implement a small MVP.
 
 Private development has no release-version increments. Reproducible local builds should identify their clean source commit as `0.0.0+<short-sha>`; assign an explicit in-game release version only when building a public release. The current project version is the neutral `0.0.0` base; build-time SHA stamping is not implemented yet.
+
+**Push and conflict rules:** always fetch `origin` before pushing. If `origin/main` has advanced, rebase unpublished commits onto it, inspect the combined result and rerun relevant checks. If a push loses a race, fetch and rebase again; never force-push shared history. For simple compatible conflicts, AI should resolve them while keeping all contributors' work. If AI cannot preserve all work, or the intended direction splits, **stop and ask the user for direction** before resolving or pushing. Preserve both versions and local commits; do not silently choose a side.
 
 The repository is private on GitHub at [RaresKeY/random-game](https://github.com/RaresKeY/random-game). Collaborators need repository access before cloning. The [Jam Sync alignment map](docs/jam-sync-alignment.md) connects every source convention to its location and current status here.
 
@@ -28,7 +32,7 @@ The repository is private on GitHub at [RaresKeY/random-game](https://github.com
 | [marketing/](marketing/README.md), [artifacts/](artifacts/README.md) | Intentional promotional deliverables and temporary working material. |
 | [vendored/](vendored/_readme.md) | Dependency and copied-source provenance, including the original rope implementations. |
 | [tests/](tests/README.md), [tools/](tools/README.md) | Verification and one-shot creation utilities, respectively. |
-| [labs/](labs/README.md) | Runnable rope and pixel-scaling showcases; pixel scaling is the current entry point. |
+| [labs/](labs/README.md) | Runnable rope, mask/collision and pixel-scaling showcases; pixel scaling is the current entry point. |
 | [examples_agents/](examples_agents/README.md), [examples/](examples/README.md) | Portable instruction examples and clearly labeled convention illustrations. |
 | [scenes/](scenes/README.md), [scripts/](scripts/README.md), [assets/](assets/README.md), [data/](data/README.md), [shaders/](shaders/README.md), [native/](native/README.md) | Source boundaries; reusable rope and pixel-scaling modules, diagnostic media, and a reserved game scene. |
 

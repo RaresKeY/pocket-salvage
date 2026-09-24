@@ -72,8 +72,15 @@ func capture_when_requested() -> void:
 	if not args.has("--capture"): return
 	Input.warp_mouse(Vector2(2, get_viewport_rect().size.y - 2))
 	for frame in 150: await get_tree().physics_frame
+	if not await verify_visuals():
+		push_error("Lab visual verification failed")
+		get_tree().quit(1)
+		return
 	await RenderingServer.frame_post_draw
 	var path := args[args.find("--capture") + 1]
 	var error := get_viewport().get_texture().get_image().save_png(path)
 	print("LAB_CAPTURE result=%s renderer=%s" % [error, RenderingServer.get_video_adapter_name()])
 	get_tree().quit(error)
+
+func verify_visuals() -> bool:
+	return true

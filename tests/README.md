@@ -7,3 +7,5 @@ Run `./tests/check` from the repository root on the shared workstation. The scri
 Use [the background capture flow](../labs/pixel_scaling/README.md) for hardware-rendered comparisons. Its image metadata records when an on-screen native-integer/baked comparison was actually checked; offscreen pairs are not counted as proof.
 
 `rope_test.gd` checks actual slack, tension and wrapped-route behavior as well as renderer isolation. The suite also runs the rope lab for 120 physics ticks. Use `./labs/capture rope` for its separate hardware-rendered check. Refer to tests and input files with project-relative paths, so records remain useful across machines and worktree lanes. Full timed-round gameplay is not implemented yet.
+
+`physics_parts_test.gd` checks real ray hits, filtered Area2D overlap, private shape ownership, independently enabled parts, and visual-mask material lifetime. The physics lab startup is also checked. `./labs/capture physics` verifies rendered alpha and observes contacts/sensors on the GPU. Its boxes are diagnostic fixtures, not game object definitions.

@@ -28,7 +28,7 @@ Configure `git config --local pull.rebase true` in each clone so ordinary pulls 
 
 ## Conflicts and recovery
 
-Keep all contributors' work. AI can resolve mechanical conflicts when both intentions are compatible; inspect the combined result and rerun relevant checks. When intentions overlap or contradict one another, preserve both versions and ask the contributors to choose before resolving that conflict. Abort an in-progress rebase if necessary to return to the preserved local commits; never discard work just to make a push succeed.
+Keep all contributors' work. AI should resolve simple compatible conflicts while retaining both intentions; inspect the combined result and rerun relevant checks. If AI cannot preserve all work, or the direction is bifurcating, **stop and ask the user for direction before resolving or pushing**. Preserve both versions and local commits. Abort an in-progress rebase if necessary to return to that preserved state; never silently choose a side or discard work just to make a push succeed. Always fetch before pushing and rebase whenever `origin/main` has advanced, including after a rejected push race.
 
 Use `git bisect` to locate regressions and add a corrective or revert commit on top. Checkpoints provide recovery points; they are not release markers. Add a more elaborate coordination policy only if actual conflicts make it necessary.
 

@@ -12,6 +12,8 @@ The repository implements Jam Sync's organizational conventions through tracked 
 - `tests/` owns verification, `tools/` owns creation utilities, and `labs/` owns runnable technical comparisons. The pixel-scaling tool and lab share `scripts/art/` and diagnostic media under `assets/pixel_lab/`. The reusable rope lives under `scripts/rope/` with its own lab and focused spec. Other product source areas remain ready for the later game.
 - `examples_agents/` contains portable instructions to adapt locally. `examples/` contains illustrations that are not accepted game design or actual generation records.
 
+`scripts/physics/` and its focused spec own caller-authored solid/sensor parts and visual masks, with `shaders/occlusion_mask.gdshader` and a diagnostic lab. The component supplies no concrete game object or chosen collision box dimensions.
+
 ## Local and shared state
 
 `AGENTS.md` and `CLAUDE.md` are ignored at any depth. Shared conventions live in documentation and examples, not in tracked environment-specific instructions. Existing local instruction files may remain in a contributor's working directory.
@@ -23,5 +25,7 @@ The repository implements Jam Sync's organizational conventions through tracked 
 ## Collaboration and verification
 
 The private GitHub `origin` is the collaboration remote. Contributors commit directly to `main`, rebase unpublished commits before every push, preserve work during conflicts, and recover with bisect and corrective commits. Experimental branches and external worktrees are optional. Pull requests and release tags are not used. Atomic ownership locks remain an optional future design; no lock manager or automatic recovery is implemented. No branch protection or access changes are part of this bootstrap.
+
+README, collaboration guidance and the portable instruction example explicitly require fetching before push and rebasing if origin has advanced, including a push race. AI preserves all work through simple compatible conflicts. If that is impossible or the direction bifurcates, stop and ask the user before resolving or pushing; preserve both versions. The workstation's local ignored `AGENTS.md` carries the same policy.
 
 Check Markdown links, the tracked/ignored boundary, Git attributes, and `git diff --check` after structure changes. Run `./tests/check` when engine sources or the check entry point change. Keep current behavior in specs and unfinished implementation work in `TODO.md`.
