@@ -15,7 +15,7 @@ checks = [
     (BASE + ["--scene", "res://labs/physics/lab.tscn", "--quit-after", "120"], None),
     (BASE + ["--scene", "res://labs/rope/lab.tscn", "--quit-after", "120"], None),
     ([sys.executable, "tests/test_superscale_cli.py"], None),
-    (BASE + ["--quit-after", "60", "--", "--self-test"], "PIXEL_LAB_TEST_OK"),
+    (BASE + ["--scene", "res://labs/pixel_scaling/lab.tscn", "--quit-after", "60", "--", "--self-test"], "PIXEL_LAB_TEST_OK"),
     (BASE + ["--quit-after", "2"], None),
 ]
 for command, marker in checks:

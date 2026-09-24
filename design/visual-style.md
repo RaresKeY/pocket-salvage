@@ -2,11 +2,11 @@
 
 ## User design
 
-The user requested alignment with Jam Sync: choose and document a cohesive direction before generating images, preserve exact prompts, compare candidates, and verify selected assets in-game. No game-specific visual style has been selected.
+The user requested alignment with Jam Sync: choose and document a cohesive direction before generating images, preserve exact prompts, compare candidates, and verify selected assets in-game. The user subsequently requested arranging the teammate’s supplied assets in the main scene for local review. This does not establish a final art-direction decision.
 
 ## AI-inferred design
 
-No palette, theme, material language, or reference set is proposed by this bootstrap. The [style example](../examples/visual-style.md) is an illustration only.
+The provisional [scene arrangement](scene_preview.md) uses the contributed Bitwright sprites: yellow steelwork, blue-gray scrap, a dark scrapyard backdrop, and color/symbol-coded bins. The arrangement is for user review. The [style example](../examples/visual-style.md) is an illustration only.
 
 ## Decisions required before generation
 

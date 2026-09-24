@@ -1,6 +1,6 @@
 # Pixel Scaling Lab
 
-Open `project.godot` in Godot 4.7 and run it to see the lab. Add contributor PNGs anywhere beneath `assets/`, then select **Refresh art**. Select an image, choose an integer factor, and compare the four sampling modes. **Motion test** shows snapped versus subpixel movement. Scroll large previews without changing their scale.
+Open `project.godot` in Godot 4.7, open `labs/pixel_scaling/lab.tscn`, and run the current scene (F6) to see the lab. Add contributor PNGs anywhere beneath `assets/`, then select **Refresh art**. Select an image, choose an integer factor, and compare the four sampling modes. **Motion test** shows snapped versus subpixel movement. Scroll large previews without changing their scale.
 
 The supplied 32×32 chart is diagnostic media, not a game-art proposal. At 10×, each source pixel becomes a 10×10 block. Fractional views intentionally use 10.5×; the baked 320×320 image is shown at 1× for comparison with native 10× sampling.
 

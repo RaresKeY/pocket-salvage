@@ -7,6 +7,8 @@ Design captures evolving intent. Every design document distinguishes explicit **
 | [Game direction](game.md) | Pocket Salvage's crane, scrap and timed sorting loop | Extending the playable design |
 | [Rope module](rope.md) | Copied source foundations and reusable crane rope | Changing the rope or its showcase |
 | [Object subsystem](physics.md) | Reusable collision and visual masking capabilities; concrete objects deferred | Designing physical objects or occlusion |
+
+| [Scene arrangement](scene_preview.md) | Teammate art arranged for local inspection | Revising the scrapyard composition |
 | [Visual direction](visual-style.md) | Art-direction decisions required before image generation | Producing mockups, prompts, assets, or UI |
 | [Pixel-scaling experiment](pixel_scaling_lab.md) | Integer scaling tool, art conventions, and diagnostic showcase | Extending the technical art lab |
 | [Collaboration design](collaboration.md) | External worktree lanes, ownership, and serial integration | Planning parallel work or coordination tooling |

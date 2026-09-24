@@ -19,7 +19,7 @@ for size in "${sizes[@]}"; do
     width="${size%x*}"; height="${size#*x}"
     gamescope --backend headless --force-windows-fullscreen -W "$width" -H "$height" -w "$width" -h "$height" -- \
         "$runner" run --project "$project_root" --purpose pixel-lab-visual --no-lock --display host -- \
-        godot --path /workspace --rendering-method gl_compatibility --audio-driver Dummy --resolution "$size" --quit-after 600 \
+        godot --path /workspace --scene res://labs/pixel_scaling/lab.tscn --rendering-method gl_compatibility --audio-driver Dummy --resolution "$size" --quit-after 600 \
         -- --capture "res://artifacts/generated/pixel_scaling/$size.png" \
         2>&1 | tee "artifacts/generated/pixel_scaling/$size.log"
     test -s "artifacts/generated/pixel_scaling/$size.png"

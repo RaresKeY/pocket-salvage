@@ -2,7 +2,7 @@
 
 Control a magnetic crane, collect scrap, and sort it before the timer expires. Pocket Salvage is a small Godot 4.7 collaboration experiment, organized around Jam Sync's conventions. The repository and upstream remain **`random-game`**.
 
-The game loop is selected; implementation currently consists of technical labs. Open the [rope lab](labs/rope/README.md) to experiment with slack, reeling and terrain wrapping. The [pixel-scaling lab](labs/pixel_scaling/README.md) remains the default startup scene. The [reusable rope component](scripts/rope/README.md) combines copied White Approach physics with Plug & Prosper's refined cable drawing.
+Run the project to see the [scrapyard scene preview](specs/scene_preview.md), arranging the contributed crane, scrap and sorting-bin sprites. It is a static composition; the timed game loop remains to be built. Open the [rope lab](labs/rope/README.md) to experiment with slack, reeling and terrain wrapping, or the [pixel-scaling lab](labs/pixel_scaling/README.md) to compare sampling. The [reusable rope component](scripts/rope/README.md) combines copied White Approach physics with Plug & Prosper's refined cable drawing.
 
 The [object-physics components](scripts/physics/README.md) provide caller-authored solid shapes, separate sensors and visual occlusion masks. The [mask and collision fixture](labs/physics/README.md) demonstrates their independence. Concrete magnet/scrap objects and their boxes remain deferred.
 
@@ -32,9 +32,9 @@ The repository is private on GitHub at [RaresKeY/random-game](https://github.com
 | [marketing/](marketing/README.md), [artifacts/](artifacts/README.md) | Intentional promotional deliverables and temporary working material. |
 | [vendored/](vendored/_readme.md) | Dependency and copied-source provenance, including the original rope implementations. |
 | [tests/](tests/README.md), [tools/](tools/README.md) | Verification and one-shot creation utilities, respectively. |
-| [labs/](labs/README.md) | Runnable rope, mask/collision and pixel-scaling showcases; pixel scaling is the current entry point. |
+| [labs/](labs/README.md) | Standalone rope, mask/collision, pixel-scaling and sprite playground showcases. |
 | [examples_agents/](examples_agents/README.md), [examples/](examples/README.md) | Portable instruction examples and clearly labeled convention illustrations. |
-| [scenes/](scenes/README.md), [scripts/](scripts/README.md), [assets/](assets/README.md), [data/](data/README.md), [shaders/](shaders/README.md), [native/](native/README.md) | Source boundaries; reusable rope and pixel-scaling modules, diagnostic media, and a reserved game scene. |
+| [scenes/](scenes/README.md), [scripts/](scripts/README.md), [assets/](assets/README.md), [data/](data/README.md), [shaders/](shaders/README.md), [native/](native/README.md) | Source boundaries; reusable rope and pixel-scaling modules, diagnostic media, and the arranged scrapyard scene. |
 
 Directory guides establish ownership without implying that gameplay, dependencies, art, or coordination tooling already exist. Journals and plans remain optional and have no required shared directory.
 

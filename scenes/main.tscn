@@ -1,3 +1,405 @@
-[gd_scene format=3]
+[gd_scene load_steps=31 format=3]
 
-[node name="Main" type="Node"]
+[ext_resource type="Script" path="res://scripts/scene/yard_preview.gd" id="1_asset"]
+[ext_resource type="Texture2D" path="res://assets/bitwright/backdrop_scrapyard_tile.png" id="2_asset"]
+[ext_resource type="Texture2D" path="res://assets/bitwright/bin_copper.png" id="3_asset"]
+[ext_resource type="Texture2D" path="res://assets/bitwright/bin_rubber.png" id="4_asset"]
+[ext_resource type="Texture2D" path="res://assets/bitwright/bin_steel.png" id="5_asset"]
+[ext_resource type="Texture2D" path="res://assets/bitwright/conveyor_belt_tile_01.png" id="6_asset"]
+[ext_resource type="Texture2D" path="res://assets/bitwright/crane_chain_link.png" id="7_asset"]
+[ext_resource type="Texture2D" path="res://assets/bitwright/crane_magnet_01.png" id="8_asset"]
+[ext_resource type="Texture2D" path="res://assets/bitwright/crane_rail_tile.png" id="9_asset"]
+[ext_resource type="Texture2D" path="res://assets/bitwright/crane_tower.png" id="10_asset"]
+[ext_resource type="Texture2D" path="res://assets/bitwright/crane_trolley.png" id="11_asset"]
+[ext_resource type="Texture2D" path="res://assets/bitwright/ground_dirt_tile.png" id="12_asset"]
+[ext_resource type="Texture2D" path="res://assets/bitwright/hud_coin.png" id="13_asset"]
+[ext_resource type="Texture2D" path="res://assets/bitwright/hud_timer.png" id="14_asset"]
+[ext_resource type="Texture2D" path="res://assets/bitwright/scrap_bent_pipe.png" id="15_asset"]
+[ext_resource type="Texture2D" path="res://assets/bitwright/scrap_car_battery.png" id="16_asset"]
+[ext_resource type="Texture2D" path="res://assets/bitwright/scrap_car_door.png" id="17_asset"]
+[ext_resource type="Texture2D" path="res://assets/bitwright/scrap_cog.png" id="18_asset"]
+[ext_resource type="Texture2D" path="res://assets/bitwright/scrap_copper_wire.png" id="19_asset"]
+[ext_resource type="Texture2D" path="res://assets/bitwright/scrap_engine_block.png" id="20_asset"]
+[ext_resource type="Texture2D" path="res://assets/bitwright/scrap_girder.png" id="21_asset"]
+[ext_resource type="Texture2D" path="res://assets/bitwright/scrap_hubcap.png" id="22_asset"]
+[ext_resource type="Texture2D" path="res://assets/bitwright/scrap_oil_drum.png" id="23_asset"]
+[ext_resource type="Texture2D" path="res://assets/bitwright/scrap_spring.png" id="24_asset"]
+[ext_resource type="Texture2D" path="res://assets/bitwright/scrap_tin_can.png" id="25_asset"]
+[ext_resource type="Texture2D" path="res://assets/bitwright/scrap_tire.png" id="26_asset"]
+[ext_resource type="Texture2D" path="res://assets/bitwright/scrap_washing_machine.png" id="27_asset"]
+[ext_resource type="Texture2D" path="res://assets/bitwright/fx_sparks_03.png" id="28_asset"]
+[ext_resource type="Texture2D" path="res://assets/bitwright/fx_dust_03.png" id="29_asset"]
+
+[sub_resource type="Theme" id="Theme_yard"]
+default_font_size = 18
+Label/colors/font_color = Color(0.94, 0.92, 0.85, 1)
+
+[node name="Main" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("1_asset")
+
+[node name="Letterbox" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.055, 0.065, 0.086, 1)
+
+[node name="Stage" type="SubViewportContainer" parent="."]
+texture_filter = 1
+layout_mode = 0
+offset_left = 64.0
+offset_top = 36.0
+offset_right = 448.0
+offset_bottom = 252.0
+scale = Vector2(3, 3)
+mouse_filter = 2
+
+[node name="Viewport" type="SubViewport" parent="Stage"]
+handle_input_locally = false
+size = Vector2i(384, 216)
+render_target_update_mode = 4
+
+[node name="Yard" type="Node2D" parent="Stage/Viewport"]
+texture_filter = 1
+
+[node name="Environment" type="Node2D" parent="Stage/Viewport/Yard"]
+
+
+[node name="Sky" type="Polygon2D" parent="Stage/Viewport/Yard/Environment"]
+color = Color(0.14, 0.17, 0.22, 1)
+polygon = PackedVector2Array(0, 0, 384, 0, 384, 216, 0, 216)
+
+[node name="DistantHaze" type="Polygon2D" parent="Stage/Viewport/Yard/Environment"]
+color = Color(0.18, 0.20, 0.25, 1)
+polygon = PackedVector2Array(0, 80, 384, 80, 384, 176, 0, 176)
+
+[node name="Fence" type="Sprite2D" parent="Stage/Viewport/Yard/Environment"]
+position = Vector2(0, 112)
+texture = ExtResource("2_asset")
+centered = false
+texture_repeat = 2
+region_enabled = true
+region_rect = Rect2(0, 0, 384, 64)
+
+[node name="Ground" type="Sprite2D" parent="Stage/Viewport/Yard/Environment"]
+position = Vector2(0, 176)
+texture = ExtResource("12_asset")
+centered = false
+texture_repeat = 2
+region_enabled = true
+region_rect = Rect2(0, 0, 384, 40)
+
+[node name="GroundEdge" type="Polygon2D" parent="Stage/Viewport/Yard/Environment"]
+color = Color(0.10, 0.10, 0.12, 1)
+polygon = PackedVector2Array(0, 175, 384, 175, 384, 177, 0, 177)
+
+[node name="FooterShade" type="Polygon2D" parent="Stage/Viewport/Yard/Environment"]
+color = Color(0.065, 0.07, 0.08, 0.92)
+polygon = PackedVector2Array(0, 204, 384, 204, 384, 216, 0, 216)
+
+[node name="Gantry" type="Node2D" parent="Stage/Viewport/Yard"]
+
+
+[node name="LeftUpper" type="Sprite2D" parent="Stage/Viewport/Yard/Gantry"]
+position = Vector2(8, 64)
+texture = ExtResource("10_asset")
+centered = false
+region_enabled = true
+region_rect = Rect2(0, 0, 24, 48)
+
+[node name="LeftFoot" type="Sprite2D" parent="Stage/Viewport/Yard/Gantry"]
+position = Vector2(8, 112)
+texture = ExtResource("10_asset")
+centered = false
+
+[node name="RightUpper" type="Sprite2D" parent="Stage/Viewport/Yard/Gantry"]
+position = Vector2(352, 64)
+texture = ExtResource("10_asset")
+centered = false
+region_enabled = true
+region_rect = Rect2(0, 0, 24, 48)
+
+[node name="RightFoot" type="Sprite2D" parent="Stage/Viewport/Yard/Gantry"]
+position = Vector2(352, 112)
+texture = ExtResource("10_asset")
+centered = false
+
+[node name="OverheadRail" type="Sprite2D" parent="Stage/Viewport/Yard/Gantry"]
+position = Vector2(8, 48)
+texture = ExtResource("9_asset")
+centered = false
+texture_repeat = 2
+region_enabled = true
+region_rect = Rect2(0, 0, 368, 16)
+
+[node name="Incoming" type="Node2D" parent="Stage/Viewport/Yard"]
+
+
+[node name="BeltLegLeft" type="Polygon2D" parent="Stage/Viewport/Yard/Incoming"]
+color = Color(0.18, 0.20, 0.23, 1)
+polygon = PackedVector2Array(50, 170, 55, 170, 55, 176, 50, 176)
+
+[node name="BeltLegRight" type="Polygon2D" parent="Stage/Viewport/Yard/Incoming"]
+color = Color(0.18, 0.20, 0.23, 1)
+polygon = PackedVector2Array(163, 170, 168, 170, 168, 176, 163, 176)
+
+[node name="Conveyor" type="Sprite2D" parent="Stage/Viewport/Yard/Incoming"]
+position = Vector2(40, 160)
+texture = ExtResource("6_asset")
+centered = false
+texture_repeat = 2
+region_enabled = true
+region_rect = Rect2(0, 0, 144, 12)
+
+[node name="Washer" type="Sprite2D" parent="Stage/Viewport/Yard/Incoming"]
+position = Vector2(44, 132)
+texture = ExtResource("27_asset")
+centered = false
+
+[node name="CarDoor" type="Sprite2D" parent="Stage/Viewport/Yard/Incoming"]
+position = Vector2(72, 132)
+texture = ExtResource("17_asset")
+centered = false
+
+[node name="Tire" type="Sprite2D" parent="Stage/Viewport/Yard/Incoming"]
+position = Vector2(109, 136)
+texture = ExtResource("26_asset")
+centered = false
+
+[node name="Battery" type="Sprite2D" parent="Stage/Viewport/Yard/Incoming"]
+position = Vector2(141, 146)
+texture = ExtResource("16_asset")
+centered = false
+
+[node name="Can" type="Sprite2D" parent="Stage/Viewport/Yard/Incoming"]
+position = Vector2(167, 150)
+texture = ExtResource("25_asset")
+centered = false
+
+[node name="Crane" type="Node2D" parent="Stage/Viewport/Yard"]
+
+
+[node name="Chain1" type="Sprite2D" parent="Stage/Viewport/Yard/Crane"]
+position = Vector2(128, 65)
+texture = ExtResource("7_asset")
+centered = false
+
+[node name="Chain2" type="Sprite2D" parent="Stage/Viewport/Yard/Crane"]
+position = Vector2(128, 74)
+texture = ExtResource("7_asset")
+centered = false
+
+[node name="Chain3" type="Sprite2D" parent="Stage/Viewport/Yard/Crane"]
+position = Vector2(128, 83)
+texture = ExtResource("7_asset")
+centered = false
+
+[node name="Chain4" type="Sprite2D" parent="Stage/Viewport/Yard/Crane"]
+position = Vector2(128, 92)
+texture = ExtResource("7_asset")
+centered = false
+
+[node name="Magnet" type="Sprite2D" parent="Stage/Viewport/Yard/Crane"]
+position = Vector2(112, 99)
+texture = ExtResource("8_asset")
+centered = false
+
+[node name="Trolley" type="Sprite2D" parent="Stage/Viewport/Yard/Crane"]
+position = Vector2(116, 48)
+texture = ExtResource("11_asset")
+centered = false
+
+[node name="LiftedCog" type="Sprite2D" parent="Stage/Viewport/Yard/Crane"]
+position = Vector2(122, 120)
+texture = ExtResource("18_asset")
+centered = false
+
+[node name="ContactSpark" type="Sprite2D" parent="Stage/Viewport/Yard/Crane"]
+position = Vector2(126, 111)
+texture = ExtResource("28_asset")
+centered = false
+
+[node name="SortingBins" type="Node2D" parent="Stage/Viewport/Yard"]
+
+
+[node name="Copper" type="Sprite2D" parent="Stage/Viewport/Yard/SortingBins"]
+position = Vector2(192, 144)
+texture = ExtResource("3_asset")
+centered = false
+
+[node name="Rubber" type="Sprite2D" parent="Stage/Viewport/Yard/SortingBins"]
+position = Vector2(246, 144)
+texture = ExtResource("4_asset")
+centered = false
+
+[node name="Steel" type="Sprite2D" parent="Stage/Viewport/Yard/SortingBins"]
+position = Vector2(300, 144)
+texture = ExtResource("5_asset")
+centered = false
+
+[node name="LooseScrap" type="Node2D" parent="Stage/Viewport/Yard"]
+
+
+[node name="Drum" type="Sprite2D" parent="Stage/Viewport/Yard/LooseScrap"]
+position = Vector2(35, 176)
+texture = ExtResource("23_asset")
+centered = false
+
+[node name="Pipe" type="Sprite2D" parent="Stage/Viewport/Yard/LooseScrap"]
+position = Vector2(61, 187)
+texture = ExtResource("15_asset")
+centered = false
+
+[node name="Girder" type="Sprite2D" parent="Stage/Viewport/Yard/LooseScrap"]
+position = Vector2(98, 191)
+texture = ExtResource("21_asset")
+centered = false
+
+[node name="Spring" type="Sprite2D" parent="Stage/Viewport/Yard/LooseScrap"]
+position = Vector2(150, 179)
+texture = ExtResource("24_asset")
+centered = false
+
+[node name="Engine" type="Sprite2D" parent="Stage/Viewport/Yard/LooseScrap"]
+position = Vector2(166, 180)
+texture = ExtResource("20_asset")
+centered = false
+
+[node name="Hubcap" type="Sprite2D" parent="Stage/Viewport/Yard/LooseScrap"]
+position = Vector2(211, 183)
+texture = ExtResource("22_asset")
+centered = false
+
+[node name="CopperWire" type="Sprite2D" parent="Stage/Viewport/Yard/LooseScrap"]
+position = Vector2(239, 184)
+texture = ExtResource("19_asset")
+centered = false
+
+[node name="Dust" type="Sprite2D" parent="Stage/Viewport/Yard/LooseScrap"]
+position = Vector2(88, 184)
+texture = ExtResource("29_asset")
+centered = false
+
+[node name="Presentation" type="CanvasLayer" parent="."]
+
+
+[node name="HUD" type="Control" parent="Presentation"]
+layout_mode = 0
+offset_left = 64.0
+offset_top = 36.0
+offset_right = 1216.0
+offset_bottom = 684.0
+mouse_filter = 2
+theme = SubResource("Theme_yard")
+
+[node name="Header" type="MarginContainer" parent="Presentation/HUD"]
+layout_mode = 1
+anchor_right = 1.0
+offset_left = 20.0
+offset_top = 16.0
+offset_right = -20.0
+offset_bottom = 80.0
+grow_horizontal = 2
+mouse_filter = 2
+
+[node name="Row" type="HBoxContainer" parent="Presentation/HUD/Header"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 24
+
+[node name="TitleBlock" type="VBoxContainer" parent="Presentation/HUD/Header/Row"]
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_filter = 2
+theme_override_constants/separation = 2
+
+[node name="Title" type="Label" parent="Presentation/HUD/Header/Row/TitleBlock"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 26
+text = "Pocket Salvage"
+
+[node name="Subtitle" type="Label" parent="Presentation/HUD/Header/Row/TitleBlock"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.72, 0.73, 0.72, 1)
+theme_override_font_sizes/font_size = 12
+text = "SCRAPYARD  /  01"
+
+[node name="Salvage" type="HBoxContainer" parent="Presentation/HUD/Header/Row"]
+layout_mode = 2
+size_flags_vertical = 0
+mouse_filter = 2
+theme_override_constants/separation = 8
+
+[node name="Icon" type="TextureRect" parent="Presentation/HUD/Header/Row/Salvage"]
+custom_minimum_size = Vector2(24, 24)
+layout_mode = 2
+size_flags_vertical = 4
+mouse_filter = 2
+texture_filter = 1
+texture = ExtResource("13_asset")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Value" type="Label" parent="Presentation/HUD/Header/Row/Salvage"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+text = "000"
+vertical_alignment = 1
+
+[node name="Timer" type="HBoxContainer" parent="Presentation/HUD/Header/Row"]
+layout_mode = 2
+size_flags_vertical = 0
+mouse_filter = 2
+theme_override_constants/separation = 8
+
+[node name="Icon" type="TextureRect" parent="Presentation/HUD/Header/Row/Timer"]
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+size_flags_vertical = 4
+mouse_filter = 2
+texture_filter = 1
+texture = ExtResource("14_asset")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Value" type="Label" parent="Presentation/HUD/Header/Row/Timer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+text = "--:--"
+vertical_alignment = 1
+
+[node name="Footer" type="HBoxContainer" parent="Presentation/HUD"]
+layout_mode = 1
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 12.0
+offset_top = -28.0
+offset_right = -12.0
+offset_bottom = -2.0
+grow_horizontal = 2
+grow_vertical = 0
+mouse_filter = 2
+
+[node name="Credit" type="Label" parent="Presentation/HUD/Footer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.70, 0.72, 0.72, 1)
+theme_override_font_sizes/font_size = 12
+text = "ART  /  DALE MOONEY"
+
+[node name="Status" type="Label" parent="Presentation/HUD/Footer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.88, 0.73, 0.37, 1)
+theme_override_font_sizes/font_size = 12
+text = "SCENE PREVIEW"
