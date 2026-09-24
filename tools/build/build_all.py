@@ -48,7 +48,11 @@ def inside(args):
     project = ROOT / 'project.godot'
     text = project.read_text()
     text = re.sub(r'run/main_scene=.*', 'run/main_scene="res://labs/salvage/lab.tscn"', text)
+    if "macos" in args.targets:
+        text = text.replace("[rendering]", "[rendering]\ntextures/vram_compression/import_etc2_astc=true")
     project.write_text(text)
+    (ROOT / "output").mkdir()
+    (ROOT / "output/.gdignore").touch()
     # Archive mtimes and generated metadata must not depend on invocation time.
     for path in ROOT.rglob('*'):
         if path.is_file():
@@ -86,7 +90,7 @@ def build_once(destination, args, source, epoch, runner):
 
 
 def hashes(directory):
-    return {str(path.relative_to(directory)): digest(path) for path in sorted(directory.rglob('*')) if path.is_file()}
+    return {str(path.relative_to(directory)): digest(path) for path in sorted(directory.rglob('*')) if path.is_file() and path.name != '.gdignore'}
 
 
 def main():
