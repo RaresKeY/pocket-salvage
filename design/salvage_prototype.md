@@ -4,6 +4,8 @@
 
 Develop reusable subsystems with independent lab scenes, keep design and implementation specs current, and assemble features incrementally toward a fun game. The user requested subagents, separate worktrees, ongoing commits/pushes, and testing until the result is ready.
 
+The user also requested smooth motion without cable resets or unprompted straightening, reproducible standalone builds for Linux/Web and other supported desktops, and version v0.1.0 visible as small corner text.
+
 ## Prototype choices (AI-inferred)
 
 Compose a small timed sorting experiment with six objects and three labeled bins. Keep the reviewed scene arrangement separately accessible; launch the playable lab from that scene. Two minutes allows room to learn the crane. Use keyboard controls with one magnet toggle, visible timer/score/carry status, pause, results and restart.

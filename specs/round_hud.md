@@ -10,7 +10,7 @@ Reviewed: 2026-09-24 alongside the initial HUD implementation.
 
 Signals: `start_requested`, `restart_requested`, and `pause_requested`. The paused Resume button emits `pause_requested`; the caller chooses the transition. The HUD does not maintain scores, tick the clock, pause physics, or choose round outcomes.
 
-Top status and bottom hints leave the center clear during running. At the minimum 768×480 window with ordinary one-line feedback the top ends at y95 and bottom begins at y389, fitting a gameplay inset of 100px top / 105px bottom. Ready/paused/finished use a dimmed modal and focused action. Entering running releases HUD focus so ordinary game keys are available. Decorative controls ignore mouse input; buttons and the active modal receive it. Native Control/container layout resizes independently of world zoom.
+Top status and bottom hints leave the center clear during running. At the minimum 768×480 window with ordinary one-line feedback the top ends at y95 and bottom begins at y373, fitting a gameplay inset of 100px top / 121px bottom. Ready/paused/finished use a dimmed modal and focused action. Entering running releases HUD focus so ordinary game keys are available. Decorative controls ignore mouse input; buttons and the active modal receive it. Native Control/container layout resizes independently of world zoom.
 
 ## Lab and verification
 
@@ -19,3 +19,5 @@ Top status and bottom hints leave the center clear during running. At the minimu
 `tests/hud_test.gd` checks buffered presentation, counters, modal states, actual mouse activation of start/pause/resume/replay, focus release and action bounds at 768×480 and 1280×720. Headless checks prove behavior, not hardware rendering. Visual checks use the shared runner under Gamescope headless and inspect screenshots.
 
 Optional `navigation_hint` appends caller-owned navigation guidance to the controls footer; the playable integration uses F2 preview.
+
+The small lower-right version label reads `application/config/version`, remains visible over modal states, and ignores mouse input. The footer reserves 28px beneath its panel for the label.

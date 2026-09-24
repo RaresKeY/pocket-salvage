@@ -44,6 +44,11 @@ func run() -> void:
 		await process_frame
 		assert(Rect2(Vector2.ZERO, Vector2(dimensions)).encloses(hud.action.get_global_rect()))
 		assert(hud.action.size.y >= 44)
+		var version := hud.get_node("Version") as Label
+		assert(version.text == "v" + str(ProjectSettings.get_setting("application/config/version")))
+		assert(version.is_visible_in_tree())
+		assert(Rect2(Vector2.ZERO, Vector2(dimensions)).encloses(version.get_global_rect()))
+		assert(not version.get_global_rect().intersects(hud.hints_label.get_global_rect()))
 	hud.queue_free()
 	await process_frame
 	print("HUD_TEST_OK states, signals, real mouse clicks, focus, counters, responsive actions")

@@ -58,7 +58,7 @@ func _ready() -> void:
 	bottom.grow_vertical = GROW_DIRECTION_BEGIN
 	bottom.offset_left = 12
 	bottom.offset_right = -12
-	bottom.offset_bottom = -12
+	bottom.offset_bottom = -28
 	add_child(bottom)
 	var foot := VBoxContainer.new()
 	bottom.add_child(foot)
@@ -90,6 +90,18 @@ func _ready() -> void:
 	action.custom_minimum_size.y = 48
 	action.pressed.connect(_activate)
 	content.add_child(action)
+	var version := Label.new()
+	version.name = "Version"
+	version.text = "v" + str(ProjectSettings.get_setting("application/config/version", "0.1.0"))
+	version.add_theme_font_size_override("font_size", 12)
+	version.add_theme_color_override("font_color", Color("b0bdc4"))
+	version.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+	version.set_anchors_and_offsets_preset(PRESET_BOTTOM_RIGHT)
+	version.offset_left = -90
+	version.offset_right = -12
+	version.offset_top = -22
+	version.offset_bottom = -4
+	add_child(version)
 	_ignore_decoration(self)
 	modal.mouse_filter = MOUSE_FILTER_STOP
 	present(_pending)
