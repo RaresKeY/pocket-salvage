@@ -1,0 +1,16 @@
+# Godot-generated imports, editor state, and export credentials.
+.godot/
+.godot-export-credentials
+export_credentials.cfg
+
+# Reproducible outputs and local scratch state.
+/build/
+/exports/
+/.local/
+
+# Machine-local secrets and desktop metadata.
+.env
+.env.*
+!.env.example
+.DS_Store
+Thumbs.db
