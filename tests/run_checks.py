@@ -7,6 +7,10 @@ ROOT = Path(__file__).resolve().parents[1]
 BASE = ["godot", "--headless", "--path", str(ROOT)]
 checks = [
     (BASE + ["--editor", "--import", "--quit"], None),
+    (BASE + ["--script", "tests/crane_test.gd", "--quit-after", "900", "--max-fps", "60"], "CRANE_TEST_OK"),
+    (BASE + ["--script", "tests/round_test.gd", "--quit-after", "900", "--max-fps", "60"], "ROUND_TEST_OK"),
+    (BASE + ["--script", "tests/hud_test.gd", "--quit-after", "900", "--max-fps", "60"], "HUD_TEST_OK"),
+    (BASE + ["--script", "tests/level_test.gd", "--quit-after", "900", "--max-fps", "60"], "LEVEL_TEST_OK"),
     (BASE + ["--script", "tests/sprite_playground_test.gd", "--quit-after", "600", "--max-fps", "60"], "SPRITE_PLAYGROUND_TEST_OK"),
     (BASE + ["--script", "tests/yard_camera_test.gd", "--quit-after", "180", "--max-fps", "60"], "YARD_CAMERA_TEST_OK"),
     (BASE + ["--script", "tests/pixel_scaling_test.gd"], "PIXEL_SCALING_TEST_OK"),

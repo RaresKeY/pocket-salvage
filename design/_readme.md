@@ -12,5 +12,9 @@ Design captures evolving intent. Every design document distinguishes explicit **
 | [Visual direction](visual-style.md) | Art-direction decisions required before image generation | Producing mockups, prompts, assets, or UI |
 | [Pixel-scaling experiment](pixel_scaling_lab.md) | Integer scaling tool, art conventions, and diagnostic showcase | Extending the technical art lab |
 | [Collaboration design](collaboration.md) | External worktree lanes, ownership, and serial integration | Planning parallel work or coordination tooling |
+| [Crane suspension](crane.md) | Reusable suspension and load handling | Extending crane handling |
+| [Sorting and rounds](round.md) | Provisional sorting/round rules | Changing scoring or round intent |
+| [Round HUD](round_hud.md) | Independent state-driven UI | Extending playable feedback |
+| [Level layouts](level_layout.md) | Provisional yard arrangements | Designing prototype layouts |
 
 Current behavior lives in [specs/](../specs/_readme.md); deferred work lives in [TODO.md](../TODO.md).
