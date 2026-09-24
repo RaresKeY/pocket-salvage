@@ -52,6 +52,9 @@ def inside(args):
     text = re.sub(r'run/main_scene=.*', 'run/main_scene="res://labs/salvage/lab.tscn"', text)
     if "macos" in args.targets:
         text = text.replace("[rendering]", "[rendering]\ntextures/vram_compression/import_etc2_astc=true")
+    # Godot 4.7 scene conversion synthesizes random node IDs for text scenes.
+    # Keeping their authored text avoids injecting nondeterministic binary data.
+    text += "\n[editor]\nexport/convert_text_resources_to_binary=false\n"
     project.write_text(text)
     (ROOT / "output").mkdir()
     (ROOT / "output/.gdignore").touch()
