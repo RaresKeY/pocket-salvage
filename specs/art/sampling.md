@@ -1,6 +1,6 @@
 # Sampling and Aliasing
 
-Reviewed: 2026-09-24. The prior implementation baseline is `08eed65`; the pixel-scaling implementation is under review.
+Reviewed: 2026-09-24. Implementation revision: `2cff8e5`.
 
 ## Art classification
 
