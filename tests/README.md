@@ -11,4 +11,5 @@ Use [the background capture flow](../labs/pixel_scaling/README.md) for hardware-
 `physics_parts_test.gd` checks real ray hits, filtered Area2D overlap, private shape ownership, independently enabled parts, and visual-mask material lifetime. The physics lab startup is also checked. `./labs/capture physics` verifies rendered alpha and observes contacts/sensors on the GPU. Its boxes are diagnostic fixtures, not game object definitions.
 
 `sprite_playground_test.gd` verifies all 75 exact 8× derivatives and provenance, gallery count, gravity/floor collision, matching sprite/collision size, filtering, mouse picking/grab/release and reset. `./labs/capture sprite_playground` supplies separate GPU captures.
+
 `yard_camera_test.gd` checks the scene’s enlarged texture bindings, tile regions, native viewport, smooth pointer-anchored zoom, limits, left/middle panning, release/focus cancellation, reset and resize.

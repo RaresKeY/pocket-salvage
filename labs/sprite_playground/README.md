@@ -1,6 +1,6 @@
 # Sprite playground
 
-Open **Sprite playground** from the default scaling lab, or run `labs/sprite_playground/lab.tscn` (F6 in the editor). The gallery uses all 48 non-mask PNGs from `assets/bitwright_8x/`; masks remain available separately. The original pixel-scaling lab remains the default project entry point.
+Open **Sprite playground** from the standalone scaling lab, or run `labs/sprite_playground/lab.tscn` (F6 in the editor). The gallery uses all 48 non-mask PNGs from `assets/bitwright_8x/`; masks remain available separately. The scrapyard scene preview is the project entry point.
 
 Drag the washing machine in the right arena and release to toss it. Hold Q/E while grabbing to rotate it. Object size ranges from 1× to 4× the original dimensions, with linear filtering by default and a nearest comparison toggle. Reset restores its position and motion. The texture stays 192×224 in memory as its displayed size changes.
 
