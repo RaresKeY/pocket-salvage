@@ -1,5 +1,7 @@
 # Project Contract
 
+Reviewed: 2026-09-24. Runtime baseline: `d41fa0a`; the check entry point is being relocated in this bootstrap.
+
 ## Status and scope
 
 Random Game is an initial Godot 4.7 scaffold for a collaboration experiment. `project.godot` selects `scenes/main.tscn`, which currently contains only an empty root node. There is no gameplay yet. The genre, mechanics, art direction, and delivery platforms remain undecided.
@@ -8,20 +10,15 @@ Random Game is an initial Godot 4.7 scaffold for a collaboration experiment. `pr
 
 - `project.godot` owns engine features, project identity, startup scene, and renderer settings.
 - `scenes/main.tscn` owns the initial scene tree.
-- `tools/check` owns the workstation import and startup checks through the external shared Godot Podman runner.
-- `README.md` and `AGENTS.md` describe contributor entry points and collaboration rules.
-- `.gitignore` excludes generated engine data, reproducible output, and local-only state; `specs/` remains tracked.
+- `tests/check` owns the workstation import and startup checks through the external shared Godot Podman runner. It resolves the runner from a sibling checkout or `GODOT_PODMAN_RUNNER`.
+- [Repository structure](repository.md) describes project memory, collaboration, file handling, and the source layout.
 
 ## Collaboration contract
 
-The project uses a private GitHub repository, `RaresKeY/random-game`, with `origin` as its remote. `main` is the integration branch. Contributors work on short-lived feature or fix branches and open pull requests into `main`; no permanent development or release branches are required at this stage. Concurrent contributors use separate worktrees or clones.
-
-These are documented conventions, not enforced branch-protection settings. Collaborator invitations and repository access rules are not part of the initial scaffold.
-
-Behavior changes include the corresponding spec updates and relevant verification evidence. Git tags should identify actual releases when a release process is introduced. The scaffold version is not a published game release. No project license has been selected.
+The private GitHub repository uses `main` as the integration branch and focused feature or fix branches for contributions. The [collaboration guide](../docs/collaboration.md) describes the manual workflow; the [coordination design](../design/collaboration.md) distinguishes proposed lock automation from current capabilities. The scaffold version is not a published game release. No project license has been selected.
 
 ## Verification
 
-`./tools/check` runs an editor import and a two-frame headless startup through the shared runner in one managed container. Both commands must exit successfully, and their output must be checked for engine errors. These checks establish that the starter imports and starts; they do not establish gameplay correctness, visual quality, or hardware rendering. The equivalent local Godot commands are in `README.md`.
+`./tests/check` runs an editor import and a two-frame headless startup through the shared runner in one managed container. Both commands must exit successfully, and their output must be checked for engine errors. These checks establish that the starter imports and starts; they do not establish gameplay correctness, visual quality, or hardware rendering. The equivalent local Godot commands are in `README.md`.
 
 Documentation changes require checking map links, source references, and the Git diff. Future gameplay needs behavior-specific checks as it is implemented.

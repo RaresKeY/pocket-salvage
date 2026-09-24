@@ -2,7 +2,7 @@
 set -eu
 
 project_root=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
-runner=${GODOT_PODMAN_RUNNER:-"$HOME/workspace/godot-podman/bin/godot-podman"}
+runner=${GODOT_PODMAN_RUNNER:-"$project_root/../godot-podman/bin/godot-podman"}
 
 if [ ! -x "$runner" ]; then
     echo "Godot Podman runner unavailable; set GODOT_PODMAN_RUNNER to its executable path." >&2

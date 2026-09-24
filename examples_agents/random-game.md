@@ -1,0 +1,15 @@
+# Random Game — Example Local Instructions
+
+Adapt these rules into a local `AGENTS.md` or `CLAUDE.md`; add your own environment constraints. This example is portable guidance, not an automatically loaded instruction file.
+
+- Read `specs/_readme.md` and relevant specs before editing. Update specs alongside implementation, recording the review date and implementation commit reviewed.
+- Read `design/_readme.md` before adding behavior. Separate explicit user input and contributor decisions from AI-inferred proposals. The game concept and art direction remain undecided.
+- Use `TODO.md` for deferred work. Plans and journals are optional and separate from implementation specs.
+- Use one focused task branch per owned external worktree or clone. Follow `docs/collaboration.md`; preserve unfinished work and hand off commits and verification before releasing a lane. Automatic task/lane locks are not implemented.
+- Use private GitHub `origin` and pull requests into `main`. Keep integration serial and validate the merged result. Do not change hosting or collaborator access without a user request.
+- Run `./tests/check` for engine-affecting changes; add meaningful behavior checks as the game grows. Report actual results and limitations. Fix failures instead of weakening checks.
+- Follow your local execution rules. On the shared workstation, use the managed Godot Podman runner; use background Gamescope for automated visuals and verify the actual renderer. Headless startup does not establish rendering quality.
+- Choose the style in `design/` before generating images. Preserve source directives, exact prompts, references, outputs, and selection status through `prompts/` and `prototype/`. Treat Trellis models as experimental candidates.
+- Keep provenance under `vendored/` and third-party notices separately at the root when needed. Keep runtime sources, creation tools, tests, and promotional material in their documented areas.
+- Use project-relative references. Keep machine-specific state, credentials, private keys, sensitive raw logs, and reproducible outputs out of tracked files. Preserve authored source and non-reproducible evidence.
+- Prototype and orchestrate in Python; profile before optimizing measured bottlenecks in native code. Do not add a project license without explicit direction.

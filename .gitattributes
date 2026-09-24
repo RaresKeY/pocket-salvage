@@ -1,1 +1,40 @@
-* text=auto eol=lf
+# Normalize text; pin source formats to LF across platforms.
+* text=auto
+*.gd text eol=lf
+*.gdshader text eol=lf
+*.gdshaderinc text eol=lf
+*.tscn text eol=lf
+*.tres text eol=lf
+*.godot text eol=lf
+*.uid text eol=lf
+*.cfg text eol=lf
+*.md text eol=lf
+*.sh text eol=lf
+*.py text eol=lf
+*.json text eol=lf
+*.jsonl text eol=lf
+tests/check text eol=lf
+
+# Binary media must not receive text conversion or text merges.
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.webp binary
+*.gif binary
+*.ico binary
+*.ogg binary
+*.wav binary
+*.mp3 binary
+*.flac binary
+*.mp4 binary
+*.webm binary
+*.glb binary
+*.blend binary
+*.scn binary
+*.res binary
+*.ttf binary
+*.otf binary
+*.woff binary
+*.woff2 binary
+*.zip binary
+*.7z binary
