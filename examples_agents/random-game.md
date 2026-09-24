@@ -12,6 +12,7 @@ Adapt these rules into a local `AGENTS.md` or `CLAUDE.md`; add your own environm
 - Run `./tests/check` for engine-affecting changes; add meaningful behavior checks as the game grows. Report actual results and limitations. Fix failures instead of weakening checks.
 - Follow your local execution rules. On the shared workstation, use the managed Godot Podman runner; use background Gamescope for automated visuals and verify the actual renderer. Headless startup does not establish rendering quality.
 - Choose the style in `design/` before generating images. Preserve source directives, exact prompts, references, outputs, and selection status through `prompts/` and `prototype/`. Treat Trellis models as experimental candidates.
+- Read `specs/art/_readme.md` before importing or displaying art. Use `labs/pixel_scaling/` to compare sampling and `tools/superscale` for exact integer PNG enlargement. Diagnostic lab styling does not select the game's art direction.
 - Keep provenance under `vendored/` and third-party notices separately at the root when needed. Keep runtime sources, creation tools, tests, and promotional material in their documented areas.
 - Use project-relative references. Keep machine-specific state, credentials, private keys, sensitive raw logs, and reproducible outputs out of tracked files. Preserve authored source and non-reproducible evidence.
 - Prototype and orchestrate in Python; profile before optimizing measured bottlenecks in native code. Do not add a project license without explicit direction.

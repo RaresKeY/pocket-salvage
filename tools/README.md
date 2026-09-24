@@ -4,4 +4,4 @@ Reserve this directory for one-shot utilities that create or transform project m
 
 Prototype and orchestrate in Python; use native code for measured bottlenecks. Follow local execution boundaries. Generated output belongs in its owning source area or an appropriate ignored artifact bucket.
 
-No creation tools exist yet. The former `tools/check` verification entry point now lives at [tests/check](../tests/check).
+[superscale](superscale) enlarges pixel PNGs through the shared Godot runner; [pixel_art/](pixel_art/README.md) owns the portable CLI and diagnostic-image construction. Verification lives in [tests/check](../tests/check); interactive comparisons live in [labs/](../labs/README.md).

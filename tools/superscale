@@ -1,0 +1,6 @@
+#!/bin/sh
+set -eu
+project_root=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
+runner=${GODOT_PODMAN_RUNNER:-"$project_root/../godot-podman/bin/godot-podman"}
+exec "$runner" run --project "$project_root" --purpose pixel-superscale --display none -- \
+    godot --headless --path /workspace --script tools/pixel_art/superscale.gd -- "$@"

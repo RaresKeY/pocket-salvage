@@ -9,7 +9,4 @@ if [ ! -x "$runner" ]; then
     exit 1
 fi
 
-exec "$runner" run --project "$project_root" --purpose check --display none -- sh -eu -c '
-    godot --headless --path /workspace --editor --import --quit
-    godot --headless --path /workspace --quit-after 2
-'
+exec "$runner" run --project "$project_root" --purpose check --display none -- python3 tests/run_checks.py

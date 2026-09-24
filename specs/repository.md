@@ -9,7 +9,7 @@ The repository implements Jam Sync's organizational conventions through tracked 
 - `design/` records evolving intent, separating explicit user direction from AI-inferred proposals. `specs/` describes current reality and records the implementation revision reviewed. `TODO.md` holds deferred work. Plans and journals are optional and separate from all three.
 - `docs/` holds contributor guidance; `research/` holds dated, source-backed investigations. `prototype/` holds visual targets and references, `prompts/` preserves exact directives and generation lineage, `marketing/` holds intentional promotional deliverables, and `artifacts/` holds working material according to its reproducibility.
 - `vendored/` maps dependency ownership and provenance. No third-party dependency or root notices file exists yet. Add `THIRD_PARTY_NOTICES.md` separately at the root when attribution is needed.
-- `tests/` owns verification. `tools/` is reserved for creation utilities. Product source is separated into `scenes/`, `scripts/`, `assets/`, `data/`, `shaders/`, and `native/`; only `scenes/main.tscn` currently contains product implementation.
+- `tests/` owns verification, `tools/` owns creation utilities, and `labs/` owns runnable technical comparisons. The pixel-scaling tool and lab share `scripts/art/` and diagnostic media under `assets/pixel_lab/`. Other product source areas remain ready for the later game.
 - `examples_agents/` contains portable instructions to adapt locally. `examples/` contains illustrations that are not accepted game design or actual generation records.
 
 ## Local and shared state
@@ -18,7 +18,7 @@ The repository implements Jam Sync's organizational conventions through tracked 
 
 `.gitignore` excludes engine caches, build/export output, local journals and scratch state, secrets files, and the reproducible `artifacts/tmp/` and `artifacts/generated/` buckets. It does not blanket-ignore `artifacts/`, visual candidates, or shared source. Preserve non-reproducible evidence and authored deliverables according to purpose, and review them before tracking. Reproducible release outputs are ephemeral under the owning release workflow.
 
-`.gitattributes` normalizes text, pins Godot source and script formats to LF, and marks binary media as binary. Tracked references use project-relative paths; machine installation details belong in environment variables or ignored local instructions.
+`.gitattributes` normalizes text, pins Godot source and script formats to LF, and marks binary media as binary. `artifacts/.gdignore` prevents Godot from importing working outputs and captures. Tracked references use project-relative paths; machine installation details belong in environment variables or ignored local instructions.
 
 ## Collaboration and verification
 

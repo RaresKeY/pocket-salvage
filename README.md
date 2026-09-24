@@ -1,6 +1,6 @@
 # Random Game
 
-A small Godot 4.7 project for a collaboration experiment, organized around Jam Sync's conventions. The starting point is an empty main scene; the game concept and mechanics are still open.
+A small Godot 4.7 project for a collaboration experiment, organized around Jam Sync's conventions. The project currently opens a [pixel-scaling comparison lab](labs/pixel_scaling/README.md); the game concept and mechanics are still open.
 
 ## Start here
 
@@ -26,8 +26,9 @@ The repository is private on GitHub at [RaresKeY/random-game](https://github.com
 | [marketing/](marketing/README.md), [artifacts/](artifacts/README.md) | Intentional promotional deliverables and temporary working material. |
 | [vendored/](vendored/_readme.md) | Third-party dependency provenance; empty of dependencies initially. |
 | [tests/](tests/README.md), [tools/](tools/README.md) | Verification and one-shot creation utilities, respectively. |
+| [labs/](labs/README.md) | Runnable technical experiments and showcases; pixel scaling is the current entry point. |
 | [examples_agents/](examples_agents/README.md), [examples/](examples/README.md) | Portable instruction examples and clearly labeled convention illustrations. |
-| [scenes/](scenes/README.md), [scripts/](scripts/README.md), [assets/](assets/README.md), [data/](data/README.md), [shaders/](shaders/README.md), [native/](native/README.md) | Product source boundaries; only the empty main scene is implemented. |
+| [scenes/](scenes/README.md), [scripts/](scripts/README.md), [assets/](assets/README.md), [data/](data/README.md), [shaders/](shaders/README.md), [native/](native/README.md) | Source boundaries; the game scene is empty, with shared pixel-scaling logic and diagnostic media for the lab. |
 
 Directory guides establish ownership without implying that gameplay, dependencies, art, or coordination tooling already exist. Journals and plans remain optional and have no required shared directory.
 
@@ -39,13 +40,12 @@ On the shared workstation, run:
 ./tests/check
 ```
 
-This uses the shared Godot Podman runner to import the project and briefly run its main scene without opening a desktop window. It looks for a sibling `godot-podman` checkout; set `GODOT_PODMAN_RUNNER` if the runner is installed elsewhere, including when using an external worktree lane.
+This uses the shared Godot Podman runner for project import, exact-pixel and CLI tests, lab interaction checks, and headless startup. It looks for a sibling `godot-podman` checkout; set `GODOT_PODMAN_RUNNER` if the runner is installed elsewhere, including when using an external worktree lane. [The lab guide](labs/pixel_scaling/README.md) covers superscaling and background GPU captures.
 
-With a local Godot 4.7 installation on another machine, the equivalent checks are:
+With local Godot 4.7 and Python 3 on another machine, subject to its execution rules, run the same suite:
 
 ```sh
-godot --headless --path . --editor --import --quit
-godot --headless --path . --quit-after 2
+python3 tests/run_checks.py
 ```
 
 These are import and startup checks, not visual or hardware-renderer validation.

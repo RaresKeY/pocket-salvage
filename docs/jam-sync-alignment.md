@@ -29,6 +29,8 @@ The user's later [collaboration rules](../prompts/source/collaboration-rules.md)
 | Preserve dirty/failed work and recover ownership explicitly | [collaboration guide](collaboration.md), [coordination design](../design/collaboration.md) | Manual preservation rules and proposed recovery contract. |
 | Commit/validation handoff and serial integration | [collaboration guide](collaboration.md) | Direct pushes with fetch/rebase/recheck when another contributor advances `main`. |
 | Source isolation versus container execution | [coordination design](../design/collaboration.md), [tests](../tests/README.md) | Distinction explicit; shared runner handles engine execution. |
-| Optional product-source separations | [scenes](../scenes/README.md), [scripts](../scripts/README.md), [assets](../assets/README.md), [data](../data/README.md), [shaders](../shaders/README.md), [native](../native/README.md) | Ownership guides present; only the empty scene is implemented. |
+| Optional product-source separations | [scenes](../scenes/README.md), [scripts](../scripts/README.md), [assets](../assets/README.md), [data](../data/README.md), [shaders](../shaders/README.md), [native](../native/README.md) | Ownership guides present; the game is still empty, while shared scaling code and diagnostic media support the lab. |
+
+The user subsequently requested a technical art experiment under [labs/](../labs/README.md), with a nested [art specs module](../specs/art/_readme.md). Its calibration chart is diagnostic source, not generated or selected game art.
 
 No license, external dependency, game design, generated art, or automatic coordination system is introduced by this structure bootstrap.

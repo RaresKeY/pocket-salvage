@@ -4,13 +4,13 @@ Reviewed: 2026-09-24. Implementation revision: `08eed65`.
 
 ## Status and scope
 
-Random Game is an initial Godot 4.7 scaffold for a collaboration experiment. `project.godot` selects `scenes/main.tscn`, which currently contains only an empty root node. There is no gameplay yet. The genre, mechanics, art direction, and delivery platforms remain undecided.
+Random Game is a Godot 4.7 collaboration experiment. `project.godot` currently opens `labs/pixel_scaling/lab.tscn`, an interactive art-sampling comparison. `scenes/main.tscn` remains an empty future-game scene. There is no gameplay yet. The genre, mechanics, game art direction, and delivery platforms remain undecided.
 
 ## Source ownership
 
 - `project.godot` owns engine features, project identity, startup scene, and renderer settings.
-- `scenes/main.tscn` owns the initial scene tree.
-- `tests/check` owns the workstation import and startup checks through the external shared Godot Podman runner. It resolves the runner from a sibling checkout or `GODOT_PODMAN_RUNNER`.
+- `labs/pixel_scaling/` owns the temporary entry point; [the art module](art/_readme.md) owns its scaling/filtering contract and related creation tool.
+- `tests/check` runs `tests/run_checks.py` through the external shared Godot Podman runner. It resolves the runner from a sibling checkout or `GODOT_PODMAN_RUNNER`.
 - [Repository structure](repository.md) describes project memory, collaboration, file handling, and the source layout.
 
 ## Collaboration contract
@@ -21,6 +21,6 @@ The private GitHub repository uses direct commits to `main`, rebasing unpublishe
 
 ## Verification
 
-`./tests/check` runs an editor import and a two-frame headless startup through the shared runner in one managed container. Both commands must exit successfully, and their output must be checked for engine errors. These checks establish that the starter imports and starts; they do not establish gameplay correctness, visual quality, or hardware rendering. The equivalent local Godot commands are in `README.md`.
+`./tests/check` runs editor import, exact-pixel and CLI tests, lab control checks, and a two-frame headless startup in one managed container. Each child process has a timeout; script errors and missing success markers fail the suite. These checks do not establish gameplay correctness, visual quality, or hardware rendering. The separate background GPU capture flow is described in [the lab spec](art/pixel_scaling.md).
 
 Documentation changes require checking map links, source references, and the Git diff. Future gameplay needs behavior-specific checks as it is implemented.

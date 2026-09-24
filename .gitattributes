@@ -14,6 +14,8 @@
 *.json text eol=lf
 *.jsonl text eol=lf
 tests/check text eol=lf
+tools/superscale text eol=lf
+labs/pixel_scaling/capture text eol=lf
 
 # Binary media must not receive text conversion or text merges.
 *.png binary

@@ -8,7 +8,8 @@ Reviewed: 2026-09-24. Implementation revision: `08eed65`. Reference conventions:
 
 | Spec | Owning sources | Scope | Read when |
 |---|---|---|---|
-| [Project contract](project.md) | `project.godot`, `scenes/main.tscn`, `tests/check`, `tests/README.md` | Implemented runtime and verification | Changing engine configuration, startup, or checks |
+| [Project contract](project.md) | `project.godot`, `labs/`, `tests/check`, `tests/README.md` | Implemented runtime and verification | Changing engine configuration, startup, or checks |
+| [Art specs module](art/_readme.md) | `assets/`, `scripts/art/`, `tools/pixel_art/`, `labs/pixel_scaling/`, project rendering defaults | Sampling conventions for all art and the exact-pixel tool/lab | Adding art, changing filtering/imports, or testing scaling |
 | [Repository structure](repository.md) | `README.md`, directory guides, `.gitignore`, `.gitattributes`, `docs/`, `examples_agents/` | Source ownership, project memory, collaboration boundaries, and provenance | Changing the layout, contribution workflow, or file handling |
 
 ## Maintenance

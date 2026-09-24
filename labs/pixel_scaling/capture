@@ -1,0 +1,31 @@
+#!/usr/bin/env bash
+set -euo pipefail
+project_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
+runner="${GODOT_PODMAN_RUNNER:-$project_root/../godot-podman/bin/godot-podman}"
+cd "$project_root"
+if [[ "${RANDOM_GAME_CAPTURE_LOCKED:-0}" != 1 ]]; then
+    exec "$runner" lock --project "$project_root" -- env RANDOM_GAME_CAPTURE_LOCKED=1 "$0" "$@"
+fi
+sizes=("$@")
+if (( ${#sizes[@]} == 0 )); then
+    sizes=(1920x1080 1280x720 960x540 854x480)
+fi
+mkdir -p artifacts/generated/pixel_scaling
+for size in "${sizes[@]}"; do
+    if [[ ! "$size" =~ ^[0-9]+x[0-9]+$ ]]; then
+        echo "Expected a resolution such as 1280x720." >&2
+        exit 2
+    fi
+    width="${size%x*}"; height="${size#*x}"
+    gamescope --backend headless --force-windows-fullscreen -W "$width" -H "$height" -w "$width" -h "$height" -- \
+        "$runner" run --project "$project_root" --purpose pixel-lab-visual --no-lock --display host -- \
+        godot --path /workspace --rendering-method gl_compatibility --audio-driver Dummy --resolution "$size" --quit-after 600 \
+        -- --capture "res://artifacts/generated/pixel_scaling/$size.png" \
+        2>&1 | tee "artifacts/generated/pixel_scaling/$size.log"
+    test -s "artifacts/generated/pixel_scaling/$size.png"
+    grep -q 'PIXEL_LAB_CAPTURE.*result=0' "artifacts/generated/pixel_scaling/$size.log"
+    if grep -Eiq 'SCRIPT ERROR:|^ERROR:|renderer=.*(llvmpipe|softpipe|lavapipe|software)' "artifacts/generated/pixel_scaling/$size.log"; then
+        echo "Capture failed engine or hardware-renderer verification." >&2
+        exit 1
+    fi
+done
