@@ -61,7 +61,7 @@ func _ready() -> void:
 func _fit() -> void:
 	if stage == null: return
 	stage.position = Vector2(0,100)
-	stage.size = Vector2(size.x, maxf(120, size.y - 205))
+	stage.size = Vector2(size.x, maxf(120, size.y - 221))
 	var zoom := minf(stage.size.x / 1200.0, stage.size.y / 480.0)
 	viewport.canvas_transform = Transform2D(0,Vector2.ONE * zoom,0,(stage.size - Vector2(1200,480) * zoom)*0.5)
 
@@ -130,6 +130,7 @@ func _build_world() -> void:
 	world.add_child(suspension)
 	suspension.configure(tip,layout.crane_anchor,160.0)
 	trolley.position = suspension.anchor
+	world.reset_physics_interpolation()
 	finish_reason = ""
 	round_state.configure(120.0,payloads.size())
 	rebuilding = false
@@ -161,7 +162,11 @@ func toggle_pause() -> void:
 func _state_changed() -> void:
 	if rebuilding or world == null: return
 	var running: bool = round_state.state == &"running"
-	world.process_mode = Node.PROCESS_MODE_INHERIT if running else Node.PROCESS_MODE_DISABLED
+	var next_mode := Node.PROCESS_MODE_INHERIT if running else Node.PROCESS_MODE_DISABLED
+	if world.process_mode != next_mode:
+		world.reset_physics_interpolation()
+		suspension.rope.finish_interpolation()
+	world.process_mode = next_mode
 	for bin in bins: bin.enabled = running
 	refresh_hud()
 
@@ -227,7 +232,7 @@ func _delivered(body: RigidBody2D, material: StringName) -> void:
 
 func refresh_hud() -> void:
 	if hud == null or round_state == null: return
-	hud.present({"state":round_state.state,"score":round_state.score,"time_left":round_state.remaining_time,"correct":round_state.correct_count,"wrong":round_state.wrong_count,"total":payloads.size(),"delivered":round_state.delivered_count,"magnet_on":magnet_on,"held_material":str(held_body.material_id) if is_instance_valid(held_body) else "","feedback":feedback if feedback_left > 0 else "Copper / rubber / steel — match the labeled bins.","finish_reason":finish_reason,"navigation_hint":"F2 preview"})
+	hud.present({"state":round_state.state,"score":round_state.score,"time_left":round_state.remaining_time,"correct":round_state.correct_count,"wrong":round_state.wrong_count,"total":payloads.size(),"delivered":round_state.delivered_count,"magnet_on":magnet_on,"held_material":str(held_body.material_id) if is_instance_valid(held_body) else "","feedback":feedback if feedback_left > 0 else "Copper / rubber / steel — match the labeled bins.","finish_reason":finish_reason,"navigation_hint":"" if OS.has_feature("standalone") else "F2 preview"})
 
 func _unhandled_key_input(event: InputEvent) -> void:
 	if not event is InputEventKey or not event.pressed or event.echo: return
@@ -237,7 +242,8 @@ func _unhandled_key_input(event: InputEvent) -> void:
 		KEY_R: restart_round()
 		KEY_ENTER:
 			if round_state.state == &"ready": start_round()
-		KEY_F2: get_tree().change_scene_to_file("res://scenes/main.tscn")
+		KEY_F2:
+			if not OS.has_feature("standalone"): get_tree().change_scene_to_file("res://scenes/main.tscn")
 
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_WM_WINDOW_FOCUS_OUT and round_state != null and round_state.state == &"running":
