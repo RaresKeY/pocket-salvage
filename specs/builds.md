@@ -1,0 +1,17 @@
+# Standalone prototype builds
+
+Reviewed: 2026-09-24. Sources: `tools/build/build_all.py`, `export_presets.cfg`.
+
+The user requested a versioned standalone prototype and reproducible builds. Export presets cover Linux x86_64, Windows x86_64, Web (single-thread WebAssembly) and unsigned macOS universal. Mobile input and signing are outside this prototype. Platform availability is separate from tested runtime support: Linux and Web can be exercised on the development workstation; Windows and macOS require target-machine playtests.
+
+Run `python3 tools/build/build_all.py --verify` from clean committed source. The script uses only Python's standard library and the shared `godot-podman` runner (sibling checkout, or `GODOT_PODMAN_RUNNER`). It does not install an engine or templates. `--targets linux web` narrows the build; default builds all four. `--image` chooses an already-present toolchain image.
+
+Each build extracts `git archive HEAD` into an isolated temporary snapshot, stamps all source mtimes from the commit timestamp (`SOURCE_DATE_EPOCH`), and changes only that snapshot's startup to `labs/salvage/lab.tscn`. The export feature `standalone` suppresses lab navigation. The project version is the source of the displayed/released version. Source and editor startup are not rewritten. All resources are exported because layout entries load textures by constructed paths; static dependency discovery alone misses those textures.
+
+The output is ignored `build/pocket-salvage-<version>/`: runnable platform directories, Linux/Windows/Web ZIP packages, the normalized macOS application ZIP, and `manifest.json`. The manifest records full source revision, epoch, Godot version, exact export-template SHA256 digests, selected targets and every output SHA256. `--verify` exports twice from independent snapshots and fails unless all exported bytes and toolchain fingerprints match. ZIP order, timestamps and Unix modes are normalized. A manifest without `--verify` explicitly says `not-compared`; repeatability is not inferred from a successful export. Compare with the same engine/templates and Python/zlib toolchain; this does not claim that rebuilding Godot itself is reproducible.
+
+Existing candidate paths are refused so retained artifacts are never silently overwritten. Temporary snapshots are removed on success or failure. Keep the current requested candidate locally; remove only that exact generated directory when replacing it. No release tags, itch uploads, signing or repository license changes are performed.
+
+Launch Linux's `linux/pocket-salvage.x86_64` beside its PCK. Serve `web/` over HTTP (for example `python3 -m http.server --directory build/pocket-salvage-0.1.0/web 8000`) and open its `index.html`; file URLs cannot load WebAssembly reliably. Windows requires the EXE and neighboring PCK together. macOS is unsigned and unnotarized; its archive is an export candidate, not a verified public distribution.
+
+Verification: export each preset, compare independent snapshot outputs with `--verify`, then exercise the Linux and Web candidates. Engine behavior changes still require `./tests/check`; headless export success is not hardware-rendering or gameplay evidence.
