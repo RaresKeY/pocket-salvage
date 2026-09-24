@@ -78,20 +78,15 @@ func simulate(from: Vector2, to: Vector2, length: float, dt: float) -> void:
 		old_points = points.duplicate()
 		previous_bends = path.bends.duplicate()
 	render_previous = points.duplicate()
-	# Full extension is piecewise straight through every supporting corner.
-	# Keep the pre-constraint positions as Verlet history: moving endpoints
-	# must carry cable motion into the next slack step, not reset the cable.
-	if total>=length-1.0:
-		for span in guides.size()-1:
-			for i in range(pins[span],pins[span+1]+1):
-				points[i] = guides[span].lerp(guides[span+1],float(i-pins[span])/(pins[span+1]-pins[span]))
-		old_points = render_previous.duplicate()
-		if topology_changed: render_previous = points.duplicate()
-		return
+	# Use the same tension solver through slack and full extension. Projecting
+	# the entire cable to a line here erased bends as input crossed the taut
+	# threshold, then injected that jump into the next Verlet step.
 	for span in guides.size()-1:
 		var first := pins[span]
 		var last := pins[span+1]
 		var segment := guides[span].distance_to(guides[span+1])*maxf(1.0,length/maxf(total,1))/(last-first)
+		old_points[first] = render_previous[first]
+		old_points[last] = render_previous[last]
 		points[first] = guides[span]
 		points[last] = guides[span+1]
 		for i in range(first+1,last):
@@ -115,6 +110,14 @@ func simulate(from: Vector2, to: Vector2, length: float, dt: float) -> void:
 					points[i] = contact(points[i],points[i]+correction/weight,i)
 				if weight_b>0:
 					points[i+1] = contact(points[i+1],points[i+1]-correction/weight,i+1)
+		# Long-range tension limits propagate endpoint pulls through the
+		# cable without a special straight-line mode or a particle reset.
+		for i in range(first+1,last):
+			for endpoint in [first,last]:
+				var radial := points[i]-points[endpoint]
+				var reach := segment*absf(i-endpoint)
+				if radial.length()>reach:
+					points[i] = contact(points[i],points[endpoint]+radial.normalized()*reach,i)
 		# Catch link/edge intersections too, not just the particle sweeps.
 		for i in range(first+1,last):
 			var hit := ray(points[i-1],points[i])

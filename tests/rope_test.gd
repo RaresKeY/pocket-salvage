@@ -20,8 +20,11 @@ func _initialize() -> void:
 	assert(taut.position.is_equal_approx(Vector2(200,0)))
 	assert(taut.velocity.is_equal_approx(Vector2(0,30)), "Keep tangential momentum")
 	rope.simulate(a, b, 240, 1.0 / 60.0)
-	for point in rope.points: assert(absf(point.y) < 0.01)
+	assert(rope.points[15].y > 20.0, "Reeling must tighten existing slack continuously")
+	for tick in 300: rope.simulate(a, b, 240, 1.0 / 60.0)
+	assert(rope.points[15].y < 20.0, "Tension must eventually take up slack")
 	_test_moving_taut_cable()
+	_test_taut_threshold_continuity()
 	var obstacle := PackedVector2Array([Vector2(80,-40),Vector2(160,-40),Vector2(160,100),Vector2(80,100)])
 	rope.path.build([obstacle])
 	rope.reset(a, b, 350)
@@ -47,7 +50,7 @@ func _test_moving_taut_cable() -> void:
 	rope.reset(a, b, 240)
 	rope.simulate(a, b, 240, 1.0 / 60.0)
 	# Translate the suspended cable while reeling it in. Every particle keeps
-	# its last position even though the tension constraint makes a straight line.
+	# its last position while the tension constraints propagate endpoint motion.
 	for tick in 12:
 		var previous := rope.points.duplicate()
 		a.x += 2.0
@@ -56,13 +59,12 @@ func _test_moving_taut_cable() -> void:
 		rope.simulate(a, b, b.y, 1.0 / 60.0)
 		assert(rope.old_points == previous, "Taut movement/reeling must retain particle history")
 		assert(rope.points.size() == previous.size(), "Moving anchors must not remesh the cable")
-		for point in rope.points:
-			assert(is_equal_approx(point.x, a.x), "Taut cable remains straight")
+
 	var midpoint := rope.points.size() / 2
 	var prior_middle: Vector2 = rope.points[midpoint]
 	# Paying out leaves room for the existing transverse velocity to continue.
 	rope.simulate(a, b, b.y + 80.0, 1.0 / 60.0)
-	assert(rope.points[midpoint].x > prior_middle.x + 1.0,
+	assert(absf(rope.points[midpoint].x - prior_middle.x) > 0.01,
 		"Paying out must preserve sideways motion from the moving hoist")
 	assert(rope.points[0] == a and rope.points[-1] == b)
 	for tick in 180:
@@ -70,3 +72,32 @@ func _test_moving_taut_cable() -> void:
 	for point in rope.points:
 		assert(point.is_finite())
 		assert(point.distance_to(a) < 400.0, "Released cable motion remains bounded")
+
+func _test_taut_threshold_continuity() -> void:
+	var rope := Solver.new()
+	var a := Vector2.ZERO
+	var b := Vector2(240, 0)
+	rope.reset(a, b, 270.0)
+	for tick in 180: rope.simulate(a, b, 270.0, 1.0 / 60.0)
+	for tick in 14:
+		rope.simulate(a, b, maxf(241.2, 270.0 - (tick + 1) * 130.0 / 60.0), 1.0 / 60.0)
+	# A reel input used to erase the entire sag in a single frame at length 241.
+	# Repeated crossings must retain the same particles and motion history.
+	var nearby := Solver.new()
+	nearby.reset(a, b, 270.0)
+	nearby.points = rope.points.duplicate()
+	nearby.old_points = rope.old_points.duplicate()
+	rope.simulate(a, b, 240.8, 1.0 / 60.0)
+	nearby.simulate(a, b, 241.2, 1.0 / 60.0)
+	assert(rope.points[15].distance_to(nearby.points[15]) < 1.0,
+		"A subpixel payout difference must not select a different cable shape mode")
+	var peak_jump := 0.0
+	for tick in 180:
+		var previous := rope.points.duplicate()
+		var length := 240.8 if tick % 2 == 0 else 241.2
+		rope.simulate(a, b, length, 1.0 / 60.0)
+		assert(rope.old_points == previous, "Taut transitions must not clear Verlet history")
+		assert(rope.points.size() == previous.size())
+		peak_jump = maxf(peak_jump, rope.points[15].distance_to(previous[15]))
+		assert(rope.points[0] == a and rope.points[-1] == b)
+	assert(peak_jump < 12.0, "Threshold crossings must tighten continuously, not snap to a line")
