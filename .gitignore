@@ -1,3 +1,7 @@
+# Agent instructions belong to each contributor's environment.
+AGENTS.md
+CLAUDE.md
+
 # Godot-generated imports, editor state, and export credentials.
 .godot/
 .godot-export-credentials
@@ -7,6 +11,8 @@ export_credentials.cfg
 /build/
 /exports/
 /.local/
+/artifacts/tmp/
+/artifacts/generated/
 
 # Machine-local secrets and desktop metadata.
 .env
