@@ -9,7 +9,7 @@ Pocket Salvage is the official game name; its private GitHub repository remains 
 ## Source ownership
 
 - `project.godot` owns engine features, project identity, startup scene, and renderer settings.
-- `scenes/main.tscn` owns the editable yard composition; `scripts/scene/yard_preview.gd` fits its integer-scaled canvas and native HUD.
+- `scenes/main.tscn` owns the editable yard composition; `scripts/scene/yard_preview.gd` owns its smooth inspection camera and native HUD.
 - `labs/pixel_scaling/` owns the standalone scaling lab; [the art module](art/_readme.md) owns its scaling/filtering contract and related creation tool.
 - `scripts/rope/` and `labs/rope/` own the [rope subsystem and showcase](rope.md); `vendored/rope_sources/` preserves original copied source.
 - `scripts/physics/`, `shaders/occlusion_mask.gdshader` and `labs/physics/` own [separate visual mask, solid and sensor capabilities](physics.md). Concrete game objects remain deferred.

@@ -23,11 +23,11 @@ The lab loads decoded source PNGs directly, before importer processing, to isola
 
 Visual occlusion masks in the [object subsystem](../physics.md) use alpha-only coverage, nearest filtering and repeat disabled. Their transforms are independent from physical shapes. The diagnostic physics fixture fits its whole world fractionally when needed; this is a lab exception, not the selected gameplay pixel viewport.
 
-The main scene preview uses a separate 384×216 SubViewport, centered at the largest whole-number scale that fits. The root still has no stretch, so both technical labs retain native-resolution layout. The preview HUD renders separately through a CanvasLayer at native window resolution. Intentional tiling is enabled only on the fence, ground, overhead rail and conveyor sprites. See [the scene contract](../scene_preview.md).
+The main scene preview uses 8× nearest-neighbor texture derivatives, displayed at one-eighth local sprite scale through a window-resolution SubViewport. Its camera supports smooth fractional zoom and panning, with scene-local linear filtering. The HUD stays at native resolution. Tiling remains restricted to the fence, ground, overhead rail and conveyor sprites. This deliberate runtime filtering exception is specified in [the scene contract](../scene_preview.md).
 
 ## Pixel-art contract for future gameplay
 
-Choose an authored base resolution with the game's design. A low-resolution pixel-art world should use an integer-scaled viewport and preserved aspect ratio, accepting unused screen margins rather than fractional stretching. A 3D world with pixel UI may instead isolate that UI in its own integer-scaled layer. The scene preview exercises this convention at 384×216; that is a provisional composition size, not a final gameplay-resolution decision.
+Choose an authored base resolution with the game's design. A low-resolution pixel-art world should use an integer-scaled viewport and preserved aspect ratio, accepting unused screen margins rather than fractional stretching. A 3D world with pixel UI may instead isolate that UI in its own integer-scaled layer. The scene preview retains a 384×216 composition measured in world units, but now renders it at window resolution; its inspection camera is not a final gameplay-resolution decision.
 
 Keep pixel sprites and cameras aligned at the final display stage. Arbitrary rotation, subpixel camera movement, non-integer rescaling, and minification can still change apparent pixel shapes. Enlarging a file first does not prevent those artifacts. Do not enable both transform and vertex snapping indiscriminately.
 

@@ -1,34 +1,34 @@
 [gd_scene load_steps=31 format=3]
 
 [ext_resource type="Script" path="res://scripts/scene/yard_preview.gd" id="1_asset"]
-[ext_resource type="Texture2D" path="res://assets/bitwright/backdrop_scrapyard_tile.png" id="2_asset"]
-[ext_resource type="Texture2D" path="res://assets/bitwright/bin_copper.png" id="3_asset"]
-[ext_resource type="Texture2D" path="res://assets/bitwright/bin_rubber.png" id="4_asset"]
-[ext_resource type="Texture2D" path="res://assets/bitwright/bin_steel.png" id="5_asset"]
-[ext_resource type="Texture2D" path="res://assets/bitwright/conveyor_belt_tile_01.png" id="6_asset"]
-[ext_resource type="Texture2D" path="res://assets/bitwright/crane_chain_link.png" id="7_asset"]
-[ext_resource type="Texture2D" path="res://assets/bitwright/crane_magnet_01.png" id="8_asset"]
-[ext_resource type="Texture2D" path="res://assets/bitwright/crane_rail_tile.png" id="9_asset"]
-[ext_resource type="Texture2D" path="res://assets/bitwright/crane_tower.png" id="10_asset"]
-[ext_resource type="Texture2D" path="res://assets/bitwright/crane_trolley.png" id="11_asset"]
-[ext_resource type="Texture2D" path="res://assets/bitwright/ground_dirt_tile.png" id="12_asset"]
-[ext_resource type="Texture2D" path="res://assets/bitwright/hud_coin.png" id="13_asset"]
-[ext_resource type="Texture2D" path="res://assets/bitwright/hud_timer.png" id="14_asset"]
-[ext_resource type="Texture2D" path="res://assets/bitwright/scrap_bent_pipe.png" id="15_asset"]
-[ext_resource type="Texture2D" path="res://assets/bitwright/scrap_car_battery.png" id="16_asset"]
-[ext_resource type="Texture2D" path="res://assets/bitwright/scrap_car_door.png" id="17_asset"]
-[ext_resource type="Texture2D" path="res://assets/bitwright/scrap_cog.png" id="18_asset"]
-[ext_resource type="Texture2D" path="res://assets/bitwright/scrap_copper_wire.png" id="19_asset"]
-[ext_resource type="Texture2D" path="res://assets/bitwright/scrap_engine_block.png" id="20_asset"]
-[ext_resource type="Texture2D" path="res://assets/bitwright/scrap_girder.png" id="21_asset"]
-[ext_resource type="Texture2D" path="res://assets/bitwright/scrap_hubcap.png" id="22_asset"]
-[ext_resource type="Texture2D" path="res://assets/bitwright/scrap_oil_drum.png" id="23_asset"]
-[ext_resource type="Texture2D" path="res://assets/bitwright/scrap_spring.png" id="24_asset"]
-[ext_resource type="Texture2D" path="res://assets/bitwright/scrap_tin_can.png" id="25_asset"]
-[ext_resource type="Texture2D" path="res://assets/bitwright/scrap_tire.png" id="26_asset"]
-[ext_resource type="Texture2D" path="res://assets/bitwright/scrap_washing_machine.png" id="27_asset"]
-[ext_resource type="Texture2D" path="res://assets/bitwright/fx_sparks_03.png" id="28_asset"]
-[ext_resource type="Texture2D" path="res://assets/bitwright/fx_dust_03.png" id="29_asset"]
+[ext_resource type="Texture2D" path="res://assets/bitwright_8x/backdrop_scrapyard_tile.png" id="2_asset"]
+[ext_resource type="Texture2D" path="res://assets/bitwright_8x/bin_copper.png" id="3_asset"]
+[ext_resource type="Texture2D" path="res://assets/bitwright_8x/bin_rubber.png" id="4_asset"]
+[ext_resource type="Texture2D" path="res://assets/bitwright_8x/bin_steel.png" id="5_asset"]
+[ext_resource type="Texture2D" path="res://assets/bitwright_8x/conveyor_belt_tile_01.png" id="6_asset"]
+[ext_resource type="Texture2D" path="res://assets/bitwright_8x/crane_chain_link.png" id="7_asset"]
+[ext_resource type="Texture2D" path="res://assets/bitwright_8x/crane_magnet_01.png" id="8_asset"]
+[ext_resource type="Texture2D" path="res://assets/bitwright_8x/crane_rail_tile.png" id="9_asset"]
+[ext_resource type="Texture2D" path="res://assets/bitwright_8x/crane_tower.png" id="10_asset"]
+[ext_resource type="Texture2D" path="res://assets/bitwright_8x/crane_trolley.png" id="11_asset"]
+[ext_resource type="Texture2D" path="res://assets/bitwright_8x/ground_dirt_tile.png" id="12_asset"]
+[ext_resource type="Texture2D" path="res://assets/bitwright_8x/hud_coin.png" id="13_asset"]
+[ext_resource type="Texture2D" path="res://assets/bitwright_8x/hud_timer.png" id="14_asset"]
+[ext_resource type="Texture2D" path="res://assets/bitwright_8x/scrap_bent_pipe.png" id="15_asset"]
+[ext_resource type="Texture2D" path="res://assets/bitwright_8x/scrap_car_battery.png" id="16_asset"]
+[ext_resource type="Texture2D" path="res://assets/bitwright_8x/scrap_car_door.png" id="17_asset"]
+[ext_resource type="Texture2D" path="res://assets/bitwright_8x/scrap_cog.png" id="18_asset"]
+[ext_resource type="Texture2D" path="res://assets/bitwright_8x/scrap_copper_wire.png" id="19_asset"]
+[ext_resource type="Texture2D" path="res://assets/bitwright_8x/scrap_engine_block.png" id="20_asset"]
+[ext_resource type="Texture2D" path="res://assets/bitwright_8x/scrap_girder.png" id="21_asset"]
+[ext_resource type="Texture2D" path="res://assets/bitwright_8x/scrap_hubcap.png" id="22_asset"]
+[ext_resource type="Texture2D" path="res://assets/bitwright_8x/scrap_oil_drum.png" id="23_asset"]
+[ext_resource type="Texture2D" path="res://assets/bitwright_8x/scrap_spring.png" id="24_asset"]
+[ext_resource type="Texture2D" path="res://assets/bitwright_8x/scrap_tin_can.png" id="25_asset"]
+[ext_resource type="Texture2D" path="res://assets/bitwright_8x/scrap_tire.png" id="26_asset"]
+[ext_resource type="Texture2D" path="res://assets/bitwright_8x/scrap_washing_machine.png" id="27_asset"]
+[ext_resource type="Texture2D" path="res://assets/bitwright_8x/fx_sparks_03.png" id="28_asset"]
+[ext_resource type="Texture2D" path="res://assets/bitwright_8x/fx_dust_03.png" id="29_asset"]
 
 [sub_resource type="Theme" id="Theme_yard"]
 default_font_size = 18
@@ -55,22 +55,23 @@ mouse_filter = 2
 color = Color(0.055, 0.065, 0.086, 1)
 
 [node name="Stage" type="SubViewportContainer" parent="."]
-texture_filter = 1
+texture_filter = 2
 layout_mode = 0
 offset_left = 64.0
 offset_top = 36.0
 offset_right = 448.0
 offset_bottom = 252.0
-scale = Vector2(3, 3)
+stretch = true
 mouse_filter = 2
 
 [node name="Viewport" type="SubViewport" parent="Stage"]
+transparent_bg = true
 handle_input_locally = false
 size = Vector2i(384, 216)
 render_target_update_mode = 4
 
 [node name="Yard" type="Node2D" parent="Stage/Viewport"]
-texture_filter = 1
+texture_filter = 2
 
 [node name="Environment" type="Node2D" parent="Stage/Viewport/Yard"]
 
@@ -85,19 +86,21 @@ polygon = PackedVector2Array(0, 80, 384, 80, 384, 176, 0, 176)
 
 [node name="Fence" type="Sprite2D" parent="Stage/Viewport/Yard/Environment"]
 position = Vector2(0, 112)
+scale = Vector2(0.125, 0.125)
 texture = ExtResource("2_asset")
 centered = false
 texture_repeat = 2
 region_enabled = true
-region_rect = Rect2(0, 0, 384, 64)
+region_rect = Rect2(0.0, 0.0, 3072.0, 512.0)
 
 [node name="Ground" type="Sprite2D" parent="Stage/Viewport/Yard/Environment"]
 position = Vector2(0, 176)
+scale = Vector2(0.125, 0.125)
 texture = ExtResource("12_asset")
 centered = false
 texture_repeat = 2
 region_enabled = true
-region_rect = Rect2(0, 0, 384, 40)
+region_rect = Rect2(0.0, 0.0, 3072.0, 320.0)
 
 [node name="GroundEdge" type="Polygon2D" parent="Stage/Viewport/Yard/Environment"]
 color = Color(0.10, 0.10, 0.12, 1)
@@ -112,35 +115,40 @@ polygon = PackedVector2Array(0, 204, 384, 204, 384, 216, 0, 216)
 
 [node name="LeftUpper" type="Sprite2D" parent="Stage/Viewport/Yard/Gantry"]
 position = Vector2(8, 64)
+scale = Vector2(0.125, 0.125)
 texture = ExtResource("10_asset")
 centered = false
 region_enabled = true
-region_rect = Rect2(0, 0, 24, 48)
+region_rect = Rect2(0.0, 0.0, 192.0, 384.0)
 
 [node name="LeftFoot" type="Sprite2D" parent="Stage/Viewport/Yard/Gantry"]
 position = Vector2(8, 112)
+scale = Vector2(0.125, 0.125)
 texture = ExtResource("10_asset")
 centered = false
 
 [node name="RightUpper" type="Sprite2D" parent="Stage/Viewport/Yard/Gantry"]
 position = Vector2(352, 64)
+scale = Vector2(0.125, 0.125)
 texture = ExtResource("10_asset")
 centered = false
 region_enabled = true
-region_rect = Rect2(0, 0, 24, 48)
+region_rect = Rect2(0.0, 0.0, 192.0, 384.0)
 
 [node name="RightFoot" type="Sprite2D" parent="Stage/Viewport/Yard/Gantry"]
 position = Vector2(352, 112)
+scale = Vector2(0.125, 0.125)
 texture = ExtResource("10_asset")
 centered = false
 
 [node name="OverheadRail" type="Sprite2D" parent="Stage/Viewport/Yard/Gantry"]
 position = Vector2(8, 48)
+scale = Vector2(0.125, 0.125)
 texture = ExtResource("9_asset")
 centered = false
 texture_repeat = 2
 region_enabled = true
-region_rect = Rect2(0, 0, 368, 16)
+region_rect = Rect2(0.0, 0.0, 2944.0, 128.0)
 
 [node name="Incoming" type="Node2D" parent="Stage/Viewport/Yard"]
 
@@ -155,34 +163,40 @@ polygon = PackedVector2Array(163, 170, 168, 170, 168, 176, 163, 176)
 
 [node name="Conveyor" type="Sprite2D" parent="Stage/Viewport/Yard/Incoming"]
 position = Vector2(40, 160)
+scale = Vector2(0.125, 0.125)
 texture = ExtResource("6_asset")
 centered = false
 texture_repeat = 2
 region_enabled = true
-region_rect = Rect2(0, 0, 144, 12)
+region_rect = Rect2(0.0, 0.0, 1152.0, 96.0)
 
 [node name="Washer" type="Sprite2D" parent="Stage/Viewport/Yard/Incoming"]
 position = Vector2(44, 132)
+scale = Vector2(0.125, 0.125)
 texture = ExtResource("27_asset")
 centered = false
 
 [node name="CarDoor" type="Sprite2D" parent="Stage/Viewport/Yard/Incoming"]
 position = Vector2(72, 132)
+scale = Vector2(0.125, 0.125)
 texture = ExtResource("17_asset")
 centered = false
 
 [node name="Tire" type="Sprite2D" parent="Stage/Viewport/Yard/Incoming"]
 position = Vector2(109, 136)
+scale = Vector2(0.125, 0.125)
 texture = ExtResource("26_asset")
 centered = false
 
 [node name="Battery" type="Sprite2D" parent="Stage/Viewport/Yard/Incoming"]
 position = Vector2(141, 146)
+scale = Vector2(0.125, 0.125)
 texture = ExtResource("16_asset")
 centered = false
 
 [node name="Can" type="Sprite2D" parent="Stage/Viewport/Yard/Incoming"]
 position = Vector2(167, 150)
+scale = Vector2(0.125, 0.125)
 texture = ExtResource("25_asset")
 centered = false
 
@@ -191,41 +205,49 @@ centered = false
 
 [node name="Chain1" type="Sprite2D" parent="Stage/Viewport/Yard/Crane"]
 position = Vector2(128, 65)
+scale = Vector2(0.125, 0.125)
 texture = ExtResource("7_asset")
 centered = false
 
 [node name="Chain2" type="Sprite2D" parent="Stage/Viewport/Yard/Crane"]
 position = Vector2(128, 74)
+scale = Vector2(0.125, 0.125)
 texture = ExtResource("7_asset")
 centered = false
 
 [node name="Chain3" type="Sprite2D" parent="Stage/Viewport/Yard/Crane"]
 position = Vector2(128, 83)
+scale = Vector2(0.125, 0.125)
 texture = ExtResource("7_asset")
 centered = false
 
 [node name="Chain4" type="Sprite2D" parent="Stage/Viewport/Yard/Crane"]
 position = Vector2(128, 92)
+scale = Vector2(0.125, 0.125)
 texture = ExtResource("7_asset")
 centered = false
 
 [node name="Magnet" type="Sprite2D" parent="Stage/Viewport/Yard/Crane"]
 position = Vector2(112, 99)
+scale = Vector2(0.125, 0.125)
 texture = ExtResource("8_asset")
 centered = false
 
 [node name="Trolley" type="Sprite2D" parent="Stage/Viewport/Yard/Crane"]
 position = Vector2(116, 48)
+scale = Vector2(0.125, 0.125)
 texture = ExtResource("11_asset")
 centered = false
 
 [node name="LiftedCog" type="Sprite2D" parent="Stage/Viewport/Yard/Crane"]
 position = Vector2(122, 120)
+scale = Vector2(0.125, 0.125)
 texture = ExtResource("18_asset")
 centered = false
 
 [node name="ContactSpark" type="Sprite2D" parent="Stage/Viewport/Yard/Crane"]
 position = Vector2(126, 111)
+scale = Vector2(0.125, 0.125)
 texture = ExtResource("28_asset")
 centered = false
 
@@ -234,16 +256,19 @@ centered = false
 
 [node name="Copper" type="Sprite2D" parent="Stage/Viewport/Yard/SortingBins"]
 position = Vector2(192, 144)
+scale = Vector2(0.125, 0.125)
 texture = ExtResource("3_asset")
 centered = false
 
 [node name="Rubber" type="Sprite2D" parent="Stage/Viewport/Yard/SortingBins"]
 position = Vector2(246, 144)
+scale = Vector2(0.125, 0.125)
 texture = ExtResource("4_asset")
 centered = false
 
 [node name="Steel" type="Sprite2D" parent="Stage/Viewport/Yard/SortingBins"]
 position = Vector2(300, 144)
+scale = Vector2(0.125, 0.125)
 texture = ExtResource("5_asset")
 centered = false
 
@@ -252,41 +277,49 @@ centered = false
 
 [node name="Drum" type="Sprite2D" parent="Stage/Viewport/Yard/LooseScrap"]
 position = Vector2(35, 176)
+scale = Vector2(0.125, 0.125)
 texture = ExtResource("23_asset")
 centered = false
 
 [node name="Pipe" type="Sprite2D" parent="Stage/Viewport/Yard/LooseScrap"]
 position = Vector2(61, 187)
+scale = Vector2(0.125, 0.125)
 texture = ExtResource("15_asset")
 centered = false
 
 [node name="Girder" type="Sprite2D" parent="Stage/Viewport/Yard/LooseScrap"]
 position = Vector2(98, 191)
+scale = Vector2(0.125, 0.125)
 texture = ExtResource("21_asset")
 centered = false
 
 [node name="Spring" type="Sprite2D" parent="Stage/Viewport/Yard/LooseScrap"]
 position = Vector2(150, 179)
+scale = Vector2(0.125, 0.125)
 texture = ExtResource("24_asset")
 centered = false
 
 [node name="Engine" type="Sprite2D" parent="Stage/Viewport/Yard/LooseScrap"]
 position = Vector2(166, 180)
+scale = Vector2(0.125, 0.125)
 texture = ExtResource("20_asset")
 centered = false
 
 [node name="Hubcap" type="Sprite2D" parent="Stage/Viewport/Yard/LooseScrap"]
 position = Vector2(211, 183)
+scale = Vector2(0.125, 0.125)
 texture = ExtResource("22_asset")
 centered = false
 
 [node name="CopperWire" type="Sprite2D" parent="Stage/Viewport/Yard/LooseScrap"]
 position = Vector2(239, 184)
+scale = Vector2(0.125, 0.125)
 texture = ExtResource("19_asset")
 centered = false
 
 [node name="Dust" type="Sprite2D" parent="Stage/Viewport/Yard/LooseScrap"]
 position = Vector2(88, 184)
+scale = Vector2(0.125, 0.125)
 texture = ExtResource("29_asset")
 centered = false
 
@@ -345,7 +378,7 @@ custom_minimum_size = Vector2(24, 24)
 layout_mode = 2
 size_flags_vertical = 4
 mouse_filter = 2
-texture_filter = 1
+texture_filter = 2
 texture = ExtResource("13_asset")
 expand_mode = 1
 stretch_mode = 5
@@ -367,7 +400,7 @@ custom_minimum_size = Vector2(32, 32)
 layout_mode = 2
 size_flags_vertical = 4
 mouse_filter = 2
-texture_filter = 1
+texture_filter = 2
 texture = ExtResource("14_asset")
 expand_mode = 1
 stretch_mode = 5
@@ -402,4 +435,4 @@ text = "ART  /  DALE MOONEY"
 layout_mode = 2
 theme_override_colors/font_color = Color(0.88, 0.73, 0.37, 1)
 theme_override_font_sizes/font_size = 12
-text = "SCENE PREVIEW"
+text = "WHEEL: ZOOM  ·  DRAG: PAN  ·  F: RESET"
