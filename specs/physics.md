@@ -1,6 +1,6 @@
 # Object physics and visual masking components
 
-Reviewed: 2026-09-24. Source sync: the implementation commit introducing this component.
+Reviewed: 2026-09-24. Implementation revision: `fe746e2`.
 
 The clarified user scope is **component support**, not concrete objects or box placement. `scripts/physics/collision_parts_2d.gd` accepts caller-authored `Shape2D` resources and clones them into separate solid `CollisionShape2D` or sensor `Area2D` parts. Callers own body type, motion, mass, shape dimensions, offsets and collision channels. Deferred toggles are safe from overlap callbacks. No magnet behavior, scrap/bin scene, scoring, timer, automatic mask-to-shape conversion or hard-coded game collision profile exists.
 

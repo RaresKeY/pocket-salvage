@@ -1,6 +1,6 @@
 # Project Contract
 
-Reviewed: 2026-09-24. Implementation revision: `a4a329e`.
+Reviewed: 2026-09-24. Implementation revision: `fe746e2`.
 
 ## Status and scope
 

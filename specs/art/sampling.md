@@ -1,6 +1,6 @@
 # Sampling and Aliasing
 
-Reviewed: 2026-09-24. Implementation revision: `2cff8e5`.
+Reviewed: 2026-09-24. Implementation revision: `fe746e2` (mask addition; pixel scaler remains `2cff8e5`).
 
 ## Art classification
 
