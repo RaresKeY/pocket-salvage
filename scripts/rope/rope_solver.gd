@@ -79,11 +79,13 @@ func simulate(from: Vector2, to: Vector2, length: float, dt: float) -> void:
 		previous_bends = path.bends.duplicate()
 	render_previous = points.duplicate()
 	# Full extension is piecewise straight through every supporting corner.
+	# Keep the pre-constraint positions as Verlet history: moving endpoints
+	# must carry cable motion into the next slack step, not reset the cable.
 	if total>=length-1.0:
 		for span in guides.size()-1:
 			for i in range(pins[span],pins[span+1]+1):
 				points[i] = guides[span].lerp(guides[span+1],float(i-pins[span])/(pins[span+1]-pins[span]))
-		old_points = points.duplicate()
+		old_points = render_previous.duplicate()
 		if topology_changed: render_previous = points.duplicate()
 		return
 	for span in guides.size()-1:

@@ -21,6 +21,7 @@ func _initialize() -> void:
 	assert(taut.velocity.is_equal_approx(Vector2(0,30)), "Keep tangential momentum")
 	rope.simulate(a, b, 240, 1.0 / 60.0)
 	for point in rope.points: assert(absf(point.y) < 0.01)
+	_test_moving_taut_cable()
 	var obstacle := PackedVector2Array([Vector2(80,-40),Vector2(160,-40),Vector2(160,100),Vector2(80,100)])
 	rope.path.build([obstacle])
 	rope.reset(a, b, 350)
@@ -38,3 +39,34 @@ func _initialize() -> void:
 		for point in Render.curve(fixture): assert(point.is_finite())
 	print("ROPE_TEST_OK")
 	quit()
+
+func _test_moving_taut_cable() -> void:
+	var rope := Solver.new()
+	var a := Vector2.ZERO
+	var b := Vector2(0, 240)
+	rope.reset(a, b, 240)
+	rope.simulate(a, b, 240, 1.0 / 60.0)
+	# Translate the suspended cable while reeling it in. Every particle keeps
+	# its last position even though the tension constraint makes a straight line.
+	for tick in 12:
+		var previous := rope.points.duplicate()
+		a.x += 2.0
+		b.x += 2.0
+		b.y -= 1.0
+		rope.simulate(a, b, b.y, 1.0 / 60.0)
+		assert(rope.old_points == previous, "Taut movement/reeling must retain particle history")
+		assert(rope.points.size() == previous.size(), "Moving anchors must not remesh the cable")
+		for point in rope.points:
+			assert(is_equal_approx(point.x, a.x), "Taut cable remains straight")
+	var midpoint := rope.points.size() / 2
+	var prior_middle: Vector2 = rope.points[midpoint]
+	# Paying out leaves room for the existing transverse velocity to continue.
+	rope.simulate(a, b, b.y + 80.0, 1.0 / 60.0)
+	assert(rope.points[midpoint].x > prior_middle.x + 1.0,
+		"Paying out must preserve sideways motion from the moving hoist")
+	assert(rope.points[0] == a and rope.points[-1] == b)
+	for tick in 180:
+		rope.simulate(a, b, b.y + 80.0, 1.0 / 60.0)
+	for point in rope.points:
+		assert(point.is_finite())
+		assert(point.distance_to(a) < 400.0, "Released cable motion remains bounded")
