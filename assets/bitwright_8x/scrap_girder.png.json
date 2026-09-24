@@ -1,0 +1,18 @@
+{
+	"algorithm": "integer-nearest-neighbor",
+	"factor": 8,
+	"format": "RGBA8",
+	"godot": "4.7-stable (official)",
+	"output": "assets/bitwright_8x/scrap_girder.png",
+	"output_sha256": "9446aa7589cd9b170f1e88a69530b5d706e7704558b8f61ec3f9bba961fe3404",
+	"output_size": [
+		320,
+		80
+	],
+	"source": "assets/bitwright/scrap_girder.png",
+	"source_sha256": "5ebbdb6ce6c646aba1878fb0277e97214d3413ee3d486af48e2506759340ea43",
+	"source_size": [
+		40,
+		10
+	]
+}

@@ -1,0 +1,18 @@
+{
+	"algorithm": "integer-nearest-neighbor",
+	"factor": 8,
+	"format": "RGBA8",
+	"godot": "4.7-stable (official)",
+	"output": "assets/bitwright_8x/scrap_engine_block.png",
+	"output_sha256": "d329e535ab89ea04e25ae9bceb6fecb9d5ab65492692f6c23004795b41b8fd47",
+	"output_size": [
+		256,
+		192
+	],
+	"source": "assets/bitwright/scrap_engine_block.png",
+	"source_sha256": "321ee5d1d218752d05f90e7ae04421d575a187ea89fc109f1434d07fc3371df5",
+	"source_size": [
+		32,
+		24
+	]
+}

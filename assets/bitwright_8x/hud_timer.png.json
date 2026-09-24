@@ -1,0 +1,18 @@
+{
+	"algorithm": "integer-nearest-neighbor",
+	"factor": 8,
+	"format": "RGBA8",
+	"godot": "4.7-stable (official)",
+	"output": "assets/bitwright_8x/hud_timer.png",
+	"output_sha256": "da18b57ed1740076e509f78f667ab0bc0e0c4b7e953bf397f11aafe38ed495ca",
+	"output_size": [
+		128,
+		128
+	],
+	"source": "assets/bitwright/hud_timer.png",
+	"source_sha256": "9da8dcfc60354cab749c33b28a1bed282a26980505133bd91ae42de26a065b4d",
+	"source_size": [
+		16,
+		16
+	]
+}

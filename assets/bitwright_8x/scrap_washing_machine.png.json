@@ -1,0 +1,18 @@
+{
+	"algorithm": "integer-nearest-neighbor",
+	"factor": 8,
+	"format": "RGBA8",
+	"godot": "4.7-stable (official)",
+	"output": "assets/bitwright_8x/scrap_washing_machine.png",
+	"output_sha256": "a1d53decd6613fd7bed3b76e60a8fd704393a973b2dfd3a7c6f813bc1b3189a8",
+	"output_size": [
+		192,
+		224
+	],
+	"source": "assets/bitwright/scrap_washing_machine.png",
+	"source_sha256": "2540b6722b016ec70a189c5c09b565ea09b0f96261b5ce5f5b2ed4e3a9c00312",
+	"source_size": [
+		24,
+		28
+	]
+}

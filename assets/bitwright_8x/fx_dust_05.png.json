@@ -1,0 +1,18 @@
+{
+	"algorithm": "integer-nearest-neighbor",
+	"factor": 8,
+	"format": "RGBA8",
+	"godot": "4.7-stable (official)",
+	"output": "assets/bitwright_8x/fx_dust_05.png",
+	"output_sha256": "9660ae99fbd88b0578fefaae7e1ad3b728da236f3258d395f20a39fc9bb419aa",
+	"output_size": [
+		192,
+		128
+	],
+	"source": "assets/bitwright/fx_dust_05.png",
+	"source_sha256": "6d5c63ecfacdcbc742740ce7af026305571b38edeef2b8a68a9e3fafc47df49f",
+	"source_size": [
+		24,
+		16
+	]
+}

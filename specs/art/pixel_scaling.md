@@ -27,3 +27,5 @@ The responsive grid uses four columns at widths of at least 1700, two from 1000,
 `labs/pixel_scaling/capture` uses background Gamescope with the shared hardware-enabled runner, under one project lock. It captures 1920×1080, 1280×720, 960×540, and 854×480 by default, preserving logs and image/renderer metadata under ignored `artifacts/generated/pixel_scaling/`. When both complete images are visible, the captured integer and baked regions must match byte-for-byte. Offscreen comparisons are explicitly reported as unchecked. This capture is local verification, not a public build.
 
 No controller interaction, arbitrary 3D-material case, or exported-game comparison is claimed by these checks. Native GPU captures and headless control/input checks cover the stated paths; contributor art still needs inspection when it arrives.
+
+The **Sprite playground** button opens [the enlarged-art physics scene](sprite_playground.md), which renders stored 8× textures at smaller sizes.

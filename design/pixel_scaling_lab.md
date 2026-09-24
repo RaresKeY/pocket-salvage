@@ -13,3 +13,11 @@ The lab has a neutral dark background, mint emphasis, readable native-resolution
 Open the lab as the temporary project entry point. Preserve the empty gameplay scene for the later MVP. Assets are selected from the project, with a refresh control, integer scale, optional motion comparison, and a ready-to-copy export command. Large images stay at the displayed scale inside scrollable previews.
 
 The game-wide art contract distinguishes crisp pixel art from smooth painted art and 3D textures; one global filtering rule is not sufficient for every asset type. Actual gameplay viewport resolution remains undecided.
+
+## User extension: enlarged runtime assets
+
+The user requested enlarged copies in a new folder, then a scene displaying them with one physics-enabled, grabbable object. The user explicitly selected **8×**. The large texture remains in memory and is scaled down with runtime filtering.
+
+## AI-inferred playground details
+
+Use the existing Bitwright sprites and masks, a gallery, and a washing machine with a spring-based mouse grab. Expose display size and linear/nearest filtering; Q/E turns the grabbed object. The rectangular collision approximation is a lab fixture, not final gameplay geometry. Current behavior lives in [the playground spec](../specs/art/sprite_playground.md).

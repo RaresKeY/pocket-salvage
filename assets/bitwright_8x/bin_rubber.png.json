@@ -1,0 +1,18 @@
+{
+	"algorithm": "integer-nearest-neighbor",
+	"factor": 8,
+	"format": "RGBA8",
+	"godot": "4.7-stable (official)",
+	"output": "assets/bitwright_8x/bin_rubber.png",
+	"output_sha256": "3a3f6ec2536e5adc6b13812e7bd0dc45f7df7cf356eec629dfb7ff96be46ca56",
+	"output_size": [
+		384,
+		256
+	],
+	"source": "assets/bitwright/bin_rubber.png",
+	"source_sha256": "0bff2cfdf075c81cc7530910f80b492a8111b3d7b2158dfad96a5dbcafd19db5",
+	"source_size": [
+		48,
+		32
+	]
+}

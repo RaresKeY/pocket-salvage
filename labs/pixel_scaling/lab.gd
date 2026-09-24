@@ -74,6 +74,10 @@ func _ready() -> void:
 			preview.set_motion(enabled)
 	)
 	controls.add_child(motion)
+	var playground := Button.new()
+	playground.text = "Sprite playground"
+	playground.pressed.connect(func() -> void: get_tree().change_scene_to_file("res://labs/sprite_playground/lab.tscn"))
+	controls.add_child(playground)
 	status = label("", 15, MINT, true)
 	page.add_child(status)
 	grid = GridContainer.new()

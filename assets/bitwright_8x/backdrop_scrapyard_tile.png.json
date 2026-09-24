@@ -1,0 +1,18 @@
+{
+	"algorithm": "integer-nearest-neighbor",
+	"factor": 8,
+	"format": "RGBA8",
+	"godot": "4.7-stable (official)",
+	"output": "assets/bitwright_8x/backdrop_scrapyard_tile.png",
+	"output_sha256": "d3bee405bd13e040c38ac0d4b5cfaee68dd9a149509d8c6c66ce8c8e058d1a60",
+	"output_size": [
+		1280,
+		512
+	],
+	"source": "assets/bitwright/backdrop_scrapyard_tile.png",
+	"source_sha256": "b0208a9fdad6b5ee662d1377aefd4bfd15d3ddcd9d90bb24c56685f3a7428b89",
+	"source_size": [
+		160,
+		64
+	]
+}

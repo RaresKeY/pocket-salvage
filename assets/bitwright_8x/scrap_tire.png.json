@@ -1,0 +1,18 @@
+{
+	"algorithm": "integer-nearest-neighbor",
+	"factor": 8,
+	"format": "RGBA8",
+	"godot": "4.7-stable (official)",
+	"output": "assets/bitwright_8x/scrap_tire.png",
+	"output_sha256": "9b80888153bb8ddc11fddb2f5662b6059d9bcc8c331735a159c59c308ff7d456",
+	"output_size": [
+		192,
+		192
+	],
+	"source": "assets/bitwright/scrap_tire.png",
+	"source_sha256": "7d46e38208864fde2e616e90fb7f4cb2b79886e50d4f36497143a200476dc569",
+	"source_size": [
+		24,
+		24
+	]
+}

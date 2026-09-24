@@ -1,0 +1,18 @@
+{
+	"algorithm": "integer-nearest-neighbor",
+	"factor": 8,
+	"format": "RGBA8",
+	"godot": "4.7-stable (official)",
+	"output": "assets/bitwright_8x/crane_magnet_mask.png",
+	"output_sha256": "1abdd272743c8701c7486bc672f8ad4bb0865ceee58f36dcf17a3a35567cf570",
+	"output_size": [
+		320,
+		192
+	],
+	"source": "assets/bitwright/crane_magnet_mask.png",
+	"source_sha256": "e08584a27c9a167f6cea558104de5bfefe5fe5d432919cd39712d599fc9a6e2f",
+	"source_size": [
+		40,
+		24
+	]
+}

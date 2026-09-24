@@ -1,0 +1,18 @@
+{
+	"algorithm": "integer-nearest-neighbor",
+	"factor": 8,
+	"format": "RGBA8",
+	"godot": "4.7-stable (official)",
+	"output": "assets/bitwright_8x/scrap_car_battery_mask.png",
+	"output_sha256": "6961b27eaf7e1466c0c575b2f0b6aca3464e2189d276c19d3a095f94cc2ce63f",
+	"output_size": [
+		144,
+		112
+	],
+	"source": "assets/bitwright/scrap_car_battery_mask.png",
+	"source_sha256": "986d78140c4a8629826582a8083641a84c6419f6a7f64128f4fd8741b0ed97de",
+	"source_size": [
+		18,
+		14
+	]
+}

@@ -1,0 +1,18 @@
+{
+	"algorithm": "integer-nearest-neighbor",
+	"factor": 8,
+	"format": "RGBA8",
+	"godot": "4.7-stable (official)",
+	"output": "assets/bitwright_8x/crane_trolley.png",
+	"output_sha256": "6ed0a25b01d35c6f54310e66c5c486bcefb092592559ba7af79375512dd4d494",
+	"output_size": [
+		256,
+		160
+	],
+	"source": "assets/bitwright/crane_trolley.png",
+	"source_sha256": "59440cc6aa9e617a3e41e51bde5cbd81a186358b14ed7fc11d1cde46c61181c2",
+	"source_size": [
+		32,
+		20
+	]
+}

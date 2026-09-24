@@ -1,0 +1,18 @@
+{
+	"algorithm": "integer-nearest-neighbor",
+	"factor": 8,
+	"format": "RGBA8",
+	"godot": "4.7-stable (official)",
+	"output": "assets/bitwright_8x/conveyor_belt_tile_06.png",
+	"output_sha256": "ca2067dc6236517ea4f17e9038ffb8a55cd4845a3eb7db71d84bd463452e0470",
+	"output_size": [
+		128,
+		96
+	],
+	"source": "assets/bitwright/conveyor_belt_tile_06.png",
+	"source_sha256": "c7e2b000b20f6d7e8e630cc44c7bdc192b2509c7de56f6c35b8ea451d0bccb8b",
+	"source_size": [
+		16,
+		12
+	]
+}

@@ -1,0 +1,18 @@
+{
+	"algorithm": "integer-nearest-neighbor",
+	"factor": 8,
+	"format": "RGBA8",
+	"godot": "4.7-stable (official)",
+	"output": "assets/bitwright_8x/bin_steel_catch_mask.png",
+	"output_sha256": "5239b209975797ae7f7dbab25d873e8bbbf9e23d6d35a4c8b6c341a705dc94d2",
+	"output_size": [
+		384,
+		256
+	],
+	"source": "assets/bitwright/bin_steel_catch_mask.png",
+	"source_sha256": "1bdbe345c798f62f2280dbeca9e06b2f9ffc37dbdaf1a63d3bb5408f30255e69",
+	"source_size": [
+		48,
+		32
+	]
+}

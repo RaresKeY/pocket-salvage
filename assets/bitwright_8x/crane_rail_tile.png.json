@@ -1,0 +1,18 @@
+{
+	"algorithm": "integer-nearest-neighbor",
+	"factor": 8,
+	"format": "RGBA8",
+	"godot": "4.7-stable (official)",
+	"output": "assets/bitwright_8x/crane_rail_tile.png",
+	"output_sha256": "0729d9b0740cb5cc985e64695e9f1ba7c3cf261b3687ed23e996ccee546b21ad",
+	"output_size": [
+		128,
+		128
+	],
+	"source": "assets/bitwright/crane_rail_tile.png",
+	"source_sha256": "b801a3c074cc3afd4e226fd88116df50cc894c4cf6d97566ee9078639a0a8f64",
+	"source_size": [
+		16,
+		16
+	]
+}

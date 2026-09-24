@@ -1,0 +1,18 @@
+{
+	"algorithm": "integer-nearest-neighbor",
+	"factor": 8,
+	"format": "RGBA8",
+	"godot": "4.7-stable (official)",
+	"output": "assets/bitwright_8x/scrap_bent_pipe.png",
+	"output_sha256": "aaf8e39fb64d82a4ec8b203fb94b3692b3edc52c67b0ca72a0b9d0d33408f1d1",
+	"output_size": [
+		256,
+		96
+	],
+	"source": "assets/bitwright/scrap_bent_pipe.png",
+	"source_sha256": "af74f107c2c46a57cb2050dd574d8b7233d8996ee7961cd59ba25a23da2f4160",
+	"source_size": [
+		32,
+		12
+	]
+}

@@ -1,0 +1,18 @@
+{
+	"algorithm": "integer-nearest-neighbor",
+	"factor": 8,
+	"format": "RGBA8",
+	"godot": "4.7-stable (official)",
+	"output": "assets/bitwright_8x/scrap_oil_drum.png",
+	"output_sha256": "b9253e6f30032b1773ce5ea2e578d34efe8867ae0a34c314f6c15ab52bbd56e5",
+	"output_size": [
+		160,
+		224
+	],
+	"source": "assets/bitwright/scrap_oil_drum.png",
+	"source_sha256": "9776a6de93b3ae11f8667a8966f432f6545dd42479dfdfd30daf9b192662e6f2",
+	"source_size": [
+		20,
+		28
+	]
+}

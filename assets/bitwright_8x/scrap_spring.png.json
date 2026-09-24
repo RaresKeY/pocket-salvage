@@ -1,0 +1,18 @@
+{
+	"algorithm": "integer-nearest-neighbor",
+	"factor": 8,
+	"format": "RGBA8",
+	"godot": "4.7-stable (official)",
+	"output": "assets/bitwright_8x/scrap_spring.png",
+	"output_sha256": "5e04ae3aacaaef05ce0d6f54df094dbb2438c44e2c4e486381aba5b08164f98c",
+	"output_size": [
+		96,
+		160
+	],
+	"source": "assets/bitwright/scrap_spring.png",
+	"source_sha256": "01e22dea4b6c3664ea6748677f01bb3a47f0767661f81e3a87c8d329d3142bc4",
+	"source_size": [
+		12,
+		20
+	]
+}

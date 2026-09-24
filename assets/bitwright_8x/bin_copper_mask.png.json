@@ -1,0 +1,18 @@
+{
+	"algorithm": "integer-nearest-neighbor",
+	"factor": 8,
+	"format": "RGBA8",
+	"godot": "4.7-stable (official)",
+	"output": "assets/bitwright_8x/bin_copper_mask.png",
+	"output_sha256": "8df6702176f28d0df6b66a981e2a984db5c4d804699f5a5d2582141df99ab6a4",
+	"output_size": [
+		384,
+		256
+	],
+	"source": "assets/bitwright/bin_copper_mask.png",
+	"source_sha256": "b52bbafb693528d9bc550181dbab8d1356b8148e9cca9feca765162076b92026",
+	"source_size": [
+		48,
+		32
+	]
+}

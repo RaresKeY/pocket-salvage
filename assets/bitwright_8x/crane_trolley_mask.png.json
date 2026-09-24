@@ -1,0 +1,18 @@
+{
+	"algorithm": "integer-nearest-neighbor",
+	"factor": 8,
+	"format": "RGBA8",
+	"godot": "4.7-stable (official)",
+	"output": "assets/bitwright_8x/crane_trolley_mask.png",
+	"output_sha256": "e287d67761721d14f0259daa1ef6755994793e1b55e9e6ca965b8da16b791938",
+	"output_size": [
+		256,
+		160
+	],
+	"source": "assets/bitwright/crane_trolley_mask.png",
+	"source_sha256": "71c8a9190c93aaf55abcdb106a3052c8efb46b0e6b0d3243aed5713f8882b4c0",
+	"source_size": [
+		32,
+		20
+	]
+}

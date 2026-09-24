@@ -5,3 +5,5 @@
 [Rope](rope/README.md) showcases Pocket Salvage's reusable slack, tension, terrain-contact and curve-rendering component. Run the scene directly or use `./labs/capture rope` for off-desktop GPU evidence.
 
 [Mask and collision parts](physics/README.md) demonstrates independent visual masks, caller-authored solids and sensors. Its shapes are disposable fixtures, not game objects. Use `./labs/capture physics` for GPU pixel and contact checks.
+
+[Sprite playground](sprite_playground/README.md) displays the 8× Bitwright derivatives at smaller runtime sizes, with a grabbable physics sprite.

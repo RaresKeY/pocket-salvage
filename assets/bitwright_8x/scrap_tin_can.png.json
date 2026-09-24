@@ -1,0 +1,18 @@
+{
+	"algorithm": "integer-nearest-neighbor",
+	"factor": 8,
+	"format": "RGBA8",
+	"godot": "4.7-stable (official)",
+	"output": "assets/bitwright_8x/scrap_tin_can.png",
+	"output_sha256": "0ccb15d2e8d62dc928ff6a90feb18a7429f2405ed0a87bd0a80764f848c076e7",
+	"output_size": [
+		80,
+		80
+	],
+	"source": "assets/bitwright/scrap_tin_can.png",
+	"source_sha256": "15e6982885155a7958a0fb1f147d00a1fe7cbacfc9483fbda36fc055a250b914",
+	"source_size": [
+		10,
+		10
+	]
+}

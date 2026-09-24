@@ -1,0 +1,18 @@
+{
+	"algorithm": "integer-nearest-neighbor",
+	"factor": 8,
+	"format": "RGBA8",
+	"godot": "4.7-stable (official)",
+	"output": "assets/bitwright_8x/fx_sparks_02.png",
+	"output_sha256": "7988eeec1928c336e90011e3c8060aef9e7a8e70531aefd83f4c3b923ff598c4",
+	"output_size": [
+		192,
+		192
+	],
+	"source": "assets/bitwright/fx_sparks_02.png",
+	"source_sha256": "17d7dc11f3345b13a8613e14accdc3ac8be1ed19f565b35fada4c40977b70eee",
+	"source_size": [
+		24,
+		24
+	]
+}

@@ -1,0 +1,18 @@
+{
+	"algorithm": "integer-nearest-neighbor",
+	"factor": 8,
+	"format": "RGBA8",
+	"godot": "4.7-stable (official)",
+	"output": "assets/bitwright_8x/crane_tower.png",
+	"output_sha256": "96bc334b0f905eaf9466aecce63c5347db73b2ae3806a626000ed783312a919c",
+	"output_size": [
+		192,
+		512
+	],
+	"source": "assets/bitwright/crane_tower.png",
+	"source_sha256": "088d62355a38f456d4cf87424190c81875c4eff95bb515e377abeb490814efc0",
+	"source_size": [
+		24,
+		64
+	]
+}

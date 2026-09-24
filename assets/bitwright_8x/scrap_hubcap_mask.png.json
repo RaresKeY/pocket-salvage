@@ -1,0 +1,18 @@
+{
+	"algorithm": "integer-nearest-neighbor",
+	"factor": 8,
+	"format": "RGBA8",
+	"godot": "4.7-stable (official)",
+	"output": "assets/bitwright_8x/scrap_hubcap_mask.png",
+	"output_sha256": "d27fff05e501c2ce4deefaa316c3721d2c5c86d1b789a0ec521aa17fae49e605",
+	"output_size": [
+		128,
+		128
+	],
+	"source": "assets/bitwright/scrap_hubcap_mask.png",
+	"source_sha256": "5adf678c55a7efd824c22a05c7ced2998f98354f4f17937486640d2012589bbc",
+	"source_size": [
+		16,
+		16
+	]
+}

@@ -1,0 +1,18 @@
+{
+	"algorithm": "integer-nearest-neighbor",
+	"factor": 8,
+	"format": "RGBA8",
+	"godot": "4.7-stable (official)",
+	"output": "assets/bitwright_8x/scrap_copper_wire.png",
+	"output_sha256": "c72a108efe01eb178e2c80d6eda44b824ded293cf4e875537f8ca8bfd4cbacc9",
+	"output_size": [
+		144,
+		112
+	],
+	"source": "assets/bitwright/scrap_copper_wire.png",
+	"source_sha256": "c6fd870c8d410a42804be18d3d747663c961579db1501d3b6caecfe0c7db6380",
+	"source_size": [
+		18,
+		14
+	]
+}

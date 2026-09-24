@@ -1,0 +1,18 @@
+{
+	"algorithm": "integer-nearest-neighbor",
+	"factor": 8,
+	"format": "RGBA8",
+	"godot": "4.7-stable (official)",
+	"output": "assets/bitwright_8x/hud_coin.png",
+	"output_sha256": "6eff5b3c2832a084a8e6227035c5ed24cc86d6fdc5f7dddc0d8918b983a82aed",
+	"output_size": [
+		96,
+		96
+	],
+	"source": "assets/bitwright/hud_coin.png",
+	"source_sha256": "d7275271c8f844a706894a7e2d0fac35f19bff7629f0dd3682783c876779c107",
+	"source_size": [
+		12,
+		12
+	]
+}

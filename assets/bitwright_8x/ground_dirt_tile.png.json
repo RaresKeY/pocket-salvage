@@ -1,0 +1,18 @@
+{
+	"algorithm": "integer-nearest-neighbor",
+	"factor": 8,
+	"format": "RGBA8",
+	"godot": "4.7-stable (official)",
+	"output": "assets/bitwright_8x/ground_dirt_tile.png",
+	"output_sha256": "067d70e29fa898bd82c07ec64a8a3afdda4bbc3cbdb27295af7480a8a604e9e0",
+	"output_size": [
+		128,
+		128
+	],
+	"source": "assets/bitwright/ground_dirt_tile.png",
+	"source_sha256": "166ca099d3791100bc71eec2d339a72f0fabc01a7cb3940efff120fba5b3e011",
+	"source_size": [
+		16,
+		16
+	]
+}

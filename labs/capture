@@ -4,8 +4,8 @@ project_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 runner="${GODOT_PODMAN_RUNNER:-$project_root/../godot-podman/bin/godot-podman}"
 cd "$project_root"
 lab="${1:-rope}"
-if [[ "$lab" != rope && "$lab" != physics ]]; then
-    echo 'Usage: labs/capture rope|physics [WIDTHxHEIGHT ...]' >&2
+if [[ "$lab" != rope && "$lab" != physics && "$lab" != sprite_playground ]]; then
+    echo 'Usage: labs/capture rope|physics|sprite_playground [WIDTHxHEIGHT ...]' >&2
     exit 2
 fi
 if [[ "${POCKET_SALVAGE_CAPTURE_LOCKED:-0}" != 1 ]]; then
