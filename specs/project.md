@@ -1,6 +1,6 @@
 # Project Contract
 
-Reviewed: 2026-09-25. Implementation: level-flow change based on `575407c`.
+Reviewed: 2026-09-25. Implementation: local launcher, wind motes and Blood Moon lighting change based on `fb9ac83`.
 
 ## Status and scope
 
@@ -13,7 +13,7 @@ Pocket Salvage is the official game name; its public GitHub repository is `Rares
 - `labs/pixel_scaling/` owns the standalone scaling lab; [the art module](art/_readme.md) owns its scaling/filtering contract and related creation tool.
 - `scripts/rope/` and `labs/rope/` own the [rope subsystem and showcase](rope.md); `vendored/rope_sources/` preserves original copied source.
 - `scripts/physics/`, `shaders/occlusion_mask.gdshader` and `labs/physics/` own [separate visual mask, solid and sensor capabilities](physics.md). Concrete geometry lives in prototype callers rather than the reusable physics components.
-- `play.sh` imports assets and launches the playable scene through the managed runner, with hardware GPU access and real desktop audio. Import and play share one project lock; extra arguments pass unchanged to Godot. See [audio](audio.md).
+- `play.sh` resolves its source checkout, imports current local assets and launches the configured project main scene through the managed runner, with hardware GPU access and real desktop audio. Import and play share one project lock; extra arguments pass unchanged to Godot. See [audio](audio.md).
 - `tests/check` runs `tests/run_checks.py` through the external shared Godot Podman runner. It resolves the runner from a sibling checkout or `GODOT_PODMAN_RUNNER`.
 - `scripts/crane/`, `scripts/round/`, `scripts/ui/`, `scripts/level/`, `scripts/fx/`, `scripts/art/yard_art.gd`, `scripts/audio/` and `labs/salvage/` own the playable prototype; see the [specs map](_readme.md).
 - [Repository structure](repository.md) describes project memory, collaboration, file handling, and the source layout.

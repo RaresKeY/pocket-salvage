@@ -19,6 +19,7 @@ var controls: Node
 const DebugOverlay = preload("res://scripts/debug/yard_debug_overlay.gd")
 const Levels = preload("res://scripts/level/level_catalog.gd")
 var selected_level := 0
+const BLOOD_GRADE = preload("res://shaders/blood_moon_grade.gdshader")
 const BloodMoon = preload("res://scripts/level/blood_moon.gd")
 var blood_cycle: Node
 const HUD = preload("res://scripts/ui/round_hud.gd")
@@ -149,6 +150,11 @@ func _build_world() -> void:
 	gripping = false
 	head = Heads.Kind.MAGNET
 	stands.clear()
+	stage.material = null
+	if selected_level == 3:
+		var grade := ShaderMaterial.new()
+		grade.shader = BLOOD_GRADE
+		stage.material = grade
 	world = Node2D.new()
 	viewport.add_child(world)
 	layout = Layout.create_layout(level_variant, Levels.scrap_count(selected_level))

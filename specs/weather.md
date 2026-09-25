@@ -1,6 +1,6 @@
 # Weather
 
-Reviewed: 2026-09-25. Implementation: Blood Moon change based on `374729e`.
+Reviewed: 2026-09-25. Implementation: local launcher, wind motes and Blood Moon lighting change based on `fb9ac83`.
 
 Each salvage round uses its selected level’s weather that physically changes how the crane works and multiplies a positive final score. Intent and the split between Dale's direction and AI choices are in [design/weather.md](../design/weather.md).
 
@@ -38,7 +38,7 @@ Fields: `id`, `label`, `tip`, `chance`, `multiplier`, `wind`, `gust`, `gust_ever
 `Weather.EFFECTS` lists the effect scripts. `attach(context)` creates each one whose `applies(profile)` is true and calls `bind(weather, context)`. Adding a kind of effect is one file plus one line in that list.
 
 - **grip:** multiplies each scrap body's own friction by `grip` once when the world is built.
-- **wind:** each physics step, pushes the head with `wind x 1.04 x mass` (an acceleration of 1.04 per unit of wind, so a full gust swings it more than 6 degrees) and each body in `blown_bodies()` that has no contacts with `wind x width x height x 0.0008`, so a piece's drift is its size over its mass and light scrap drifts most. Thrown-back scrap is excluded for its whole flight (`SortingBin.is_thrown`). While the round runs it pushes the trolley along the rail by `wind x 0.22` units per second through `drift_crane(dx)`, so the player steers against it. It shows three drifting curved antialiased trails (`wind_trails.gd`) with faded tips and yard-edge fades. Seven dark-brown dust particles emit in one-shot bursts 6–11 seconds apart, above the floor, moving at 12–36 units/s with size/shade variation and lifetime fade. Cosmetic RNG is separate from weather rolls. It sets `ambience.wind` so clouds speed up, and drives the `wind_loop` level from `strength()`.
+- **wind:** each physics step, pushes the head with `wind x 1.04 x mass` (an acceleration of 1.04 per unit of wind, so a full gust swings it more than 6 degrees) and each body in `blown_bodies()` that has no contacts with `wind x width x height x 0.0008`, so a piece's drift is its size over its mass and light scrap drifts most. Thrown-back scrap is excluded for its whole flight (`SortingBin.is_thrown`). While the round runs it pushes the trolley along the rail by `wind x 0.22` units per second through `drift_crane(dx)`, so the player steers against it. It shows three moving dots (`wind_trails.gd`) on randomized smooth curves with 1.2s fading path-history tails and yard-edge fades. Seven dark-brown dust particles emit in one-shot bursts 6–11 seconds apart, above the floor, moving at 12–36 units/s with size/shade variation and lifetime fade. Cosmetic RNG is separate from weather rolls. It sets `ambience.wind` so clouds speed up, and drives the `wind_loop` level from `strength()`.
 - **rain:** non-colliding `CPUParticles2D` streaks angled by `wind_now()`, floor splashes, a translucent sheen strip on the floor, and `rain_loop` at full level.
 - **fog:** a gradient overlay at z 6 whose alpha is 0 within 150 units of the trolley and reaches `fog x 0.85` at 650; bin labels dim to `1 - fog x 0.6`. Visual only.
 - **lightning:** plays `thunder` quietly at the warning and loudly at the strike, flashes a white overlay and draws a fading bolt, and connects `power_cut` to the round.
@@ -64,3 +64,7 @@ Wind acts on the head, not the cable itself (a massless constraint), and the dra
 The later visual-only wind/dust pass passed the full managed Linux suite and hardware UI captures. See [wind/UI review](../docs/wind-ui-review.md); no weather balance or rain-particle settings changed.
 
 Profiles additionally carry neutral-default `tint`, `direction_every`, `direction_transition` and `wind_cap`. Blood Moon uses these for [bounded direction cycles and tainted effects](levels.md); other weather retains its fixed side. The HUD displays Wind left/right or calm. Direction and generator timing pause with simulation.
+
+Wind motes keep at most 40 history samples each, with an approximately 30Hz sample interval and quadratic age fade. Continuous signed direction controls horizontal motion; reversal preserves position/history rather than mirroring a ribbon. Each wrap randomizes curve phase, bend, frequency, dot size and speed using cosmetic RNG. `tests/wind_motes_test.gd` checks direction, curve movement, stationary calm, continuous reversal, age fade, wrap variation and bounded storage.
+
+Wind-mote validation: full managed engine suite passed, including `WIND_MOTES_TEST_OK`, existing weather physics and Blood Moon reversal checks. Silent hardware captures checked dot/tail movement on Breezy and Blood Moon; see `.local/motes-light-review/`.

@@ -51,7 +51,7 @@ The other eight slots are locked placeholders. The game opens on this grid. Clea
 
 Made with **Godot 4.7**. Import `project.godot` and run: level selection opens immediately. The playable scene is `labs/salvage/lab.tscn`; F2 opens the optional yard preview in source runs.
 
-On Linux, `./play.sh` launches with desktop audio and `./tests/check` runs the suite. Both require the shared `godot-podman` runner; the launcher also needs a PulseAudio-compatible desktop audio socket. See the setup and alternative commands below.
+On Linux, `./play.sh` launches current local source with desktop audio (including uncommitted edits, with no fetching) and `./tests/check` runs the suite. Both require the shared `godot-podman` runner; the launcher also needs a PulseAudio-compatible desktop audio socket. See the setup and alternative commands below.
 
 - [Contributor guide](docs/collaboration.md) and [test guide](tests/README.md).
 - [Specs](specs/_readme.md) and [design](design/_readme.md) — behavior, decisions and human/AI attribution.

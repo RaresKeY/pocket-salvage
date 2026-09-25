@@ -17,6 +17,7 @@ var blood_moon := false
 var generator_running := true
 var right_lamp_level := 1.0
 var lamp_sprites: Array[Sprite2D] = []
+const BULB_SHADER = preload("res://shaders/blood_moon_bulbs.gdshader")
 const BLOOD_TINT := Color(1.0, 0.32, 0.27)
 
 const Gull = preload("res://scripts/level/yard_gull.gd")
@@ -73,6 +74,7 @@ func configure(value: Dictionary, cursed: bool = false) -> void:
 		var pole := _sprite(near, "yard_floodlight", Vector2.ZERO)
 		if pole:
 			lamp_sprites.append(pole)
+			if blood_moon: pole.material = bulb_material(false)
 			var height: float = pole.texture.get_height() * pole.scale.y
 			pole.position = Vector2(x, layout.ground_top - height * 0.5)
 			lamps.append(pole.position - Vector2(0, height * 0.42))
@@ -82,7 +84,7 @@ func configure(value: Dictionary, cursed: bool = false) -> void:
 	for x in [300.0, 1110.0]: perches.append(Vector2(x, fence_top(Backdrop.FENCE_SKY_ROWS)))
 	for x in [bounds.position.x + 19.0, bounds.end.x - 19.0]:
 		var beacon := _animated(near, "yard_beacon", Vector2(x, 34), 4.0)
-		if beacon and blood_moon: beacon.modulate = BLOOD_TINT
+		if beacon and blood_moon: beacon.material = bulb_material(true)
 	crow = _animated(near, "critter_crow", Vector2(510, fence_top(10) - 0.5 * CROW_HEIGHT * art_scale), 5.0)
 
 func fence_top(extra_rows: float = 0.0) -> float:
@@ -152,7 +154,7 @@ func _process(delta: float) -> void:
 		crow.position.x = clampf(crow.position.x + rng.randf_range(-40, 40), 460, 560)
 	for index in lamp_sprites.size():
 		var level := (right_lamp_level if index == 1 else 1.0) if generator_running else 0.0
-		lamp_sprites[index].modulate = (BLOOD_TINT if blood_moon else Color.WHITE) * Color(0.2 + level * 0.8, 0.2 + level * 0.8, 0.2 + level * 0.8, 1)
+		if blood_moon: lamp_sprites[index].material.set_shader_parameter("power", level)
 	far.queue_redraw()
 	near.queue_redraw()
 
@@ -222,3 +224,10 @@ func _draw_near(layer: Node2D) -> void:
 		var spread := 120.0
 		layer.draw_colored_polygon(PackedVector2Array([lamp + Vector2(-8, 0), lamp + Vector2(8, 0), Vector2(lamp.x + spread, floor_y), Vector2(lamp.x - spread, floor_y)]),
 			Color(glow, glow.a * flicker * level))
+
+func bulb_material(is_beacon: bool) -> ShaderMaterial:
+	var material := ShaderMaterial.new()
+	material.shader = BULB_SHADER
+	material.set_shader_parameter("beacon", is_beacon)
+	material.set_shader_parameter("tint", BLOOD_TINT)
+	return material

@@ -1,6 +1,6 @@
 # Audio
 
-Reviewed: 2026-09-25. Implementation revision: `53982f2` (source UI/wind pass; not in published v0.1.6).
+Reviewed: 2026-09-25. Implementation: local launcher, wind motes and Blood Moon lighting change based on `fb9ac83`.
 
 ## Ownership
 
@@ -37,3 +37,7 @@ Stable loop volume/pitch values do not resend unchanged parameters to the browse
 Performance and underrun evidence, including intentionally silent stress tests, is recorded in [the Firefox/Linux review](../docs/performance-review.md).
 
 Pause-menu Music/SFX sliders call `set_volumes(music, effects)` with clamped 0–1 values. Levels apply additively in dB to existing voice/loop mix levels (0.5 is about −6.02dB); zero stops playback in that category. SFX includes weather and motors. Mute retains the chosen levels. Values persist across round restarts in the scene session, not across app launches. Stable volume setters remain suppressed in the loop update.
+
+`play.sh` resolves its own symlinks, prints checkout/revision plus a local-changes marker, and launches `project.godot`’s current main scene after successful import. It binds current local source and never fetches/pulls or selects a release package. `tests/test_launcher.py` verifies changed local input across launches, symlink resolution, argument forwarding, no Git network operations, and no play after failed import using silent process stubs.
+
+Launcher validation: shell syntax and the local-launch stub regression passed; it is registered in the full suite. Existing native audio forwarding is unchanged; automated visual runs use Dummy audio.

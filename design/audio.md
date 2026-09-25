@@ -6,6 +6,8 @@
 
 Performance follow-up (RaresKeY, 2026-09-25): [exact request](../prompts/source/performance-audio.md) asks to profile Web/native lag and prevent audio crackling during stalls, using priorities or threads as needed. This is explicit user direction.
 
+RaresKeY, 2026-09-25: the [launcher clarification](../prompts/source/wind-motes-launcher.md) explicitly selects current local files without fetching.
+
 ## AI-inferred design
 
 Everything currently in `assets/audio/` is an **AI-generated placeholder** (Claude), synthesised by seeded standard-library Python scripts in `tools/audio/`, so any sound can be edited and regenerated identically. Keep existing music for this release; future replacements remain a separate decision.
@@ -21,3 +23,5 @@ AI-inferred v0.1.1 repair: explicit streamed playback, exact desktop audio socke
 
 
 AI-inferred implementation: use browser-managed Sample playback for Web and retain the native Stream mixer. Current sounds need none of the unsupported Sample bus effects. This separates already-playing sound from game-frame progress without adding cross-origin isolation requirements to Pages. Priorities remain owned by the platform.
+
+Launcher refinement: resolve symlinks to the owning checkout, print the local revision/dirty state, retain mandatory import under the managed lock, and launch the configured project main scene. The container remains only the engine/audio runtime; it never supplies cached game source. No fetch, pull, reset or exported-package selection occurs.

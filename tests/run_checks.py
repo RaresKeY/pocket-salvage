@@ -6,7 +6,9 @@ import sys
 ROOT = Path(__file__).resolve().parents[1]
 BASE = ["godot", "--headless", "--path", str(ROOT)]
 checks = [
+    ([sys.executable, "tests/test_launcher.py"], None),
     (BASE + ["--editor", "--import", "--quit"], None),
+    (BASE + ["--script", "tests/wind_motes_test.gd", "--quit-after", "300"], "WIND_MOTES_TEST_OK"),
     (BASE + ["--script", "tests/level_progression_test.gd", "--quit-after", "900", "--max-fps", "60"], "LEVEL_PROGRESSION_TEST_OK"),
     (BASE + ["--script", "tests/blood_moon_test.gd", "--quit-after", "600", "--max-fps", "60"], "BLOOD_MOON_TEST_OK"),
     (BASE + ["--script", "tests/level_selection_test.gd", "--quit-after", "300", "--max-fps", "60"], "LEVEL_SELECTION_TEST_OK"),

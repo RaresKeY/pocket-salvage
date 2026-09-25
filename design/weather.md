@@ -98,3 +98,9 @@ The existing ten-piece salvage test forces Clear, so it stays deterministic.
 ### AI-inferred visual implementation
 
 Keep physics and rain intact. Use three bounded 32-segment antialiased ribbons with mild sinusoidal bends, faded tips and 80-unit edge fades. Dust becomes seven-particle one-shot bursts, 6–11 seconds apart after an initial delay, 22–38 units above the ground, 12–36 units/s, 0.55–1.8 scale and a dark-brown initial gradient. Dedicated cosmetic RNG avoids changing weather/gameplay rolls.
+
+### Wind motes, 2026-09-25
+
+User design: RaresKeY replaces lines with a dynamic dot following a randomized curve downwind, with a fading tail ([exact request](../prompts/source/wind-motes-launcher.md)).
+
+AI-inferred design: three motes, each with two spatial sine curves, random phase/bend/frequency/speed per crossing. Keep actual path history for 1.2s, sampled around 30Hz and capped at 40 points per mote. Tail alpha fades quadratically with age; a 1.5–2.1 unit dot leads it. Motion uses the continuous signed wind direction, preserving positions through reversals. Edge fades and Blood Moon palette remain. Physics, rain and dust stay unchanged.

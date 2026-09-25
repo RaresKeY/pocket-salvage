@@ -5,3 +5,7 @@
 > wheater effects get taint color, tihs is level 4, wheater is random here in between low and medium
 >
 > also add wind direction state, on blood moon it goes left or right, state is random for duration then switch, with smooth transition to new value, -+ caps
+
+## Lighting refinement
+
+> for blood moon scene/level: mask only bulbs of light post to red not the pole same with lights on top corners, also add a screenspace red tint ovelay and a slight edge/indirect light tint on assets, maybe 5%

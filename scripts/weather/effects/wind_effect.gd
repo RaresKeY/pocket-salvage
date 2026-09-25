@@ -70,10 +70,10 @@ func _physics_process(delta: float) -> void:
 	var level := strength()
 	context.ambience.wind = wind
 	_loop(&"wind_loop", level, -12.0)
-	trails.direction = signf(wind) if wind != 0.0 else 1.0
+	trails.direction = weather.direction
 	trails.strength = level
 	trails.modulate.a = absf(weather.direction)
-	dust.direction = Vector2(trails.direction, -0.12)
+	dust.direction = Vector2(signf(wind), -0.12)
 	dust.initial_velocity_min = 12.0 + level * 8.0
 	dust.initial_velocity_max = 24.0 + level * 12.0
 	dust_wait -= delta
