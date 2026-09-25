@@ -1,6 +1,6 @@
 # Pocket Salvage — Example Local Instructions
 
-Adapt these rules into a local `AGENTS.md` or `CLAUDE.md`; add your own environment constraints. This example is portable guidance, not an automatically loaded instruction file.
+The shared, tracked [AGENTS.md](../AGENTS.md) (imported by `CLAUDE.md`) holds the rules every agent follows. This longer example is background; keep your own environment constraints in untracked notes.
 
 - Read `specs/_readme.md` and relevant specs before editing. Update specs alongside implementation, recording the review date and implementation commit reviewed.
 - Read `design/_readme.md` before adding behavior. Separate explicit user input and contributor decisions from AI-inferred proposals. Pocket Salvage uses a magnetic crane to collect and sort scrap before time expires. Keep the repository/upstream as `random-game`; final art direction remains undecided.

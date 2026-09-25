@@ -7,4 +7,4 @@ Keep record metadata outside the exact prompt block. Each generation record iden
 
 When generation begins, keep a compact `prompts/image_inventory.jsonl`: one record per output with `prompt_path`, `input_paths`, `output_path`, `purpose`, and `status` (`candidate`, `selected`, or `rejected`). Use project-relative paths and link selected decisions from `design/`. Preserve useful candidates and non-reproducible provenance; temporary reproducible outputs follow [artifact retention](../artifacts/README.md).
 
-No generation inventory exists yet because no image-generation call has been made for this project. Illustrative prompts in `examples/` are not generation records.
+[`image_inventory.jsonl`](image_inventory.jsonl) lists the Bitwright scrapyard outputs, one line per frame. Illustrative prompts in `examples/` are not generation records.

@@ -1,6 +1,6 @@
 # Sorting and timed round
 
-Reviewed: 2026-09-24, initial subsystem implementation (commit introducing this file).
+Reviewed: 2026-09-25. Implementation revision: `cdd8a61`.
 
 `scripts/round/round_controller.gd` is a manually clocked Node. `configure(seconds=90, item_count=0)` resets to ready; `start()` resets all counters and consumed IDs and enters running. Caller invokes `tick(delta)` once per frame; nonpositive/nonfinite deltas are ignored. `set_paused(bool)` transitions running/paused. `accept_delivery(item_id, material, bin_material)` returns a `Delivery` enum: `IGNORED` outside running or for an already sorted ID, `WRONG` for a mismatch and `CORRECT` for a match. A match adds `CORRECT_POINTS` (100), consumes the ID and increments `correct_count` and `delivered_count`. A mismatch subtracts `WRONG_PENALTY` (25) with no floor, increments `wrong_count` only, and leaves the ID unconsumed so the same item can still be sorted. A positive total_items finishes with `all_sorted` once that many items are sorted correctly, adding `time_bonus` of `TIME_BONUS_PER_SECOND` (5) per whole remaining second; zero means no item-count finish. Remaining time reaching zero finishes with `timeout` and no bonus. `finish(reason)` is idempotent outside running/paused. `changed` follows state/counter updates; `finished(reason)` fires once per finish transition. There is no automatic processing or scene ownership.
 

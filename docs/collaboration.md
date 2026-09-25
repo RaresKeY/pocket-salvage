@@ -2,7 +2,7 @@
 
 ## Local setup
 
-Read [the specs map](../specs/_readme.md) and relevant specs before editing. Read [the design map](../design/_readme.md) before proposing new behavior. Adapt [the repository instruction example](../examples_agents/random-game.md) into your own ignored `AGENTS.md` or `CLAUDE.md`, adding your environment's execution and resource constraints.
+Read [the specs map](../specs/_readme.md) and relevant specs before editing. Read [the design map](../design/_readme.md) before proposing new behavior. Agents follow the shared root [AGENTS.md](../AGENTS.md), imported by `CLAUDE.md`; keep your environment's execution and resource constraints in untracked notes.
 
 The collaboration remote is private GitHub `origin`. Access requires a separate invitation; this bootstrap does not grant access or install branch protection.
 

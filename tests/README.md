@@ -10,11 +10,11 @@ Use [the background capture flow](../labs/pixel_scaling/README.md) for hardware-
 
 `physics_parts_test.gd` checks real ray hits, filtered Area2D overlap, private shape ownership, independently enabled parts, and visual-mask material lifetime. The physics lab startup is also checked. `./labs/capture physics` verifies rendered alpha and observes contacts/sensors on the GPU. Its boxes are diagnostic fixtures, not game object definitions.
 
-`sprite_playground_test.gd` verifies all 75 exact 8× derivatives and provenance, gallery count, gravity/floor collision, matching sprite/collision size, filtering, mouse picking/grab/release and reset. `./labs/capture sprite_playground` supplies separate GPU captures.
+`sprite_playground_test.gd` verifies all 117 exact 8× derivatives and provenance, the 41-tile gallery, gravity/floor collision, matching sprite/collision size, filtering, mouse picking/grab/release and reset. `./labs/capture sprite_playground` supplies separate GPU captures.
 
 `yard_camera_test.gd` checks the scene’s enlarged texture bindings, tile regions, native viewport, smooth pointer-anchored zoom, limits, left/middle panning, release/focus cancellation, reset and resize.
 
-`crane_test.gd`, `round_test.gd`, `hud_test.gd` and `level_test.gd` cover the independent subsystems. `salvage_test.gd` drives all six real-physics deliveries through the combined lab, then checks carrying pause, end-state, restart and timeout release. This proves deterministic playability, not human enjoyment.
+`crane_test.gd`, `round_test.gd`, `hud_test.gd` and `level_test.gd` cover the independent subsystems. `salvage_test.gd` drives a ten-piece real-physics round through the combined lab, including a deliberate wrong sort, the magnet refusing copper and rubber and a head swap at the stands, then checks carrying pause, end-state, restart, motor sounds, music mute and timeout release. `ambience_test.gd` checks gull perching, crane scares, departures, uneven flight and the spawn cap. This proves deterministic playability, not human enjoyment.
 
 `physical_suspension_test.gd` verifies rigid-body pivot tilt, angular stops, inertial lag, slack tension, load feedback and cable draw order. Rope tests separately retain moving/reeling history through taut-to-slack transitions.
 

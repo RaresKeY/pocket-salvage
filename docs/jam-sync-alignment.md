@@ -22,7 +22,7 @@ The user's later [collaboration rules](../prompts/source/collaboration-rules.md)
 | Shared source versus local/generated outputs | [.gitignore](../.gitignore), [artifacts](../artifacts/README.md) | Generated buckets ignored; authored and non-reproducible material considered separately. |
 | Portable references | [repository contract](../specs/repository.md), [tests/check](../tests/check) | Project-relative documentation; runner override or sibling lookup. |
 | Godot text/LF rules and explicit binary attributes | [.gitattributes](../.gitattributes) | Applied to Godot sources, scripts, and media. |
-| Local ignored agent instructions | [.gitignore](../.gitignore), [instruction examples](../examples_agents/README.md) | `AGENTS.md` and `CLAUDE.md` excluded; existing local instructions preserved. |
+| Agent instructions | [AGENTS.md](../AGENTS.md), [CLAUDE.md](../CLAUDE.md), [instruction examples](../examples_agents/README.md) | Shared and tracked since 2026-09-25 at RaresKeY's request; machine-specific rules stay in untracked notes. |
 | Reusable instruction examples | [random-game example](../examples_agents/random-game.md) | Portable guidance tracked separately from machine policy. |
 | Clearly labeled convention examples | [examples](../examples/README.md), [visual-style example](../examples/visual-style.md) | Illustration only; not approved art or an actual prompt record. |
 | External owned worktree lanes and separate atomic locks | [collaboration design](../design/collaboration.md) | Design-only; no locking tool installed. |

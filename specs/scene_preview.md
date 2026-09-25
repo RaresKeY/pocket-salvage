@@ -1,6 +1,6 @@
 # Scrapyard Scene Preview
 
-Reviewed: 2026-09-24 against the camera/8× texture extension of `b296d7f`.
+Reviewed: 2026-09-25. Implementation revision: `cdd8a61` (art counts only; the scene itself is unchanged since `b296d7f`).
 
 ## Composition and ownership
 
@@ -26,4 +26,4 @@ Inspect the main scene at 1920×1080, 1280×720, 960×540, 854×480 and the mini
 
 A static composition check establishes no collision, gameplay, controller, animation, export, or performance behavior. Final sorting rules and integration of the supplied masks remain open; the separate playable lab exercises provisional round rules.
 
-2026-09-24 validation: full `./tests/check` passed, including camera input tests. Background Gamescope captures at 1280×720 and 854×480 plus a zoomed/panned 1280×720 view confirmed NVIDIA GeForce RTX 2080 Ti rendering. All 75 source/output provenance hashes match.
+2026-09-24 validation: full `./tests/check` passed, including camera input tests. Background Gamescope captures at 1280×720 and 854×480 plus a zoomed/panned 1280×720 view confirmed NVIDIA GeForce RTX 2080 Ti rendering. All 75 source/output provenance hashes then present matched.

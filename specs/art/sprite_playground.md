@@ -1,6 +1,6 @@
 # Enlarged sprite playground
 
-Reviewed: 2026-09-24. Source sync: the change introducing the 8× art playground.
+Reviewed: 2026-09-25. Implementation revision: `cdd8a61`.
 
 User intent: preserve pixel art through integer enlargement, store enlarged copies in a new folder, then render those textures at adjustable smaller sizes with filtering and demonstrate a grabbable physics object. The user selected an 8× enlargement.
 

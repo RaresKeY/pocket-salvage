@@ -1,10 +1,10 @@
 # Project Contract
 
-Reviewed: 2026-09-24 integrating the scene preview with the physics components and 8× sprite playground.
+Reviewed: 2026-09-25. Implementation revision: `cdd8a61`.
 
 ## Status and scope
 
-Pocket Salvage is the official game name; its private GitHub repository remains `random-game`. The selected loop is a magnetic crane collecting and sorting scrap before time expires. Godot 4.7 opens the [scrapyard scene preview](scene_preview.md) in `scenes/main.tscn`, arranging Dale Mooney’s contributed sprites. The pixel-scaling and rope labs remain separate runnable scenes. The preview remains a static arrangement with a Play prototype entry to [the combined lab](salvage_prototype.md). That lab implements crane pickup/release, physical scrap, bins, scoring, a two-minute timer, pause/results/restart and a configurable prototype layout. Bin-front masking and final gameplay integration remain open. Final art direction and delivery platforms remain open.
+Pocket Salvage is the official game name; its private GitHub repository remains `random-game`. The selected loop is a magnetic crane collecting and sorting scrap before time expires. Godot 4.7 opens the [scrapyard scene preview](scene_preview.md) in `scenes/main.tscn`, arranging Dale Mooney’s contributed sprites. The pixel-scaling and rope labs remain separate runnable scenes. The preview remains a static arrangement with a Play prototype entry to [the combined lab](salvage_prototype.md). That lab implements a crane with swappable magnet and claw heads and two tool stands, a ten-piece physical scrap heap, three wall-sharing bins with throw-back on a wrong sort, scoring with a time bonus, a 240-second timer, pause/results/restart, animated night scenery and generated audio. Bin-front masking and final gameplay integration remain open. Final art direction and delivery platforms remain open.
 
 ## Source ownership
 
@@ -14,6 +14,7 @@ Pocket Salvage is the official game name; its private GitHub repository remains 
 - `scripts/rope/` and `labs/rope/` own the [rope subsystem and showcase](rope.md); `vendored/rope_sources/` preserves original copied source.
 - `scripts/physics/`, `shaders/occlusion_mask.gdshader` and `labs/physics/` own [separate visual mask, solid and sensor capabilities](physics.md). Concrete geometry lives in prototype callers rather than the reusable physics components.
 - `tests/check` runs `tests/run_checks.py` through the external shared Godot Podman runner. It resolves the runner from a sibling checkout or `GODOT_PODMAN_RUNNER`.
+- `scripts/crane/`, `scripts/round/`, `scripts/ui/`, `scripts/level/`, `scripts/fx/`, `scripts/art/yard_art.gd`, `scripts/audio/` and `labs/salvage/` own the playable prototype; see the [specs map](_readme.md).
 - [Repository structure](repository.md) describes project memory, collaboration, file handling, and the source layout.
 
 ## Collaboration contract

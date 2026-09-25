@@ -10,7 +10,7 @@ The [object-physics components](scripts/physics/README.md) provide caller-author
 
 - Open `project.godot` with Godot 4.7.
 - Read [the specs map](specs/_readme.md) for implemented reality and [the design map](design/_readme.md) for evolving intent.
-- Read [the collaboration guide](docs/collaboration.md), and adapt [the instruction example](examples_agents/random-game.md) into your own ignored `AGENTS.md` or `CLAUDE.md` when useful.
+- Read [the collaboration guide](docs/collaboration.md). Agents follow the shared [AGENTS.md](AGENTS.md) (`CLAUDE.md` imports it): read specs and design first, update both with every change, and keep explicit human direction separate from AI inference.
 - Commit directly to `main`; use an experimental branch only when separation helps. Rebase unpublished commits onto the latest remote before every push. No pull requests or release tags.
 - Keep the relevant specs updated with implementation changes and record verification with the commits. Start with a shared design spike, then implement a small MVP.
 
