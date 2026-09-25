@@ -124,5 +124,41 @@ func run() -> void:
 	misty.queue_free()
 	calm_lab.queue_free()
 	await process_frame
-	print("WEATHER_TEST_OK profiles, weighted pick, calm, wind and gusts, lightning sequence, pause, forced weather, grip, multiplier, wind, rain, fog")
+	var stormy = Lab.instantiate()
+	stormy.forced_weather = &"storm"
+	root.add_child(stormy)
+	await process_frame
+	stormy.start_round()
+	var steel: RigidBody2D = stormy.scrap_bodies().filter(func(b): return b.material_id == &"steel")[0]
+	stormy.gripping = true
+	stormy.held_body = steel
+	steel.held = true
+	stormy.suspension.attach(steel)
+	stormy.power_cut(1.0)
+	assert(stormy.held_body == null and not steel.held and stormy.power_out_left > 0.0, "power cut drops the magnet's load")
+	stormy.try_pickup()
+	assert(stormy.held_body == null, "a dark magnet picks nothing up")
+	stormy.toggle_pause()
+	var dark: float = stormy.power_out_left
+	for frame in 30: await physics_frame
+	assert(stormy.power_out_left == dark, "power cut waits while paused")
+	stormy.toggle_pause()
+	stormy._fit_head(stormy.Heads.Kind.CLAW)
+	assert(stormy.power_out_left == 0.0, "fitting the claw ends the cut for that head")
+	var coil: RigidBody2D = stormy.scrap_bodies().filter(func(b): return b.material_id == &"copper")[0]
+	stormy.held_body = coil
+	coil.held = true
+	stormy.suspension.attach(coil)
+	stormy.power_cut(1.0)
+	assert(stormy.held_body == coil, "the claw holds through a power cut")
+	stormy._fit_head(stormy.Heads.Kind.MAGNET)
+	stormy.release_load()
+	stormy.power_cut(1.0)
+	stormy.restart_round()
+	assert(stormy.power_out_left == 0.0, "restart gives working power")
+	var flashes = stormy.weather.get_children().filter(func(e): return e.has_method("strike"))
+	assert(flashes.size() == 1 and stormy.weather.power_cut.is_connected(stormy.power_cut), "storm lightning is wired to the round's power")
+	stormy.queue_free()
+	await process_frame
+	print("WEATHER_TEST_OK profiles, weighted pick, calm, wind and gusts, lightning sequence, pause, forced weather, grip, multiplier, wind, rain, fog, lightning and power cuts")
 	quit()

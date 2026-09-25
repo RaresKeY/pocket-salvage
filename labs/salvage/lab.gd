@@ -26,6 +26,7 @@ var weather: Node
 var forced_weather: StringName = &""
 var layout: Dictionary
 var bin_labels: Array[Label] = []
+var power_out_left := 0.0
 var _weather_rng := RandomNumberGenerator.new()
 const PICKUP_RANGE := 62.0
 const MUSIC := &"music_yard"
@@ -214,10 +215,16 @@ func scrap_bodies() -> Array:
 func blown_bodies() -> Array:
 	return [tip] + scrap_bodies().filter(func(body): return not body.held and not body.delivered)
 
-func power_cut(_seconds: float) -> void:
-	pass
+## Lightning: a magnet loses power and drops its load; the mechanical claw is unaffected.
+func power_cut(seconds: float) -> void:
+	if head != Heads.Kind.MAGNET: return
+	power_out_left = maxf(power_out_left,seconds)
+	release_load()
+	if is_instance_valid(head_sprite): head_sprite.play(&"open")
+	_say("Lightning! The magnet lost power.",2.5)
 
 func _fit_head(kind: Heads.Kind) -> void:
+	power_out_left = 0.0
 	if is_instance_valid(head_sprite): head_sprite.queue_free()
 	head = kind
 	head_sprite = Heads.sprite(kind,art_scale)
@@ -383,6 +390,9 @@ func _physics_process(delta: float) -> void:
 	if round_state == null or round_state.state != &"running": return
 	var axes: Vector2 = controls.movement()
 	move_crane(axes.x, axes.y, delta)
+	if power_out_left > 0.0:
+		power_out_left = maxf(0.0,power_out_left - delta)
+		if power_out_left == 0.0 and gripping: _engage(true)
 	if gripping and not is_instance_valid(held_body): try_pickup()
 	feedback_left = maxf(0,feedback_left-delta)
 	round_state.tick(delta) # changed emits the single current HUD snapshot for this tick.
@@ -410,7 +420,7 @@ func toggle_grip() -> void:
 	refresh_hud()
 
 func try_pickup() -> void:
-	if not gripping or is_instance_valid(held_body): return
+	if not gripping or is_instance_valid(held_body) or power_out_left > 0.0: return
 	var candidate: RigidBody2D
 	var refused: RigidBody2D
 	var nearest := PICKUP_RANGE
