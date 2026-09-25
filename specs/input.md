@@ -1,6 +1,6 @@
 # Player input
 
-Reviewed: 2026-09-25. Implementation: controller/mobile change based on `d386f56`; release validation recorded after publication.
+Reviewed: 2026-09-25. Implementation revision: `6488a44` (v0.1.4).
 
 `scripts/input/salvage_input.gd` owns four `salvage_*` movement actions and device-neutral command signals. WASD/arrows, standard D-pad and left-stick axes share the action map with deadzone 0.2. Horizontal and reel axes remain independent, clamped to [-1, 1]; stick strength preserves proportional movement. Existing crane speeds, bounds and grip/stand rules are unchanged.
 
@@ -18,6 +18,6 @@ Verification: `tests/input_test.gd` injects real Godot joypad/touch events and c
 
 On touch landscape screens shorter than 540 logical pixels, the controller occupies a separate bottom-right panel and the yard/footer reserve a right-side column. The redundant touch hints are hidden there to give the yard more height. Portrait and taller layouts keep the controller in the footer. This follows the same theme and leaves game rules unchanged.
 
-Local preflight: the full managed Godot test suite and eight offline release-contract tests passed. The input suite additionally guards against the header covering the modal title and verifies the short-landscape controller panel cannot overlap the yard. Exported-browser validation is required before this update is tagged.
+Local preflight: the full managed Godot test suite and eight offline release-contract tests passed. The input suite additionally guards against the header covering the modal title and verifies the short-landscape controller panel cannot overlap the yard. The rebuilt Web package passed Firefox touch/gamepad checks with no game-console errors; Android and iPadOS identities at DPR 3 exercised automatic detection and responsive layout. See [review and limits](../docs/input-review.md).
 
 Direction buttons draw their arrows with canvas lines instead of font glyphs: exported Web fonts do not include Unicode arrows. The input regression test checks font-independent direction rendering; exported-browser screenshots verify the visible result.

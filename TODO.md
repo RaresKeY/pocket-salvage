@@ -8,6 +8,7 @@
 - [ ] Add `0.0.0+<short-sha>` identity to unreleased development builds.
 
 - [ ] Playtest the published Windows package on a Windows machine.
+- [ ] Check gamepad mappings on physical controllers and touch controls in Android/iOS browsers; consider managed launcher gamepad forwarding.
 - [ ] Investigate the hosted Godot clean-import `SIGABRT` if it recurs; the unchanged v0.1.3 retry passed. See `specs/builds.md`.
 
 Revisit the optional coordination-lock design only if real collaboration friction warrants it.

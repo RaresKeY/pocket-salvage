@@ -1,6 +1,6 @@
 # Repository Structure
 
-Reviewed: 2026-09-25. Implementation: controller/mobile update based on `d386f56`; release source revision recorded after validation.
+Reviewed: 2026-09-25. Implementation revision: `6488a44` (v0.1.4).
 
 ## Current contract
 
