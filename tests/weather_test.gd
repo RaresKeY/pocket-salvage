@@ -56,5 +56,26 @@ func run() -> void:
 	var frozen: float = storm.time
 	await frames(30)
 	assert(storm.time == frozen, "a paused world pauses the weather")
-	print("WEATHER_TEST_OK profiles, weighted pick, calm, wind and gusts, lightning sequence, pause")
+	storm.queue_free()
+	windy.queue_free()
+	calm.queue_free()
+	var Lab = load("res://labs/salvage/lab.tscn")
+	var wet = Lab.instantiate()
+	wet.forced_weather = &"rain"
+	root.add_child(wet)
+	await process_frame
+	assert(wet.weather.profile.id == &"rain", "forced weather is used")
+	for body in wet.scrap_bodies():
+		assert(is_equal_approx(body.physics_material_override.friction, 0.8 * 0.35), "rain makes scrap slick")
+	wet.forced_weather = &"clear"
+	wet.restart_round()
+	for body in wet.scrap_bodies():
+		assert(is_equal_approx(body.physics_material_override.friction, 0.8), "clear leaves friction alone")
+	assert(wet.round_state.multiplier == 1.0)
+	wet.forced_weather = &"storm"
+	wet.restart_round()
+	assert(wet.round_state.multiplier == 1.6, "the round takes the weather's multiplier")
+	wet.queue_free()
+	await process_frame
+	print("WEATHER_TEST_OK profiles, weighted pick, calm, wind and gusts, lightning sequence, pause, forced weather, grip, multiplier")
 	quit()

@@ -20,6 +20,13 @@ const HUD = preload("res://scripts/ui/round_hud.gd")
 const Burst = preload("res://scripts/fx/burst_2d.gd")
 const Heads = preload("res://scripts/crane/crane_heads.gd")
 const YardArt = preload("res://scripts/art/yard_art.gd")
+const Weather = preload("res://scripts/weather/weather.gd")
+var weather: Node
+## Set before the world is built to fix the weather (tests); empty rolls one by chance.
+var forced_weather: StringName = &""
+var layout: Dictionary
+var bin_labels: Array[Label] = []
+var _weather_rng := RandomNumberGenerator.new()
 const PICKUP_RANGE := 62.0
 const MUSIC := &"music_yard"
 const MUSIC_DB := -17.0
@@ -103,6 +110,7 @@ func _ready() -> void:
 	hud.touch_controls.command_requested.connect(controls.touch_command)
 	controls.controls_released.connect(hud.touch_controls.release_all)
 	resized.connect(_fit)
+	_weather_rng.randomize()
 	_build_world()
 	_fit()
 	refresh_hud()
@@ -130,7 +138,8 @@ func _build_world() -> void:
 	stands.clear()
 	world = Node2D.new()
 	viewport.add_child(world)
-	var layout: Dictionary = Layout.create_layout(level_variant)
+	layout = Layout.create_layout(level_variant)
+	bin_labels.clear()
 	art_scale = layout.art_scale
 	reject_landing = Vector2(layout.bins[0].position.x - layout.bins[0].size.x * 0.5 - REJECT_CLEARANCE, layout.ground_top - 25)
 	ambience = Ambience.new()
@@ -163,6 +172,7 @@ func _build_world() -> void:
 		label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		label.add_theme_font_size_override("font_size",20)
 		world.add_child(label)
+		bin_labels.append(label)
 	tip = CableBody.new()
 	tip.mass = 3.0
 	tip.linear_damp = 0.35
@@ -187,11 +197,25 @@ func _build_world() -> void:
 	suspension.configure(tip,layout.crane_anchor,160.0)
 	trolley.position = suspension.anchor
 	ambience.crane_points = func() -> Array: return [trolley.position, tip.global_position]
+	weather = Weather.new()
+	world.add_child(weather)
+	weather.configure(Weather.find(forced_weather) if forced_weather != &"" else Weather.pick(Weather.profiles(),_weather_rng),_weather_rng.randi())
+	weather.attach(self)
 	world.reset_physics_interpolation()
 	finish_reason = ""
-	round_state.configure(ROUND_SECONDS,payloads.size())
+	round_state.configure(ROUND_SECONDS,payloads.size(),weather.profile.multiplier)
 	rebuilding = false
 	_state_changed()
+
+func scrap_bodies() -> Array:
+	return payloads.filter(func(body): return is_instance_valid(body))
+
+## What wind pushes: the head, and scrap that is loose, not carried and not being thrown back.
+func blown_bodies() -> Array:
+	return [tip] + scrap_bodies().filter(func(body): return not body.held and not body.delivered)
+
+func power_cut(_seconds: float) -> void:
+	pass
 
 func _fit_head(kind: Heads.Kind) -> void:
 	if is_instance_valid(head_sprite): head_sprite.queue_free()

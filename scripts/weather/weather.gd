@@ -2,6 +2,10 @@ extends Node
 ## Rolls one weather and runs its clock. Lives in the game world so it pauses with it.
 const Profile = preload("res://scripts/weather/weather_profile.gd")
 const DIR := "res://data/weather/"
+## Each effect enables itself only for profiles that use it; adding one is a file plus a line here.
+const EFFECTS := [
+	preload("res://scripts/weather/effects/grip_effect.gd"),
+]
 signal lightning_warning
 signal lightning(x: float)
 signal power_cut(seconds: float)
@@ -45,6 +49,16 @@ func configure(chosen: Profile, seed: int) -> void:
 
 func _between(span: Vector2) -> float:
 	return rng.randf_range(span.x, span.y) if span != Vector2.ZERO else INF
+
+## Creates the effects this profile uses, acting on `owner_context` (the round; see specs/weather.md).
+func attach(owner_context: Node) -> void:
+	for script in EFFECTS:
+		var effect: Node = script.new()
+		if not effect.applies(profile):
+			effect.free()
+			continue
+		add_child(effect)
+		effect.bind(self, owner_context)
 
 func wind_now() -> float:
 	return direction * (profile.wind + profile.gust * gust_level) if profile else 0.0

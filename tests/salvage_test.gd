@@ -90,6 +90,7 @@ func swap_to(kind: Heads.Kind) -> void:
 func run() -> void:
 	root.size = Vector2i(1280,720)
 	lab = load("res://labs/salvage/lab.tscn").instantiate()
+	lab.forced_weather = &"clear"
 	root.add_child(lab)
 	await process_frame
 	lab.set_physics_process(false)
