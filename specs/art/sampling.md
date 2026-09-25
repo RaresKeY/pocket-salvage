@@ -1,6 +1,6 @@
 # Sampling and Aliasing
 
-Reviewed: 2026-09-25. Implementation revision: `53982f2` (bundled pixel UI font and smooth wind-trail exception).
+Reviewed: 2026-09-25. Implementation: mobile-overlay change based on `285719e`.
 
 ## Art classification
 
@@ -40,3 +40,5 @@ Godot's [resolution guide](https://docs.godotengine.org/en/stable/tutorials/rend
 Use the calibration chart and actual assets in the lab. Inspect opaque edges, one-pixel lines, alpha transitions, and motion at integer and fractional scales. Headless startup establishes no visual quality or hardware-renderer result.
 
 The game UI now uses bundled Tiny5 via `yard_theme.gd`, with antialiasing and subpixel positioning disabled on its runtime font copy. This explicit pixel-font choice does not change other lab fonts or sprite filtering. The smooth procedural wind trails intentionally use antialiasing; rain keeps its existing pixel textures. See [font provenance](../../vendored/tiny5.md).
+
+Mobile action icons under `assets/ui/mobile/` are an explicitly requested smooth UI exception: unchanged transparent PNG masters, lossless 128px runtime imports with mipmaps, and linear overlay sampling. Pale-gray claw and swap arrows use no pixel-grid treatment. Exact generation prompts and provenance: [mobile icons](../../prompts/image/mobile-controls.md).

@@ -4,7 +4,9 @@ signal command_requested(command: StringName)
 signal scheme_changed(scheme: StringName)
 signal controls_released
 
-const DEADZONE := 0.2
+const Motion = preload("res://scripts/input/crane_motion.gd")
+const DEADZONE := Motion.DEADZONE
+var stick := Vector2.ZERO
 const DIRECTIONS := [&"salvage_left", &"salvage_right", &"salvage_up", &"salvage_down"]
 const PAD_COMMANDS := {
 	JOY_BUTTON_A: &"primary", JOY_BUTTON_X: &"swap", JOY_BUTTON_Y: &"restart",
@@ -52,11 +54,6 @@ static func install_movement_actions() -> void:
 		button.device = -1
 		button.button_index = buttons[index]
 		InputMap.action_add_event(action, button)
-		var axis := InputEventJoypadMotion.new()
-		axis.device = -1
-		axis.axis = JOY_AXIS_LEFT_X if index < 2 else JOY_AXIS_LEFT_Y
-		axis.axis_value = -1.0 if index % 2 == 0 else 1.0
-		InputMap.action_add_event(action, axis)
 
 func set_playing(value: bool) -> void:
 	if value == playing: return
@@ -69,7 +66,7 @@ func release_controls() -> void:
 	controls_released.emit()
 
 func set_touch_axes(value: Vector2) -> void:
-	virtual_axes = value if playing else Vector2.ZERO
+	virtual_axes = Motion.analog(value) if playing else Vector2.ZERO
 	if value != Vector2.ZERO: _set_scheme(&"touch")
 
 func touch_command(command: StringName) -> void:
@@ -79,10 +76,10 @@ func touch_command(command: StringName) -> void:
 func movement() -> Vector2:
 	var physical := Vector2(Input.get_axis(DIRECTIONS[0], DIRECTIONS[1]), Input.get_axis(DIRECTIONS[2], DIRECTIONS[3]))
 	if _neutral_required:
-		if physical.length_squared() < 0.0001: _neutral_required = false
+		if physical.length_squared() < 0.0001 and Motion.analog(stick, DEADZONE) == Vector2.ZERO: _neutral_required = false
 		else: return Vector2.ZERO
 	if not playing: return Vector2.ZERO
-	return (physical + virtual_axes).clamp(Vector2(-1, -1), Vector2.ONE)
+	return Motion.combine(physical, stick, virtual_axes)
 
 func _set_scheme(value: StringName) -> void:
 	if value == scheme: return
@@ -90,9 +87,15 @@ func _set_scheme(value: StringName) -> void:
 	scheme_changed.emit(scheme)
 
 func _input(event: InputEvent) -> void:
-	if event is InputEventJoypadMotion and absf(event.axis_value) > DEADZONE:
-		active_pad = event.device
-		_set_scheme(&"gamepad")
+	if event is InputEventJoypadMotion:
+		if event.axis not in [JOY_AXIS_LEFT_X, JOY_AXIS_LEFT_Y]: return
+		if active_pad != event.device:
+			if absf(event.axis_value) <= DEADZONE: return
+			stick = Vector2.ZERO
+			active_pad = event.device
+		if event.axis == JOY_AXIS_LEFT_X: stick.x = event.axis_value
+		else: stick.y = event.axis_value
+		if stick.length() > DEADZONE: _set_scheme(&"gamepad")
 	elif event is InputEventJoypadButton:
 		if event.pressed:
 			active_pad = event.device
@@ -112,5 +115,6 @@ func _connection_changed(device: int, connected: bool) -> void:
 	if connected or device != active_pad: return
 	release_controls()
 	active_pad = -1
+	stick = Vector2.ZERO
 	if playing and scheme == &"gamepad": command_requested.emit(&"pause")
 	_set_scheme(&"touch" if mobile_touch else &"keyboard")

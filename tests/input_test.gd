@@ -34,6 +34,12 @@ func settle() -> void:
 	for frame in 5: await process_frame
 
 func run() -> void:
+	var motion = preload("res://scripts/input/crane_motion.gd")
+	assert(motion.analog(Vector2(0.19, 0), 0.2) == Vector2.ZERO)
+	assert(motion.analog(Vector2(0.01, 0)).x > 0)
+	assert(motion.analog(Vector2(2, 2)).length() <= 1.00001)
+	assert(motion.combine(Vector2.RIGHT, Vector2.RIGHT, Vector2.RIGHT) == Vector2.RIGHT)
+	assert(motion.velocity(Vector2(20, -20)) == Vector2(220, -130))
 	assert(Controls.wants_touch(true, true, false))
 	assert(Controls.wants_touch(true, false, true))
 	assert(not Controls.wants_touch(true, false, false))
@@ -108,26 +114,27 @@ func run() -> void:
 	lab.toggle_pause()
 	await settle()
 	var touch = lab.hud.touch_controls
-	for key in touch.DIRECTIONS:
-		assert(touch.buttons[key].text.is_empty() and not touch.buttons[key].draw.get_connections().is_empty(), "Directions use drawn icons, independent of missing Web font glyphs")
-	var right: Vector2 = touch.buttons[&"right"].get_global_rect().get_center()
-	var lower: Vector2 = touch.buttons[&"down"].get_global_rect().get_center()
+	var right: Vector2 = touch.global_position + touch.stick_center + Vector2(touch.RADIUS, 0)
 	var grip: Vector2 = touch.buttons[&"grip"].get_global_rect().get_center()
 	await finger(1, right, true)
-	await finger(2, lower, true)
 	await finger(3, grip, true)
-	assert(lab.controls.movement() == Vector2.ONE and lab.gripping, "Three simultaneous touches move, reel and grip")
+	assert(lab.controls.movement() == Vector2.RIGHT and lab.gripping, "Independent movement and action fingers")
 	await finger(3, grip, false)
-	assert(lab.gripping, "Touch release never toggles grip a second time")
+	assert(lab.gripping, "Release never toggles grip twice")
 	var drag := InputEventScreenDrag.new()
 	drag.index = 1
-	drag.position = Vector2.ZERO
+	drag.position = touch.global_position + touch.stick_center + Vector2(1, 0)
 	root.push_input(drag, true)
 	await process_frame
-	assert(lab.controls.movement() == Vector2.DOWN, "Dragging outside releases only that finger's direction")
-	await finger(2, Vector2.ZERO, false, true)
+	assert(lab.controls.movement().x > 0 and lab.controls.movement().x < 0.05, "Touch has no deadzone")
+	drag.position = touch.global_position + touch.stick_center + Vector2(500, 500)
+	root.push_input(drag, true)
+	await process_frame
+	assert(is_equal_approx(lab.controls.movement().length(), 1.0), "Drag beyond the ring caps diagonal speed")
+	await finger(2, right, true)
+	assert(touch.stick_finger == 1, "Second finger cannot steal the stick")
+	await finger(1, Vector2.ZERO, false, true)
 	assert(lab.controls.movement() == Vector2.ZERO)
-	await finger(1, right, false)
 	await finger(1, right, true)
 	lab.toggle_pause()
 	assert(touch.fingers.is_empty() and lab.controls.virtual_axes == Vector2.ZERO)
@@ -137,6 +144,21 @@ func run() -> void:
 	root.size = Vector2i(844, 390)
 	await settle()
 	assert(touch.fingers.is_empty(), "Rotation cancels the old touch ownership")
+	touch.mouse_preview = true
+	var mouse := InputEventMouseButton.new()
+	mouse.button_index = MOUSE_BUTTON_LEFT
+	mouse.position = touch.global_position + touch.stick_center
+	mouse.pressed = true
+	root.push_input(mouse, true)
+	var mouse_drag := InputEventMouseMotion.new()
+	mouse_drag.position = mouse.position + Vector2(touch.RADIUS * 0.5, 0)
+	root.push_input(mouse_drag, true)
+	assert(is_equal_approx(lab.controls.movement().x, 0.5), "Linux preview mouse drag is proportional")
+	mouse.pressed = false
+	mouse.position = Vector2.ZERO
+	root.push_input(mouse, true)
+	assert(lab.controls.movement() == Vector2.ZERO, "Mouse release outside the ring clears motion")
+	touch.mouse_preview = false
 	for dimensions in [Vector2i(320,568), Vector2i(390,844), Vector2i(844,390), Vector2i(854,480), Vector2i(960,540), Vector2i(1280,720), Vector2i(1920,1080)]:
 		root.size = dimensions
 		await settle()
@@ -144,11 +166,11 @@ func run() -> void:
 		for button in touch.buttons.values():
 			assert(screen.encloses(button.get_global_rect()), "Touch controls remain on-screen at %s" % dimensions)
 			assert(button.size.x >= 44 and button.size.y >= 44)
-		assert(lab.hud.top_panel.get_global_rect().end.y < lab.hud.bottom_panel.get_global_rect().position.y)
-		assert(lab.stage.get_rect().end.y <= lab.hud.bottom_panel.get_global_rect().position.y)
-		if lab.hud.compact_touch_landscape:
-			assert(lab.stage.get_rect().end.x < lab.hud.touch_panel.get_global_rect().position.x)
-			assert(lab.stage.size.x > dimensions.x * 0.6, "Landscape yard keeps most of the screen width")
+		assert(lab.hud.top_panel.get_global_rect().end.x <= dimensions.x - 56, "Header leaves fullscreen target clear")
+		assert(lab.stage.size.x == dimensions.x, "Overlay reserves no yard column")
+		assert(lab.stage.get_rect().end.y == dimensions.y, "Yard extends behind the controls")
+		assert(screen.has_point(touch.stick_center + Vector2(touch.RADIUS, touch.RADIUS)))
+		assert(touch.buttons[&"swap"].position.y < touch.buttons[&"grip"].position.y)
 		lab.toggle_pause()
 		await settle()
 		assert(screen.encloses(lab.hud.action.get_global_rect()), "Phone modal stays on-screen")

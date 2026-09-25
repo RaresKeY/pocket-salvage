@@ -1,6 +1,6 @@
 # Pocket Salvage Specs Map
 
-Reviewed: 2026-09-25. Implementation revision: `39312c3` (v0.1.7).
+Reviewed: 2026-09-25. Implementation: mobile-overlay change based on `285719e`.
 
 `specs/` is committed project memory for current intent and implementation. Read the relevant spec before changing its owning behavior, contract, boundary, source area, or verification flow, and update it with the implementation.
 
@@ -8,7 +8,7 @@ Reviewed: 2026-09-25. Implementation revision: `39312c3` (v0.1.7).
 
 | Spec | Owning sources | Scope | Read when |
 |---|---|---|---|
-| [Project contract](project.md) | `project.godot`, `play.sh`, `labs/`, `tests/check`, `tests/README.md` | Implemented runtime and verification | Changing engine configuration, startup, or checks |
+| [Project contract](project.md) | `project.godot`, `play.sh`, `play-mobile.sh`, `labs/`, `tests/check`, `tests/README.md` | Implemented runtime and verification | Changing engine configuration, startup, or checks |
 | [Scene preview](scene_preview.md) | `scenes/main.tscn`, `scripts/scene/`, contributed art | Yard composition, 8× textures, smooth inspection camera and scope | Arranging the game scene or changing preview layout |
 | [Art specs module](art/_readme.md) | `assets/`, `scripts/art/`, `scripts/fx/`, `tools/pixel_art/`, `labs/pixel_scaling/`, project rendering defaults | Sampling conventions for all art and the exact-pixel tool/lab | Adding art, changing filtering/imports, or testing scaling |
 | [Enlarged sprite playground](art/sprite_playground.md) | `assets/bitwright_8x/`, `labs/sprite_playground/` | 8× stored art, runtime filtering and grabbable physics fixture | Changing enlarged derivatives or sprite interaction |

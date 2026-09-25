@@ -24,7 +24,7 @@ Correct sorts earn **100 points**. A wrong bin throws the item back and costs **
 
 **Audio:** click Start to enable browser audio. Music and SFX have separate mute buttons and pause-menu volume sliders.
 
-**Mobile:** Web builds automatically show bottom-right touch controls. Hold the arrows to move and lift; tap Grip or Swap. Landscape gives the yard more room.
+**Mobile:** Web builds automatically show a right analog stick and diagonal left Grip/Swap buttons over the yard. Drag farther for more speed. The top-right icon requests fullscreen where your browser permits it; landscape gives the yard more room.
 
 **Desktop:** extract the whole ZIP and keep the executable beside its PCK file. Run `pocket-salvage.exe` on Windows or `pocket-salvage.x86_64` on Linux. The downloadable Web ZIP needs an HTTP server; the hosted links are ready to play.
 
@@ -51,7 +51,7 @@ The other eight slots are locked placeholders. The game opens on this grid. Clea
 
 Made with **Godot 4.7**. Import `project.godot` and run: level selection opens immediately. The playable scene is `labs/salvage/lab.tscn`.
 
-On Linux, `./play.sh` launches current local source with desktop audio (including uncommitted edits, with no fetching) and `./tests/check` runs the suite. Both require the shared `godot-podman` runner; the launcher also needs a PulseAudio-compatible desktop audio socket. See the setup and alternative commands below.
+On Linux, `./play-mobile.sh` previews phone controls at 844×390 with mouse dragging. `./play.sh` launches current local source with desktop audio (including uncommitted edits, with no fetching) and `./tests/check` runs the suite. Both require the shared `godot-podman` runner; the launcher also needs a PulseAudio-compatible desktop audio socket. See the setup and alternative commands below.
 
 - [Contributor guide](docs/collaboration.md) and [test guide](tests/README.md).
 - [Specs](specs/_readme.md) and [design](design/_readme.md) — behavior, decisions and human/AI attribution.

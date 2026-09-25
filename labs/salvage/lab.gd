@@ -1,4 +1,5 @@
 extends Control
+const Motion = preload("res://scripts/input/crane_motion.gd")
 ## Playable integration fixture. Subsystems retain their independent labs.
 const Parts = preload("res://scripts/physics/collision_parts_2d.gd")
 const CableBody = preload("res://scripts/crane/cable_body_2d.gd")
@@ -133,6 +134,7 @@ func _fit() -> void:
 	if stage == null: return
 	var top: float = hud.top_panel.get_global_rect().end.y + 6 if hud != null else 100.0
 	var bottom: float = hud.bottom_panel.get_global_rect().position.y - 6 if hud != null else size.y - 121.0
+	if hud.touch_enabled: bottom = size.y
 	stage.position = Vector2(0, top)
 	stage.size = Vector2(maxf(1, size.x - hud.world_right_inset), maxf(1, bottom - top))
 	var zoom := minf(stage.size.x / 1200.0, stage.size.y / 480.0)
@@ -440,13 +442,14 @@ func _physics_process(delta: float) -> void:
 	round_state.tick(delta) # changed emits the single current HUD snapshot for this tick.
 
 func move_crane(horizontal: float, reel: float, delta: float) -> void:
+	var velocity := Motion.velocity(Vector2(horizontal, reel))
 	var before := Vector2(suspension.anchor.x,suspension.cable_length)
-	suspension.anchor.x = clampf(suspension.anchor.x + horizontal * 220 * delta,80,1120)
-	suspension.cable_length = clampf(suspension.cable_length + reel * 130 * delta,50,335)
+	suspension.anchor.x = clampf(suspension.anchor.x + velocity.x * delta,80,1120)
+	suspension.cable_length = clampf(suspension.cable_length + velocity.y * delta,50,335)
 	trolley.position = suspension.anchor
 	if delta <= 0.0: return
-	var travel: float = absf(suspension.anchor.x - before.x) / (220 * delta)
-	var reeled: float = (suspension.cable_length - before.y) / (130 * delta)
+	var travel: float = absf(suspension.anchor.x - before.x) / (Motion.SPEED.x * delta)
+	var reeled: float = (suspension.cable_length - before.y) / (Motion.SPEED.y * delta)
 	sfx.set_loop(&"trolley_loop",travel,1.0,-8.0)
 	sfx.set_loop(&"winch_loop",absf(reeled),1.12 if reeled < 0.0 else 0.92,-10.0)
 

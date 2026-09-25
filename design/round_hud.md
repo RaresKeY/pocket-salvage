@@ -43,3 +43,13 @@ RaresKeY, 2026-09-25: [exact request](../prompts/source/wind-ui-polish.md) asks 
 Borrow Supper Guard’s shared theme, restrained separators and aligned information groups, keeping this yard’s dark palette. Use square 1px borders, fixed counter order, separate action/status groups and Tiny5 under OFL. Add session-only Music/SFX sliders to Pause alongside existing mute controls. On local runs, opening Developer options replaces those slider rows so Resume and diagnostics fit short screens.
 
 AI-inferred accessibility: pause D-pad up/down navigates controls, left/right adjusts volume in 5% steps, A activates the selected button, and B/Start resumes. Keyboard sliders retain standard focus/arrow/Home/End controls.
+
+## Mobile overlay, 2026-09-25
+
+### User design
+
+RaresKeY requested [rounded analog controls, diagonal left actions and fullscreen](../prompts/source/mobile-overlay.md), over the playable area while preserving aspect ratio.
+
+### AI-inferred design
+
+Keep the square main HUD. Move mobile feedback into the header, remove the reserved touch column/footer, reserve 60px for fullscreen, and reduce counter/action text at narrow widths to preserve clearance. Thumb controls use translucent circles and smooth generated pale-gray icons; menu states hide them.

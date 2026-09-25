@@ -1,6 +1,6 @@
 # Project Contract
 
-Reviewed: 2026-09-25. Implementation: preview-shortcut removal based on `0734d3d`.
+Reviewed: 2026-09-25. Implementation: mobile-overlay change based on `285719e`.
 
 ## Status and scope
 
@@ -38,3 +38,5 @@ Web exports cap presentation at 60 FPS through `application/run/max_fps.web`; na
 
 
 Current release version is 0.1.7: curved wind and sparse dust, square pixel-font UI and independent pause-menu volumes from `53982f2`, with local Developer controls hidden in exports.
+
+`play-mobile.sh` adds a Linux phone-layout preview of current local source, with mouse-operated analog touch controls. See [input](input.md).

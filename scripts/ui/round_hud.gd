@@ -24,14 +24,12 @@ var developer_controls: HBoxContainer
 var hitboxes_check: CheckButton
 var masks_check: CheckButton
 var touch_enabled := false
-var touch_controls: HBoxContainer
+var touch_controls: Control
 var modal_card: PanelContainer
 var modal_center: CenterContainer
 var modal_content: VBoxContainer
 var footer: BoxContainer
-var touch_panel: PanelContainer
 var world_right_inset := 0.0
-var compact_touch_landscape := false
 const YardTheme = preload("res://scripts/ui/yard_theme.gd")
 var header_row: BoxContainer
 var audio_settings: VBoxContainer
@@ -73,7 +71,7 @@ func _ready() -> void:
 	top_panel = top
 	top.set_anchors_and_offsets_preset(PRESET_TOP_WIDE)
 	top.offset_left = 8
-	top.offset_right = -8
+	top.offset_right = -60
 	top.offset_top = 6
 	var compact: StyleBoxFlat = theme.get_stylebox("panel", "PanelContainer").duplicate()
 	compact.set_content_margin_all(8)
@@ -137,20 +135,12 @@ func _ready() -> void:
 	footer.add_child(foot)
 	touch_controls = TouchController.new()
 	touch_controls.visible = touch_enabled
-	touch_controls.size_flags_horizontal = SIZE_SHRINK_END
-	touch_controls.size_flags_vertical = SIZE_SHRINK_CENTER
-	footer.add_child(touch_controls)
-	touch_panel = PanelContainer.new()
-	touch_panel.add_theme_stylebox_override("panel", compact)
-	touch_panel.set_anchors_and_offsets_preset(PRESET_BOTTOM_RIGHT)
-	touch_panel.grow_horizontal = GROW_DIRECTION_BEGIN
-	touch_panel.grow_vertical = GROW_DIRECTION_BEGIN
-	touch_panel.offset_right = -12
-	touch_panel.offset_bottom = -28
-	touch_panel.visible = false
-	add_child(touch_panel)
+	add_child(touch_controls)
 	feedback_label = _label(foot, "")
 	feedback_label.add_theme_color_override("font_color", Color("a1e8c1"))
+	if touch_enabled:
+		feedback_label.reparent(header)
+		feedback_label.add_theme_font_size_override("font_size", 14)
 	hints_label = _label(foot, CONTROL_HINTS)
 	hints_label.add_theme_font_size_override("font_size", 16)
 	modal = ColorRect.new()
@@ -208,6 +198,7 @@ func _ready() -> void:
 	add_child(version)
 	# Audio controls stay available above the modal on ready, pause and results.
 	move_child(top, get_child_count() - 1)
+	add_child(preload("res://scripts/ui/fullscreen_control.gd").new())
 	_ignore_decoration(self)
 	modal.mouse_filter = MOUSE_FILTER_STOP
 	top.resized.connect(func(): _layout_modal(); layout_changed.emit())
@@ -353,7 +344,7 @@ func present(data: Dictionary) -> void:
 	var scheme := str(data.get("control_scheme", "keyboard"))
 	var hints := CONTROL_HINTS
 	if scheme == "gamepad": hints = "Stick/D-pad move/lift · A grip · X swap · Start pause · Y restart · LB music · RB SFX"
-	elif touch_enabled: hints = "Hold arrows to move/lift. Tap Grip or Swap."
+	elif touch_enabled: hints = "Drag the right stick to move/lift. Left buttons grip/swap."
 	hints_label.text = hints
 	var previous := state
 	state = str(data.get("state", "ready"))
@@ -432,16 +423,16 @@ func _activate() -> void:
 func _responsive_layout() -> void:
 	if modal_card == null: return
 	touch_controls.release_all()
-	compact_touch_landscape = touch_enabled and size.x > size.y and size.y < 540
-	var owner_container: Container = touch_panel if compact_touch_landscape else footer
-	if touch_controls.get_parent() != owner_container: touch_controls.reparent(owner_container)
-	touch_panel.visible = compact_touch_landscape
-	world_right_inset = touch_panel.get_combined_minimum_size().x + 24 if compact_touch_landscape else 0.0
-	bottom_panel.offset_right = -12 - world_right_inset
-	hints_label.visible = not compact_touch_landscape
-	footer.vertical = touch_enabled and size.x < 600
+	world_right_inset = 0.0
+	bottom_panel.visible = not touch_enabled
+	hints_label.visible = not touch_enabled
+	footer.vertical = false
 	level_grid.columns = 4 if size.x < 500 else 6
 	header_row.vertical = size.x < 760
+	for label in [score_label, time_label, progress_label]:
+		label.add_theme_font_size_override("font_size", 14 if size.x < 420 else 20)
+	for button in [music_button, effects_button, pause_button]:
+		button.add_theme_font_size_override("font_size", 14 if size.x < 360 else 20)
 	var compact_modal := size.y < 500
 	for button in level_buttons: button.add_theme_font_size_override("font_size", 14 if compact_modal or size.x < 360 else 16)
 	modal_content.add_theme_constant_override("separation", 4 if compact_modal else 10)

@@ -13,6 +13,19 @@ ROOT = Path(__file__).resolve().parents[1]
 
 @unittest.skipUnless(hasattr(socket, "AF_UNIX"), "play.sh and its desktop audio socket are Linux-only")
 class LauncherTest(unittest.TestCase):
+    def test_mobile_preview_forwards_engine_and_user_flags(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            shutil.copy2(ROOT / 'play-mobile.sh', root / 'play-mobile.sh')
+            launcher = root / 'play.sh'
+            launcher.write_text('#!/bin/sh\nprintf "%s\\n" "$@"\n')
+            launcher.chmod(0o755)
+            result = subprocess.run([str(root / 'play-mobile.sh'), '--quit-after', '2'],
+                                    capture_output=True, text=True, check=True)
+            self.assertEqual(result.stdout.splitlines(),
+                             ['--resolution', '844x390', '--quit-after', '2', '--',
+                              '--touch-controls', '--mobile-preview'])
+
     def test_local_edits_symlink_and_failed_import(self):
         with tempfile.TemporaryDirectory() as temporary:
             base = Path(temporary)
