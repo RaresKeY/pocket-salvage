@@ -11,3 +11,5 @@ Keep exact user text separate from commentary, inference, and later decisions. T
 [Controller/mobile](controller-mobile.md) records the checkout rename and explicit gamepad/mobile Web controls request.
 
 [Weather](weather.md) records Dale's weather request and design approvals.
+
+Records of Dale's directives correct typing errors in spelling and punctuation; the wording and meaning stay exactly as given.

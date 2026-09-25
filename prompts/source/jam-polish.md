@@ -1,6 +1,6 @@
 # Jam polish directives, 2026-09-25
 
-Exact text from the session in which Dale Mooney, working through Claude Code, treated the repository as a jam entry. Spelling is preserved as typed. Commentary sits outside the quotes. Design documents cite this record for the **User design** side of the split.
+Dale Mooney's words from the session in which he, working through Claude Code, treated the repository as a jam entry. Spelling and punctuation are corrected; the wording and meaning are unchanged. Commentary sits outside the quotes. Design documents cite this record for the **User design** side of the split.
 
 ## RaresKeY, relayed by Dale
 
@@ -8,69 +8,69 @@ The session's starting brief, forwarded by Dale:
 
 > "hey Darwin, Morning, can I ask if you have time to code today? I would like you to try and find what the repo we started together needs, and treat it as if it was our jam entry, find and solve problems on it and move towards polish.
 >
-> I want to asses how you deal with that part since yesterday you only did one delegated task for the art" thats what the guyb has assked me can you review?
+> I want to assess how you deal with that part since yesterday you only did one delegated task for the art." That's what he's asked me. Can you review?
 
 ## Dale
 
 Approving the AI review's first proposals (wrong-bin scrap counted as sorted, score floored at zero, no reward for speed, then an art pass using the unused sprites):
 
-> yess
+> Yes.
 
-> can you run the game
+> Can you run the game?
 
-> what next
+> What next?
 
 Bug report after playing:
 
-> items can get stuck betweeen the bins and cause issues
+> Items can get stuck between the bins and cause issues.
 
 Head attachments, first message:
 
-> maybe you have a magnet head and also a gripper so you pick up thigs that cannot be picked up by magnet and dfiferent tyypeses of headsw uyopu p[ut down and pick uhp new ones eetc
+> Maybe you have a magnet head and also a gripper, so you pick up things that can't be picked up by the magnet, and different types of heads you put down and pick up new ones, etc.
 
 Background and polish:
 
-> and would be good to improve the backgroiund with more sprites etc and movement etc? a moon or soemthing and other thtigns to make it exceiting and add lots of nice polish and any other sporites we can add
+> And it would be good to improve the background with more sprites and movement? A moon or something, and other things to make it exciting, and add lots of nice polish and any other sprites we can add.
 
-> hows it going
+> How's it going?
 
 Approving the AI's proposed list (animated sky, stars, clouds, blinking tower lights, score popups, hurry timer, screen shake, and new Bitwright sprites: moon, gull, crow, rat, floodlight, skyline, smoke, beacon):
 
-> yes do it all lets get it nice a polished
+> Yes, do it all, let's get it nice and polished.
 
 Seagull feedback after playing:
 
-> the seagulls repeat a lot fo look odd andnot nattural and would beg ood if thtey landed somettitmesw etc
+> The seagulls repeat a lot, so they look odd and not natural, and it would be good if they landed sometimes.
 
 Crane sound:
 
-> when the machine moves down it doesnt make a noise or when moving
+> When the machine moves down it doesn't make a noise, or when moving.
 
 Head attachments, second message:
 
-> and whjat aboutt the dfiferent heaed attachemnets? beecausee magnet wont pick up rubber
+> And what about the different head attachments? Because the magnet won't pick up rubber.
 
 Scrap arrangement:
 
-> and maybe we add a big pile ratther than all nicely placed next to each otther
+> And maybe we add a big pile rather than all nicely placed next to each other.
 
 Code quality:
 
-> we also need to makee sure tthe copde is DRY and reeusable
+> We also need to make sure the code is DRY and reusable.
 
 Claw feedback after playing:
 
-> thye claws close to sonn  and not aas you ge to he oiutem to pick it upo
+> The claws close too soon, and not as you get to the item to pick it up.
 
 Music:
 
-> We need some bacjkgriound music also soemethign sublee
+> We need some background music too, something subtle.
 
 Wrapping up:
 
-> ok can we push and theng ivee me an update for himn to send
+> OK, can we push and then give me an update for him to send?
 
-> nope sent tot him
+> Nope, sent to him.
 
 ## RaresKeY
 
@@ -81,6 +81,6 @@ Reply after playing the pushed build, forwarded by Dale:
 >
 > Anyway I really like the changes, the animations, smart combination of lights and masks animals background and the claw/magnet, it's all top tier design.
 >
-> I'll prep some music and sfx as well as a bit of UI polish to bring it together then push builds on release on gh, can you bring design and specs up to date? mainly since it lagged behind here and you have the logs I would ask the agent to look at chat logs and infer from that the human/ai infered split to keep it up to date
+> I'll prep some music and sfx as well as a bit of UI polish to bring it together then push builds on release on gh, can you bring design and specs up to date? mainly since it lagged behind here and you have the logs I would ask the agent to look at chat logs and infer from that the human/AI inferred split to keep it up to date
 >
 > all in all very good work, I think we can work well together, also please let me know how the flow felt and if you want change in any direction
