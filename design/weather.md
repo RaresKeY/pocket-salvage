@@ -104,3 +104,9 @@ Keep physics and rain intact. Use three bounded 32-segment antialiased ribbons w
 User design: RaresKeY replaces lines with a dynamic dot following a randomized curve downwind, with a fading tail ([exact request](../prompts/source/wind-motes-launcher.md)).
 
 AI-inferred design: three motes, each with two spatial sine curves, random phase/bend/frequency/speed per crossing. Keep actual path history for 1.2s, sampled around 30Hz and capped at 40 points per mote. Tail alpha fades quadratically with age; a 1.5–2.1 unit dot leads it. Motion uses the continuous signed wind direction, preserving positions through reversals. Edge fades and Blood Moon palette remain. Physics, rain and dust stay unchanged.
+
+### Level 3 flicker and soft rain, 2026-09-25
+
+User design (RaresKeY): [exact request and confirmation](../prompts/source/lightning-rain.md). Violent lightning briefly inverts the magnet then restores its prior state; switching off drops held scrap. Rain should primarily be non-harsh, with slight, normal and violent strengths.
+
+AI-inferred design: 0.45s inversion on Level 3 only. Overlapping strikes extend the same flicker, pause freezes it, manual toggling cancels restoration, and head changes/restart/results discard stale restoration. Other levels retain their power-cut rules, including Blood Moon’s reversed powered head. Rain particle rates select slight below 100, normal below 200, violent at 200 or above; the existing weather profiles remain unchanged apart from Violent’s flicker duration/tip.

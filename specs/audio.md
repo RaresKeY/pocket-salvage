@@ -1,10 +1,10 @@
 # Audio
 
-Reviewed: 2026-09-25. Implementation: local launcher, wind motes and Blood Moon lighting change based on `fb9ac83`.
+Reviewed: 2026-09-25. Implementation: lightning/rain change based on `826efb6`.
 
 ## Ownership
 
-`scripts/audio/sfx.gd` plays everything; `tools/audio/make_sfx.py` and `tools/audio/make_music.py` generate `assets/audio/*.wav` (16-bit mono, 22050 Hz, standard library only, seeded, so reruns reproduce the files). The generated sounds remain provisional. RaresKeY’s latest correction keeps the existing music and requests working playback instead of new music generation. A replacement WAV with the same name needs no code change.
+`scripts/audio/sfx.gd` plays everything; `tools/audio/make_sfx.py`, `tools/audio/make_rain.py` and `tools/audio/make_music.py` generate `assets/audio/*.wav` (16-bit mono, 22050 Hz, standard library only, seeded, so reruns reproduce the files). The generated sounds remain provisional. RaresKeY’s latest correction keeps the existing music and requests working playback instead of new music generation. A replacement WAV with the same name needs no code change.
 
 ## Player contract
 
@@ -12,7 +12,7 @@ Reviewed: 2026-09-25. Implementation: local launcher, wind motes and Blood Moon 
 
 ## Sounds
 
-Effects: `ui_click` (pause/resume), `start`, `magnet_on`, `magnet_off`, `claw_shut`, `claw_open`, `clank`, `pickup`, `land`, `correct`, `wrong`, `eject`, `tick`, `finish`, `thunder` (weather rumble and strike). Loops: `wind_loop` and `rain_loop` (weather, same seam correction), `trolley_loop` and `winch_loop` (one second, whole-hertz tones plus a short endpoint correction for the noise layer) and `music_yard`, a 32-second ambient loop in A minor (Am F C G pads, soft bass, sparse plucked arpeggio, note tails wrapped so it loops without a seam). `make_music.py` imports the tone and WAV helpers from `make_sfx.py`.
+Effects: `ui_click` (pause/resume), `start`, `magnet_on`, `magnet_off`, `claw_shut`, `claw_open`, `clank`, `pickup`, `land`, `correct`, `wrong`, `eject`, `tick`, `finish`, `thunder` (weather rumble and strike). Loops: `wind_loop` and three rain strengths (`rain_slight_loop`, normal `rain_loop`, `rain_violent_loop`), `trolley_loop` and `winch_loop` (one second, whole-hertz tones plus a short endpoint correction for the noise layer) and `music_yard`, a 32-second ambient loop in A minor (Am F C G pads, soft bass, sparse plucked arpeggio, note tails wrapped so it loops without a seam). `make_music.py` imports the tone and WAV helpers from `make_sfx.py`.
 
 ## Use in the salvage round
 
@@ -41,3 +41,7 @@ Pause-menu Music/SFX sliders call `set_volumes(music, effects)` with clamped 0�
 `play.sh` resolves its own symlinks, prints checkout/revision plus a local-changes marker, and launches `project.godot`’s current main scene after successful import. It binds current local source and never fetches/pulls or selects a release package. `tests/test_launcher.py` verifies changed local input across launches, symlink resolution, argument forwarding, no Git network operations, and no play after failed import using silent process stubs.
 
 Launcher validation: shell syntax and the local-launch stub regression passed; it is registered in the full suite. Existing native audio forwarding is unchanged; automated visual runs use Dummy audio.
+
+Rain masters are eight-second seeded beds from `make_rain.py`: three cascaded low-pass stages (700/950/1200Hz), smooth periodic amplitude variation, RMS 0.035/0.055/0.075 and corrected identical endpoints. Weather selects by rain rate (<100 / <200 / ≥200) and mixes at −22/−19/−16dB. No raw white-noise layer or square modulation remains in rain. `make_sfx.py` regenerates these recipes too; running `make_rain.py` changes only rain. Audio lab buttons expose all three. `tests/test_rain_audio.py` checks master/recipe identity, tier ordering, peak headroom, endpoint continuity and a bounded high-frequency difference measure; engine audio tests decode and optionally capture all tiers.
+
+Validation (2026-09-25): seeded masters reproduced exactly; normalized sample-difference RMS was 0.116/0.159/0.201 for slight/normal/violent, with no clipping and identical endpoints. Full managed Godot suite passed after rebasing onto the latest skyline change (`826efb6`); silent PulseAudio capture independently confirmed nonzero output for all three loops (`AUDIO_TEST_OK driver=PulseAudio`). This verifies playback and signal bounds, not a subjective speaker-listening assessment. Evidence: `.local/rain-flicker-review/`.

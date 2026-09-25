@@ -25,3 +25,13 @@ AI-inferred v0.1.1 repair: explicit streamed playback, exact desktop audio socke
 AI-inferred implementation: use browser-managed Sample playback for Web and retain the native Stream mixer. Current sounds need none of the unsupported Sample bus effects. This separates already-playing sound from game-frame progress without adding cross-origin isolation requirements to Pages. Priorities remain owned by the platform.
 
 Launcher refinement: resolve symlinks to the owning checkout, print the local revision/dirty state, retain mandatory import under the managed lock, and launch the configured project main scene. The container remains only the engine/audio runtime; it never supplies cached game source. No fetch, pull, reset or exported-package selection occurs.
+
+## Soft rain remake, 2026-09-25
+
+### User design
+
+RaresKeY asks for non-harsh rain with slight, normal and violent strengths ([exact request](../prompts/source/lightning-rain.md)).
+
+### AI-inferred design
+
+Replace the one-second white-noise/square-modulated rain with three eight-second seeded rain beds. Use three low-pass stages at 700/950/1200Hz, slow smooth amplitude variation and corrected loop seams; no unfiltered hiss or sharp taps. Source RMS levels are 0.035/0.055/0.075, mixed at −22/−19/−16dB respectively. Retain the normal `rain_loop` name; add `rain_slight_loop` and `rain_violent_loop`. These are synthesized soft rain washes, not field recordings. Existing music, thunder and wind audio are unchanged.

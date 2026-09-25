@@ -4,7 +4,7 @@
 script = ExtResource("1")
 id = &"violent"
 label = "Violent"
-tip = "Strong gusts, heavy rain and frequent lightning."
+tip = "Strong gusts and heavy rain. Lightning briefly flips the magnet."
 multiplier = 1.8
 wind = 100.0
 gust = 180.0
@@ -15,4 +15,4 @@ fog = 0.3
 rain = 260.0
 lightning_every = Vector2(8, 16)
 warning = 1.0
-power_cut = 1.4
+power_cut = 0.45

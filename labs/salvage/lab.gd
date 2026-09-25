@@ -34,6 +34,8 @@ var forced_weather: StringName = &""
 var layout: Dictionary
 var bin_labels: Array[Label] = []
 var power_out_left := 0.0
+var magnet_flicker_left := 0.0
+var _magnet_restore := false
 var _weather_rng := RandomNumberGenerator.new()
 const PICKUP_RANGE := 62.0
 const MUSIC := &"music_yard"
@@ -259,6 +261,15 @@ func blown_bodies() -> Array:
 
 ## The electrically powered role drops its load; Blood Moon assigns that role to the claw.
 func power_cut(seconds: float) -> void:
+	if selected_level == 2 and head == Heads.Kind.MAGNET:
+		if magnet_flicker_left <= 0.0:
+			_magnet_restore = gripping
+			gripping = not gripping
+			if not gripping: release_load()
+		magnet_flicker_left = maxf(magnet_flicker_left, seconds)
+		_say("Lightning! Magnet briefly switched %s." % ("ON" if gripping else "OFF"), 1.5)
+		refresh_hud()
+		return
 	if Heads.function_kind(head, selected_level == 3) != Heads.Kind.MAGNET: return
 	power_out_left = maxf(power_out_left,seconds)
 	release_load()
@@ -266,6 +277,7 @@ func power_cut(seconds: float) -> void:
 	_say("Power cut! The %s lost power." % Heads.SPECS[head].name.to_lower(),2.5)
 
 func _fit_head(kind: Heads.Kind) -> void:
+	magnet_flicker_left = 0.0
 	power_out_left = 0.0
 	if is_instance_valid(head_sprite): head_sprite.queue_free()
 	head = kind
@@ -423,6 +435,7 @@ func _state_changed() -> void:
 	refresh_hud()
 
 func _finished(reason: StringName) -> void:
+	magnet_flicker_left = 0.0
 	victory = reason == &"all_sorted"
 	finish_reason = "All scrap sorted" if reason == &"all_sorted" else "Time is up"
 	sfx.play(&"finish" if reason == &"all_sorted" else &"wrong")
@@ -434,6 +447,11 @@ func _physics_process(delta: float) -> void:
 	if round_state == null or round_state.state != &"running": return
 	var axes: Vector2 = controls.movement()
 	move_crane(axes.x, axes.y, delta)
+	if magnet_flicker_left > 0.0:
+		magnet_flicker_left = maxf(0.0, magnet_flicker_left - delta)
+		if magnet_flicker_left == 0.0:
+			gripping = _magnet_restore
+			if not gripping: release_load()
 	if power_out_left > 0.0:
 		power_out_left = maxf(0.0,power_out_left - delta)
 		if power_out_left == 0.0 and gripping: _engage(true)
@@ -464,6 +482,7 @@ func toggle_grip() -> void:
 		_say("No head fitted. Pick one up from a tool stand with Swap.",4.0)
 		refresh_hud()
 		return
+	magnet_flicker_left = 0.0 # An explicit player toggle supersedes automatic restoration.
 	gripping = not gripping
 	if not gripping: release_load()
 	else: try_pickup()

@@ -1,6 +1,6 @@
 # Level selection
 
-Reviewed: 2026-09-25. Implementation: local launcher, wind motes and Blood Moon lighting change based on `fb9ac83`.
+Reviewed: 2026-09-25. Implementation: lightning/rain change based on `826efb6`.
 
 `scripts/level/level_catalog.gd` owns twelve slots and four unlocked profiles. Level 1 reuses `data/weather/clear.tres` with no effects. Levels 2 and 3 use `data/levels/breezy.tres` and `violent.tres`; both enable all five existing effects with increasing intensity. Original weighted weather resources/API remain available to labs and tests.
 
@@ -37,3 +37,5 @@ Blood Moon lighting uses `shaders/blood_moon_bulbs.gdshader`: bounded lens regio
 Lighting refinement validation: full managed Godot 4.7 suite passed; silent RTX 2080 Ti/Gamescope rendering passed `BULB_MASK_GPU_OK` for floodlight and bright/dim beacon frames, plus Blood Moon material-reset checks. Captures include running wind motes and generator outage. Local evidence: `.local/motes-light-review/`.
 
 Blood Moon also swaps the backdrop's `skyline` to `backdrop_blood_skyline_tile` (a generated crimson skyline); `yard_backdrop.gd` exposes `skyline` for that. `tests/blood_moon_test.gd` checks the Blood Moon moon and skyline and that Clear restores both.
+
+Violent (Level 3) lightning briefly inverts the magnet for 0.45s before restoring its previous switch state; see [weather](weather.md). Its rain uses the violent soft-audio tier; Breezy uses slight and Blood Moon selects slight/normal from its randomized rain strength.

@@ -1,6 +1,6 @@
 # Weather
 
-Reviewed: 2026-09-25. Implementation: local launcher, wind motes and Blood Moon lighting change based on `fb9ac83`.
+Reviewed: 2026-09-25. Implementation: lightning/rain change based on `826efb6`.
 
 Each salvage round uses its selected level’s weather that physically changes how the crane works and multiplies a positive final score. Intent and the split between Dale's direction and AI choices are in [design/weather.md](../design/weather.md).
 
@@ -39,7 +39,7 @@ Fields: `id`, `label`, `tip`, `chance`, `multiplier`, `wind`, `gust`, `gust_ever
 
 - **grip:** multiplies each scrap body's own friction by `grip` once when the world is built.
 - **wind:** each physics step, pushes the head with `wind x 1.04 x mass` (an acceleration of 1.04 per unit of wind, so a full gust swings it more than 6 degrees) and each body in `blown_bodies()` that has no contacts with `wind x width x height x 0.0008`, so a piece's drift is its size over its mass and light scrap drifts most. Thrown-back scrap is excluded for its whole flight (`SortingBin.is_thrown`). While the round runs it pushes the trolley along the rail by `wind x 0.22` units per second through `drift_crane(dx)`, so the player steers against it. It shows three moving dots (`wind_trails.gd`) on randomized smooth curves with 1.2s fading path-history tails and yard-edge fades. Seven dark-brown dust particles emit in one-shot bursts 6–11 seconds apart, above the floor, moving at 12–36 units/s with size/shade variation and lifetime fade. Cosmetic RNG is separate from weather rolls. It sets `ambience.wind` so clouds speed up, and drives the `wind_loop` level from `strength()`.
-- **rain:** non-colliding `CPUParticles2D` streaks angled by `wind_now()`, floor splashes, a translucent sheen strip on the floor, and `rain_loop` at full level.
+- **rain:** non-colliding `CPUParticles2D` streaks angled by `wind_now()`, floor splashes, a translucent sheen strip on the floor, and one soft rain loop selected by particle rate: slight (<100), normal (<200), or violent (≥200), at −22/−19/−16dB respectively. Only the selected loop runs; effect lifecycle handles pause/mute/rebuild.
 - **fog:** a gradient overlay at z 6 whose alpha is 0 within 150 units of the trolley and reaches `fog x 0.85` at 650; bin labels dim to `1 - fog x 0.6`. Visual only.
 - **lightning:** plays `thunder` quietly at the warning and loudly at the strike, flashes a white overlay and draws a fading bolt, and connects `power_cut` to the round.
 
@@ -48,6 +48,8 @@ Fields: `id`, `label`, `tip`, `chance`, `multiplier`, `wind`, `gust`, `gust_ever
 The salvage round is the effects' context and provides: `layout`, `world`, `weather`, `trolley`, `ambience`, `sfx`, `round_state`, `bin_labels`, `drift_crane(dx)`, `scrap_bodies()` (valid scrap), `blown_bodies()` (the head plus scrap that is not held and not being thrown back), and `power_cut(seconds)`.
 
 The round picks the weather when it builds its world, from `forced_weather` when set (tests) or from the [level catalog](levels.md); its gust/lightning seed is randomized. It passes the profile's multiplier to `round_state.configure`. `power_cut` affects the electrically powered head (magnet normally, claw in Blood Moon): it drops the load, shows the open frame and blocks pickup until `power_out_left` runs out in the round's physics step, which only runs while the round is running, so the cut freezes while paused. Fitting a head or rebuilding the world clears it. The other head is unaffected.
+
+On Level 3 specifically, lightning instead inverts the actual magnet switch for 0.45s, releases the load when switching off, then restores its previous state. An initially OFF magnet becomes usable during the brief ON interval; restoration to OFF releases any caught load. Overlapping strikes extend the timer without another inversion. Pause freezes it; manual grip input, head swap, restart and results cancel pending restoration. The mechanical claw remains unaffected. Other levels retain the power-cut behavior above.
 
 The HUD shows `weather_label()` ("Storm x1.6", or just "Clear") as a badge, the label and tip on the start card, and the weather bonus on the results card. See [round HUD](round_hud.md) and [sorting and rounds](round.md) for the multiplier.
 
@@ -68,3 +70,7 @@ Profiles additionally carry neutral-default `tint`, `direction_every`, `directio
 Wind motes keep at most 40 history samples each, with an approximately 30Hz sample interval and quadratic age fade. Continuous signed direction controls horizontal motion; reversal preserves position/history rather than mirroring a ribbon. Each wrap randomizes curve phase, bend, frequency, dot size and speed using cosmetic RNG. `tests/wind_motes_test.gd` checks direction, curve movement, stationary calm, continuous reversal, age fade, wrap variation and bounded storage.
 
 Wind-mote validation: full managed engine suite passed, including `WIND_MOTES_TEST_OK`, existing weather physics and Blood Moon reversal checks. Silent hardware captures checked dot/tail movement on Breezy and Blood Moon; see `.local/motes-light-review/`.
+
+`tests/lightning_flicker_test.gd` exercises real Level 3 signal wiring, switch/HUD inversion, dropped load, restoration in both directions, overlap, pause and manual/head/restart cancellation. Rain tier boundaries are checked independently from presentation.
+
+Lightning/rain validation: complete managed Godot 4.7 suite passed after rebasing onto `826efb6`, including `LIGHTNING_FLICKER_TEST_OK` and unchanged Blood Moon power-cut regressions. Audio waveform and real muted-mixer evidence is recorded in [audio](audio.md).

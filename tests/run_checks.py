@@ -6,8 +6,10 @@ import sys
 ROOT = Path(__file__).resolve().parents[1]
 BASE = ["godot", "--headless", "--path", str(ROOT)]
 checks = [
+    ([sys.executable, "tests/test_rain_audio.py"], None),
     ([sys.executable, "tests/test_launcher.py"], None),
     (BASE + ["--editor", "--import", "--quit"], None),
+    (BASE + ["--script", "tests/lightning_flicker_test.gd", "--max-fps", "60", "--quit-after", "600"], "LIGHTNING_FLICKER_TEST_OK"),
     (BASE + ["--script", "tests/wind_motes_test.gd", "--quit-after", "300"], "WIND_MOTES_TEST_OK"),
     (BASE + ["--script", "tests/level_progression_test.gd", "--quit-after", "900", "--max-fps", "60"], "LEVEL_PROGRESSION_TEST_OK"),
     (BASE + ["--script", "tests/blood_moon_test.gd", "--quit-after", "600", "--max-fps", "60"], "BLOOD_MOON_TEST_OK"),

@@ -1,6 +1,6 @@
 # Playable subsystem integration
 
-Reviewed: 2026-09-25. Implementation: preview-shortcut removal based on `0734d3d`.
+Reviewed: 2026-09-25. Implementation: lightning/rain change based on `826efb6`.
 
 ## Composition
 
@@ -51,3 +51,5 @@ The yard now fits between the actual HUD panel bounds with 6px clearance. Indepe
 The physics tick expires feedback before advancing the round; the round change signal presents the single current HUD snapshot for that tick. Input and delivery events still refresh immediately.
 
 Level 4 integrates the [Blood Moon](levels.md) generator controller, reversed material/power rules, tainted ambience and random mild-to-medium weather. Only this level receives those rules; all worlds are rebuilt on selection/replay.
+
+Level 3 lightning uses `magnet_flicker_left` and a saved switch state to implement brief inversion/restoration, with real load release and cancellation on explicit input, head change, restart or finish. The existing `power_out_left` outage remains for other levels. See [weather](weather.md).

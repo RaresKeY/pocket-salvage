@@ -2,6 +2,12 @@ extends "res://scripts/weather/weather_effect.gd"
 ## Visual rain angled by the wind, floor splashes, a wet sheen and the rain loop. Drops do not collide.
 const FALL := 900.0
 static var _line: Texture2D
+const SOUND_TIERS := [&"rain_slight_loop", &"rain_loop", &"rain_violent_loop"]
+const MIX_DB := [-22.0, -19.0, -16.0]
+
+static func sound_tier(rate: float) -> int:
+	return 0 if rate < 100.0 else (1 if rate < 200.0 else 2)
+
 var streaks: CPUParticles2D
 var splashes: CPUParticles2D
 
@@ -32,7 +38,8 @@ func _start() -> void:
 	sheen.z_index = 1
 	sheen.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	context.world.add_child(sheen)
-	_loop(&"rain_loop", 1.0, -14.0)
+	var tier := sound_tier(weather.profile.rain)
+	_loop(SOUND_TIERS[tier], 1.0, MIX_DB[tier])
 
 func _particles(amount: int, at: Vector2, extents: Vector2, color: Color, life: float) -> CPUParticles2D:
 	var particles := CPUParticles2D.new()

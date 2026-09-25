@@ -21,3 +21,7 @@ Keep independent crane, sorting, HUD and level labs useful as regression and rep
 ## Audio/UI release follow-up, 2026-09-25
 
 User design (RaresKeY): [exact request and correction](../prompts/source/audio-ui-release.md) to repair existing audio, polish UI and build Windows/Linux/Web locally for a GitHub release. New music prompts/generation were cancelled. AI-inferred choices: retain existing music, use the workspace’s desktop audio pattern, compact HUD and clearer head instructions, and version this patch as v0.1.1.
+
+## Violent lightning switch behavior
+
+User design: RaresKeY [confirmed brief inversion then restoration](../prompts/source/lightning-rain.md), 2026-09-25. AI-inferred implementation: integrate the Level 3 flicker into the running simulation timer; use the actual grip setter/release path so sound, art, HUD and held-body state agree. Manual input wins over pending restoration; no delayed restoration survives a head swap, restart or finish.

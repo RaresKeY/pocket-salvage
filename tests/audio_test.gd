@@ -20,7 +20,7 @@ func run() -> void:
 		assert(voice.playback_type == Sfx.playback_mode(), "Players use the platform audio policy")
 	var real := "--require-pulse" in OS.get_cmdline_user_args()
 	if real: assert(AudioServer.get_driver_name() == "PulseAudio", "Real driver required")
-	for cue in CUES + [&"trolley_loop", &"winch_loop", &"wind_loop", &"rain_loop", &"music_yard"]:
+	for cue in CUES + [&"trolley_loop", &"winch_loop", &"wind_loop", &"rain_slight_loop", &"rain_loop", &"rain_violent_loop", &"music_yard"]:
 		var stream = load("res://assets/audio/%s.wav" % cue)
 		assert(stream is AudioStreamWAV and stream.get_length() > 0.03)
 		var playback = stream.instantiate_playback()
@@ -39,7 +39,7 @@ func run() -> void:
 		if real:
 			await create_timer(0.18).timeout
 			check_mix(capture, cue)
-	for cue in [&"trolley_loop", &"winch_loop", &"wind_loop", &"rain_loop", &"music_yard"]:
+	for cue in [&"trolley_loop", &"winch_loop", &"wind_loop", &"rain_slight_loop", &"rain_loop", &"rain_violent_loop", &"music_yard"]:
 		for voice in sound._voices: voice.stop()
 		if real: await create_timer(0.08).timeout
 		capture.clear_buffer()
@@ -77,7 +77,9 @@ func run() -> void:
 	await process_frame
 	await process_frame
 	var grid: GridContainer = lab.get_child(1).get_child(0).get_child(0)
-	assert(grid.get_child_count() == 17, "Audio lab exposes every cue and loop")
+	assert(grid.get_child_count() == 20, "Audio lab exposes every cue and loop")
+	for tier in ["Rain Slight Loop", "Rain Loop", "Rain Violent Loop"]:
+		assert(grid.get_children().any(func(button): return button.text == tier and button.toggle_mode), "Audio lab exposes the %s loop" % tier)
 	for button in grid.get_children():
 		assert(Rect2(Vector2.ZERO, Vector2(root.size)).encloses(button.get_global_rect()))
 	lab.free()
