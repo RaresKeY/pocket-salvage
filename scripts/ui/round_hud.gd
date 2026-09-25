@@ -75,7 +75,7 @@ func _ready() -> void:
 	center.mouse_filter = MOUSE_FILTER_IGNORE
 	modal.add_child(center)
 	var card := PanelContainer.new()
-	card.custom_minimum_size.x = 440
+	card.custom_minimum_size.x = 500
 	center.add_child(card)
 	var content := VBoxContainer.new()
 	content.add_theme_constant_override("separation", 16)
@@ -84,7 +84,7 @@ func _ready() -> void:
 	heading.add_theme_font_size_override("font_size", 28)
 	heading.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	details = _label(content, "")
-	details.custom_minimum_size.x = 400
+	details.custom_minimum_size.x = 460
 	details.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	action = Button.new()
 	action.custom_minimum_size.y = 48
@@ -144,6 +144,8 @@ func present(data: Dictionary) -> void:
 			heading.text = "Round complete"
 			var reason := str(data.get("finish_reason", ""))
 			details.text = "%s\nScore  %d\nCorrect  %d  ·  Wrong  %d" % [reason, int(data.get("score", 0)), int(data.get("correct", 0)), int(data.get("wrong", 0))]
+			var bonus := int(data.get("time_bonus", 0))
+			if bonus > 0: details.text += "\nTime bonus  +%d" % bonus
 			action.text = "Play again"
 		_:
 			heading.text = "Pocket Salvage"

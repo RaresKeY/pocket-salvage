@@ -7,6 +7,9 @@ var material_id: StringName = &"steel"
 var enabled: bool = true
 var bin_size := Vector2(150, 100)
 var sensor: Area2D
+var eject_velocity := Vector2(160, -640)
+var eject_timeout := 1.5
+var _ejecting: Dictionary = {}
 
 func configure(material: StringName, at: Vector2, size: Vector2 = Vector2(150, 100)) -> void:
 	material_id = material
@@ -50,9 +53,28 @@ func _shape(owner_node: Node2D, size: Vector2, at: Vector2) -> void:
 	collision.position = at
 	owner_node.add_child(collision)
 
-func _physics_process(_delta: float) -> void:
+## Throws a refused body back over the nearer wall; it stays `delivered` until it leaves.
+func eject(body: RigidBody2D) -> void:
+	var side := 1.0 if body.global_position.x >= global_position.x else -1.0
+	body.sleeping = false
+	body.linear_velocity = Vector2(eject_velocity.x * side, eject_velocity.y)
+	_ejecting[body] = eject_timeout
+
+func _release_ejected(delta: float) -> void:
+	var inside := sensor.get_overlapping_bodies()
+	for body in _ejecting.keys():
+		if not is_instance_valid(body):
+			_ejecting.erase(body)
+			continue
+		_ejecting[body] -= delta
+		if not inside.has(body) or _ejecting[body] <= 0.0:
+			body.set("delivered", false)
+			_ejecting.erase(body)
+
+func _physics_process(delta: float) -> void:
 	if not enabled or not is_instance_valid(sensor):
 		return
+	_release_ejected(delta)
 	for body in sensor.get_overlapping_bodies():
 		if not enabled:
 			break

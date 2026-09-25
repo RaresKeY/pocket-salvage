@@ -17,21 +17,30 @@ func _run() -> void:
 	var round_node := Round.new()
 	root.add_child(round_node)
 	round_node.configure(10, 3)
-	check(not round_node.accept_delivery(1, &"steel", &"steel"), "ready rejects")
+	check(round_node.accept_delivery(1, &"steel", &"steel") == Round.Delivery.IGNORED, "ready rejects")
 	round_node.start()
-	check(round_node.accept_delivery(1, &"steel", &"rubber") and round_node.score == 0, "wrong clamps")
-	check(not round_node.accept_delivery(1, &"steel", &"steel"), "duplicate rejects")
+	check(round_node.accept_delivery(1, &"steel", &"rubber") == Round.Delivery.WRONG and round_node.score == -25, "wrong penalty shows below zero")
+	check(round_node.delivered_count == 0 and round_node.state == &"running", "wrong item stays in play")
+	check(round_node.accept_delivery(1, &"steel", &"steel") == Round.Delivery.CORRECT and round_node.score == 75, "wrongly binned item can still be sorted")
+	check(round_node.accept_delivery(1, &"steel", &"steel") == Round.Delivery.IGNORED, "duplicate rejects")
 	round_node.set_paused(true)
 	round_node.tick(20)
-	check(round_node.remaining_time == 10 and not round_node.accept_delivery(2, &"steel", &"steel"), "pause blocks time and delivery")
+	check(round_node.remaining_time == 10 and round_node.accept_delivery(2, &"steel", &"steel") == Round.Delivery.IGNORED, "pause blocks time and delivery")
 	round_node.set_paused(false)
+	round_node.tick(3.5)
 	round_node.accept_delivery(2, &"steel", &"steel")
 	round_node.accept_delivery(3, &"rubber", &"steel")
-	check(round_node.score == 75 and round_node.state == &"finished" and round_node.wrong_count == 2 and round_node.correct_count == 1, "all-sorted finishes scoring")
-	check(not round_node.accept_delivery(4, &"steel", &"steel"), "finished rejects")
+	check(round_node.state == &"running" and round_node.wrong_count == 2, "wrong sorts never finish the round")
+	round_node.accept_delivery(3, &"rubber", &"rubber")
+	check(round_node.state == &"finished" and round_node.correct_count == 3 and round_node.time_bonus == 35, "all sorted earns whole remaining seconds")
+	check(round_node.score == 300 - 50 + 35, "all-sorted finishes scoring")
+	check(round_node.accept_delivery(4, &"steel", &"steel") == Round.Delivery.IGNORED, "finished rejects")
 	round_node.start()
-	check(round_node.score == 0 and round_node.delivered_count == 0 and round_node.remaining_time == 10, "restart resets")
-	check(round_node.accept_delivery(1, &"steel", &"steel"), "restart clears duplicate ids")
+	check(round_node.score == 0 and round_node.delivered_count == 0 and round_node.time_bonus == 0 and round_node.remaining_time == 10, "restart resets")
+	check(round_node.accept_delivery(1, &"steel", &"steel") == Round.Delivery.CORRECT, "restart clears duplicate ids")
+	round_node.tick(11)
+	check(round_node.state == &"finished" and round_node.time_bonus == 0, "timeout earns no bonus")
+	round_node.start()
 	round_node.tick(-1)
 	check(round_node.remaining_time == 10, "negative tick ignored")
 	round_node.tick(11)
@@ -40,19 +49,8 @@ func _run() -> void:
 	bin_node.configure(&"steel", Vector2(200, 200))
 	bin_node.delivered.connect(func(_body: Node2D, _material: StringName): signals_seen += 1)
 	root.add_child(bin_node)
-	var body := Fixture.new()
-	body.position = bin_node.position
-	body.gravity_scale = 0
-	body.collision_layer = 2
-	body.collision_mask = 1
+	var body := fixture_at(bin_node.position)
 	body.held = true
-	body.add_to_group(&"salvage_scrap")
-	var collision := CollisionShape2D.new()
-	var rectangle := RectangleShape2D.new()
-	rectangle.size = Vector2(12, 12)
-	collision.shape = rectangle
-	body.add_child(collision)
-	root.add_child(body)
 	await frames(6)
 	check(bin_node.sensor.get_overlapping_bodies().has(body), "actual area overlap")
 	check(signals_seen == 0 and not body.delivered, "held ignored")
@@ -65,6 +63,21 @@ func _run() -> void:
 	check(signals_seen == 1 and body.delivered, "release already inside accepted once")
 	await frames(4)
 	check(signals_seen == 1, "overlap not redelivered")
+	bin_node.eject(body)
+	await frames(2)
+	check(body.delivered and body.linear_velocity.y < 0, "ejected body launched and still claimed")
+	await frames(30)
+	check(not bin_node.sensor.get_overlapping_bodies().has(body) and not body.delivered and signals_seen == 1, "ejected body released once clear of the bin")
+	bin_node.eject_velocity = Vector2.ZERO
+	var stuck := fixture_at(bin_node.position)
+	await frames(4)
+	check(signals_seen == 2 and stuck.delivered, "second body delivered")
+	bin_node.eject(stuck)
+	await frames(30)
+	check(stuck.delivered and signals_seen == 2, "stuck ejected body held until timeout")
+	await frames(90)
+	check(signals_seen == 3, "stuck ejected body released after timeout")
+	stuck.queue_free()
 	body.queue_free()
 	bin_node.queue_free()
 	round_node.queue_free()
@@ -81,6 +94,21 @@ func _run() -> void:
 	if failures == 0:
 		print("ROUND_TEST_OK")
 	quit(failures)
+
+func fixture_at(at: Vector2) -> RigidBody2D:
+	var body := Fixture.new()
+	body.position = at
+	body.gravity_scale = 0
+	body.collision_layer = 2
+	body.collision_mask = 1
+	body.add_to_group(&"salvage_scrap")
+	var collision := CollisionShape2D.new()
+	var rectangle := RectangleShape2D.new()
+	rectangle.size = Vector2(12, 12)
+	collision.shape = rectangle
+	body.add_child(collision)
+	root.add_child(body)
+	return body
 
 func frames(count: int) -> void:
 	for index in range(count):

@@ -4,6 +4,11 @@ extends Node
 signal changed
 signal finished(reason: StringName)
 
+enum Delivery { IGNORED, CORRECT, WRONG }
+const CORRECT_POINTS := 100
+const WRONG_PENALTY := 25
+const TIME_BONUS_PER_SECOND := 5
+
 var duration: float = 90.0
 var total_items: int = 0
 var state: StringName = &"ready"
@@ -12,6 +17,7 @@ var remaining_time: float = 90.0
 var correct_count: int = 0
 var wrong_count: int = 0
 var delivered_count: int = 0
+var time_bonus: int = 0
 var _delivered: Dictionary = {}
 
 func configure(seconds: float = 90.0, item_count: int = 0) -> void:
@@ -27,6 +33,7 @@ func _reset() -> void:
 	correct_count = 0
 	wrong_count = 0
 	delivered_count = 0
+	time_bonus = 0
 	_delivered.clear()
 
 func start() -> void:
@@ -53,21 +60,24 @@ func set_paused(value: bool) -> void:
 		state = &"running"
 		changed.emit()
 
-func accept_delivery(item_id: int, material: StringName, bin_material: StringName) -> bool:
+func accept_delivery(item_id: int, material: StringName, bin_material: StringName) -> Delivery:
 	if state != &"running" or _delivered.has(item_id):
-		return false
+		return Delivery.IGNORED
+	if material != bin_material:
+		wrong_count += 1
+		score -= WRONG_PENALTY
+		changed.emit()
+		return Delivery.WRONG
 	_delivered[item_id] = true
 	delivered_count += 1
-	if material == bin_material:
-		correct_count += 1
-		score += 100
-	else:
-		wrong_count += 1
-		score = maxi(0, score - 25)
+	correct_count += 1
+	score += CORRECT_POINTS
 	changed.emit()
 	if total_items > 0 and delivered_count >= total_items:
+		time_bonus = ceili(remaining_time) * TIME_BONUS_PER_SECOND
+		score += time_bonus
 		finish(&"all_sorted")
-	return true
+	return Delivery.CORRECT
 
 func finish(reason: StringName = &"manual") -> void:
 	if state != &"running" and state != &"paused":

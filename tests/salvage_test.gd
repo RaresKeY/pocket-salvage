@@ -25,6 +25,30 @@ func reel_to(target: float) -> void:
 		if absf(delta) < 0.1: break
 		await step(0,clampf(delta / (130.0/60.0),-1,1))
 
+func lift(item: RigidBody2D) -> RigidBody2D:
+	await reel_to(90)
+	await move_x(item.position.x)
+	await reel_to(335)
+	await step(0,0,90)
+	if not lab.magnet_on: lab.toggle_magnet()
+	for frame in 180:
+		lab.try_pickup()
+		if is_instance_valid(lab.held_body): break
+		await step()
+	assert(is_instance_valid(lab.held_body),"Crane must pick a nearby item")
+	item = lab.held_body
+	await reel_to(80)
+	await step(0,0,120)
+	assert(item.position.y < 220,"Suspension lifts actual rigid body")
+	return item
+
+func carry_and_release(item: RigidBody2D, bin: Node2D) -> void:
+	await move_x(bin.position.x)
+	for frame in 240:
+		await step()
+		if absf(item.position.x-bin.position.x)<28 and absf(item.linear_velocity.x)<25: break
+	lab.toggle_magnet()
+
 func run() -> void:
 	root.size = Vector2i(1280,720)
 	lab = load("res://labs/salvage/lab.tscn").instantiate()
@@ -41,20 +65,7 @@ func run() -> void:
 			if is_instance_valid(candidate) and not candidate.delivered:
 				item = candidate
 				break
-		await reel_to(90)
-		await move_x(item.position.x)
-		await reel_to(335)
-		await step(0,0,90)
-		if not lab.magnet_on: lab.toggle_magnet()
-		for frame in 180:
-			lab.try_pickup()
-			if is_instance_valid(lab.held_body): break
-			await step()
-		assert(is_instance_valid(lab.held_body),"Crane must pick a nearby item")
-		item = lab.held_body
-		await reel_to(80)
-		await step(0,0,120)
-		assert(item.position.y < 220,"Suspension lifts actual rigid body")
+		item = await lift(item)
 		if delivery_index == 0:
 			lab.toggle_pause()
 			var before: Vector2 = item.position
@@ -64,23 +75,37 @@ func run() -> void:
 			assert(item.position.is_equal_approx(before) and lab.tip.position.is_equal_approx(before_tip))
 			assert(lab.round_state.remaining_time == time_before and lab.held_body == item)
 			lab.toggle_pause()
+			var wrong_bin: Node2D
+			for bin in lab.bins:
+				if bin.material_id != item.material_id: wrong_bin = bin
+			await carry_and_release(item,wrong_bin)
+			for frame in 240:
+				await step()
+				if lab.round_state.wrong_count == 1: break
+			assert(lab.round_state.wrong_count == 1 and lab.round_state.score == -25,"Wrong bin penalises")
+			for frame in 240:
+				await step()
+				if not item.delivered: break
+			assert(is_instance_valid(item) and not item.delivered,"Wrong bin throws the item back into play")
+			for bin in lab.bins: assert(not bin.sensor.get_overlapping_bodies().has(item))
+			assert(lab.round_state.delivered_count == 0 and lab.round_state.wrong_count == 1)
+			await step(0,0,60)
+			item = await lift(item)
 		var target_bin: Node2D
 		for bin in lab.bins:
 			if bin.material_id == item.material_id: target_bin = bin
-		await move_x(target_bin.position.x)
-		for frame in 240:
-			await step()
-			if absf(item.position.x-target_bin.position.x)<28 and absf(item.linear_velocity.x)<25: break
 		var before_count: int = lab.round_state.delivered_count
-		lab.toggle_magnet()
+		await carry_and_release(item,target_bin)
 		for frame in 240:
 			await step()
 			if lab.round_state.delivered_count > before_count: break
 		assert(lab.round_state.delivered_count == before_count+1,"Released item enters bin")
-		assert(lab.round_state.wrong_count == 0)
+		assert(lab.round_state.wrong_count == 1)
 		print("SALVAGE_DELIVERY count=%d elapsed=%.2f" % [lab.round_state.delivered_count,simulated])
 	assert(lab.round_state.state == &"finished")
-	assert(lab.round_state.score == 600 and lab.round_state.correct_count == 6)
+	assert(lab.round_state.time_bonus > 0 and lab.round_state.correct_count == 6)
+	assert(lab.round_state.score == 600 - 25 + lab.round_state.time_bonus)
+	assert(lab.hud.details.text.contains("Time bonus  +%d" % lab.round_state.time_bonus))
 	assert(lab.hud.modal.visible)
 	lab.hud.restart_requested.emit()
 	assert(lab.round_state.state == &"running" and lab.round_state.score == 0)

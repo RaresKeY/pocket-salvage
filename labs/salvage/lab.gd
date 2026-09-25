@@ -93,7 +93,7 @@ func _build_world() -> void:
 		var bin := Bin.new()
 		bin.configure(entry.material,entry.position,entry.size)
 		world.add_child(bin)
-		bin.delivered.connect(_delivered)
+		bin.delivered.connect(_delivered.bind(bin))
 		bins.append(bin)
 		var label := Label.new()
 		label.text = str(entry.material).to_upper()
@@ -215,7 +215,7 @@ func try_pickup() -> void:
 	if candidate != null and suspension.attach(candidate,Vector2(0,-candidate.dimensions.y*0.5)):
 		held_body = candidate
 		candidate.held = true
-		feedback = "Carrying %s — lift above the bin rim, then release." % candidate.material_id
+		feedback = "Carrying %s. Lift it over the bin rim, then release." % candidate.material_id
 		feedback_left = 5.0
 
 func release_load() -> void:
@@ -223,16 +223,21 @@ func release_load() -> void:
 	held_body = null
 	if suspension != null: suspension.detach()
 
-func _delivered(body: RigidBody2D, material: StringName) -> void:
-	if not round_state.accept_delivery(body.item_id,body.material_id,material): return
-	feedback = "Correct sort! +100" if body.material_id == material else "Wrong bin. −25"
+func _delivered(body: RigidBody2D, material: StringName, bin: Node2D) -> void:
+	match round_state.accept_delivery(body.item_id,body.material_id,material):
+		Round.Delivery.CORRECT:
+			feedback = "Correct sort! +%d" % Round.CORRECT_POINTS
+			body.call_deferred("queue_free")
+		Round.Delivery.WRONG:
+			feedback = "That %s bin won't take %s. −%d" % [material,body.material_id,Round.WRONG_PENALTY]
+			bin.eject(body)
+		_: return
 	feedback_left = 4.0
-	body.call_deferred("queue_free")
 	refresh_hud()
 
 func refresh_hud() -> void:
 	if hud == null or round_state == null: return
-	hud.present({"state":round_state.state,"score":round_state.score,"time_left":round_state.remaining_time,"correct":round_state.correct_count,"wrong":round_state.wrong_count,"total":payloads.size(),"delivered":round_state.delivered_count,"magnet_on":magnet_on,"held_material":str(held_body.material_id) if is_instance_valid(held_body) else "","feedback":feedback if feedback_left > 0 else "Copper / rubber / steel — match the labeled bins.","finish_reason":finish_reason,"navigation_hint":"" if OS.has_feature("standalone") else "F2 preview"})
+	hud.present({"state":round_state.state,"score":round_state.score,"time_left":round_state.remaining_time,"correct":round_state.correct_count,"wrong":round_state.wrong_count,"total":payloads.size(),"delivered":round_state.delivered_count,"magnet_on":magnet_on,"held_material":str(held_body.material_id) if is_instance_valid(held_body) else "","feedback":feedback if feedback_left > 0 else "Copper, rubber and steel each have a bin.","finish_reason":finish_reason,"time_bonus":round_state.time_bonus,"navigation_hint":"" if OS.has_feature("standalone") else "F2 preview"})
 
 func _unhandled_key_input(event: InputEvent) -> void:
 	if not event is InputEventKey or not event.pressed or event.echo: return

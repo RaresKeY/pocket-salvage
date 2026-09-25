@@ -13,7 +13,7 @@ func _ready() -> void:
 	for index in range(3):
 		var bin_node := Bin.new()
 		bin_node.configure([&"steel", &"copper", &"rubber"][index], Vector2(230 + index * 260, 390))
-		bin_node.delivered.connect(_on_delivery)
+		bin_node.delivered.connect(_on_delivery.bind(bin_node))
 		add_child(bin_node)
 		bins.append(bin_node)
 	var canvas := CanvasLayer.new()
@@ -61,11 +61,14 @@ func _spawn(bin_index: int) -> void:
 	bodies.append(body)
 	_refresh()
 
-func _on_delivery(body: Node2D, material: StringName) -> void:
-	if round_state.accept_delivery(body.get_instance_id(), body.material_id, material):
-		body.set_deferred("freeze", true)
-		body.set_deferred("collision_layer", 0)
-		body.set_deferred("collision_mask", 0)
+func _on_delivery(body: Node2D, material: StringName, bin_node: Node2D) -> void:
+	match round_state.accept_delivery(body.get_instance_id(), body.material_id, material):
+		Round.Delivery.CORRECT:
+			body.set_deferred("freeze", true)
+			body.set_deferred("collision_layer", 0)
+			body.set_deferred("collision_mask", 0)
+		Round.Delivery.WRONG:
+			bin_node.eject(body)
 
 func _process(delta: float) -> void:
 	round_state.tick(delta)
