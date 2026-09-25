@@ -1,6 +1,6 @@
 # Project Contract
 
-Reviewed: 2026-09-25. Implementation: public-delivery change based on `815c9b9`; final verification revision recorded below after deployment.
+Reviewed: 2026-09-25. Implementation revision: `ee17e9e` (published v0.1.3); public README/capture boundary reviewed with this documentation change.
 
 ## Status and scope
 

@@ -5,7 +5,10 @@
 - [ ] Decide on the conveyor proposal (scrap fed in over time so a round escalates). See `design/game.md`.
 - [ ] Decide whether scrap riding on a lifted piece may land in the wrong bin and cost points, or should be excused.
 - [ ] Bin-front masks so scrap drops visibly inside the bins.
-- [ ] Add `0.0.0+<short-sha>` identity to private reproducible builds.
+- [ ] Add `0.0.0+<short-sha>` identity to unreleased development builds.
+
+- [ ] Playtest the published Windows package on a Windows machine.
+- [ ] Investigate the hosted Godot clean-import `SIGABRT` if it recurs; the unchanged v0.1.3 retry passed. See `specs/builds.md`.
 
 Revisit the optional coordination-lock design only if real collaboration friction warrants it.
 

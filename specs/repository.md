@@ -1,6 +1,6 @@
 # Repository Structure
 
-Reviewed: 2026-09-25. Implementation: public-delivery change based on `815c9b9`; final verification revision recorded below after deployment.
+Reviewed: 2026-09-25. Implementation revision: `ee17e9e` (published v0.1.3); public README/capture boundary reviewed with this documentation change.
 
 ## Current contract
 
@@ -29,3 +29,7 @@ The public GitHub `origin`, `RaresKeY/pocket-salvage`, is the collaboration remo
 README, collaboration guidance and the portable instruction example explicitly require fetching before push and rebasing if origin has advanced, including a push race. AI preserves all work through simple compatible conflicts. If that is impossible or the direction bifurcates, stop and ask the user before resolving or pushing; preserve both versions. Local agent instructions can import or copy the portable example.
 
 Check Markdown links, the tracked/ignored boundary, Git attributes, and `git diff --check` after structure changes. Run `./tests/check` when engine sources or the check entry point change. Keep current behavior in specs and unfinished implementation work in `TODO.md`.
+
+## Public entry point
+
+The root README leads with browser play and desktop downloads, a selected live-game screenshot, controls, and short development links. Detailed contributor and build rules remain in their owning docs/specs. `marketing/.gdignore` prevents the README capture from becoming a game resource.
