@@ -10,6 +10,8 @@ const PAD_COMMANDS := {
 	JOY_BUTTON_A: &"primary", JOY_BUTTON_X: &"swap", JOY_BUTTON_Y: &"restart",
 	JOY_BUTTON_START: &"menu", JOY_BUTTON_B: &"pause",
 	JOY_BUTTON_LEFT_SHOULDER: &"music", JOY_BUTTON_RIGHT_SHOULDER: &"effects",
+	JOY_BUTTON_DPAD_UP: &"settings_up", JOY_BUTTON_DPAD_DOWN: &"settings_down",
+	JOY_BUTTON_DPAD_LEFT: &"settings_left", JOY_BUTTON_DPAD_RIGHT: &"settings_right",
 }
 const KEY_COMMANDS := {
 	KEY_SPACE: &"grip", KEY_E: &"swap", KEY_R: &"restart", KEY_M: &"music",

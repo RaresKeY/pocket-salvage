@@ -35,3 +35,5 @@ Web voices and loops use browser-managed Sample playback, so already-started sou
 Stable loop volume/pitch values do not resend unchanged parameters to the browser audio graph. Fades and pitch changes retain their existing easing.
 
 Performance and underrun evidence, including intentionally silent stress tests, is recorded in [the Firefox/Linux review](../docs/performance-review.md).
+
+Pause-menu Music/SFX sliders call `set_volumes(music, effects)` with clamped 0–1 values. Levels apply additively in dB to existing voice/loop mix levels (0.5 is about −6.02dB); zero stops playback in that category. SFX includes weather and motors. Mute retains the chosen levels. Values persist across round restarts in the scene session, not across app launches. Stable volume setters remain suppressed in the loop update.

@@ -21,3 +21,5 @@ On touch landscape screens shorter than 540 logical pixels, the controller occup
 Local preflight: the full managed Godot test suite and eight offline release-contract tests passed. The input suite additionally guards against the header covering the modal title and verifies the short-landscape controller panel cannot overlap the yard. The rebuilt Web package passed Firefox touch/gamepad checks with no game-console errors; Android and iPadOS identities at DPR 3 exercised automatic detection and responsive layout. See [review and limits](../docs/input-review.md).
 
 Direction buttons draw their arrows with canvas lines instead of font glyphs: exported Web fonts do not include Unicode arrows. The input regression test checks font-independent direction rendering; exported-browser screenshots verify the visible result.
+
+While paused, D-pad up/down selects Resume, volume sliders or local Developer controls; left/right changes a focused slider by 5 percentage points. A activates the focused button; B/Start still resumes directly. Running D-pad motion remains unchanged. These directions travel through explicit settings commands rather than implicit GUI navigation.

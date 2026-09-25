@@ -31,3 +31,15 @@ RaresKeY, 2026-09-25: [exact directive](../prompts/source/local-developer-option
 ### AI-inferred design
 
 Interpret local-only as native source runs using the editor binary, excluding Web and standalone exports; the follow-up explicitly authorizes rebasing and pushing the source change, while retaining the local-run feature gate. Default-off toggles persist across round restarts within a scene. Put them under a collapsed Developer options button. Green physical shapes and blue sensors are distinct from pink reference art masks and orange active occlusion masks. Never modify physics or mask materials; stop overlay processing when disabled. Audio sliders remain deferred pending direction; the recorded audio design currently specifies toggles.
+
+## Square pixel UI pass
+
+### User design
+
+RaresKeY, 2026-09-25: [exact request](../prompts/source/wind-ui-polish.md) asks for Supper Guard-like compact separation, square presentation, top-aligned information and a supplied pixel font. The earlier [audio-slider question](../prompts/source/local-developer-options.md) identifies missing volume controls.
+
+### AI-inferred design
+
+Borrow Supper Guard’s shared theme, restrained separators and aligned information groups, keeping this yard’s dark palette. Use square 1px borders, fixed counter order, separate action/status groups and Tiny5 under OFL. Add session-only Music/SFX sliders to Pause alongside existing mute controls. On local runs, opening Developer options replaces those slider rows so Resume and diagnostics fit short screens.
+
+AI-inferred accessibility: pause D-pad up/down navigates controls, left/right adjusts volume in 5% steps, A activates the selected button, and B/Start resumes. Keyboard sliders retain standard focus/arrow/Home/End controls.

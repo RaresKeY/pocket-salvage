@@ -88,3 +88,11 @@ The existing ten-piece salvage test forces Clear, so it stays deterministic.
 - The drawn rope does not lean with the wind: the rope solver takes no external force, and changing RaresKeY's rope module was out of scope. Deferred in TODO.
 - Wind skips scrap being thrown back out of a wrong bin, so the aimed landing stays inside crane reach.
 - The screenshots caught a weather badge that wrapped one letter per line and rain spilling past the yard edges; both were fixed, and the badge has a layout test.
+
+### User visual direction, RaresKeY, 2026-09-25
+
+[Exact request](../prompts/source/wind-ui-polish.md): retain pixel rain; use smooth curved wind lines that fade at edges; make lifted sand rare, slower, darker brown, varied and fading.
+
+### AI-inferred visual implementation
+
+Keep physics and rain intact. Use three bounded 32-segment antialiased ribbons with mild sinusoidal bends, faded tips and 80-unit edge fades. Dust becomes seven-particle one-shot bursts, 6–11 seconds apart after an initial delay, 22–38 units above the ground, 12–36 units/s, 0.55–1.8 scale and a dark-brown initial gradient. Dedicated cosmetic RNG avoids changing weather/gameplay rolls.

@@ -17,7 +17,7 @@ Reviewed: 2026-09-25. Implementation revision: `df5ad76` (weather, on v0.1.5 `07
 | [Repository structure](repository.md) | `README.md`, directory guides, `.gitignore`, `.gitattributes`, `docs/`, `examples_agents/` | Source ownership, project memory, collaboration boundaries, and provenance | Changing the layout, contribution workflow, or file handling |
 | [Crane suspension](crane.md) | `scripts/crane/`, `labs/crane/` | Rigid-body pivot, tension-only cable, load reaction and swappable heads | Integrating crane suspension or heads |
 | [Sorting and rounds](round.md) | `scripts/round/`, `labs/sorting/` | Delivery sensors, scoring, timer and round lifecycle | Changing sorting or round rules |
-| [Round HUD](round_hud.md) | `scripts/ui/`, `labs/hud/` | State-driven counters, feedback and modal actions | Changing round presentation |
+| [Round HUD](round_hud.md) | `scripts/ui/`, `assets/fonts/`, `labs/hud/` | State-driven counters, square pixel theme, volume controls, feedback and modal actions | Changing round presentation |
 | [Level layouts](level_layout.md) | `scripts/level/`, `labs/level/` | Prototype placements, backdrop, animated ambience and gulls | Changing layout fixtures or scenery |
 | [Playable integration](salvage_prototype.md) | `labs/salvage/` | Combined crane, heads, sorting, round, UI, level and audio prototype | Changing playable integration or controls |
 | [Weather](weather.md) | `scripts/weather/`, `data/weather/` | Per-round weather profiles, clock, and grip, wind, rain, fog and lightning effects | Changing or adding weather |

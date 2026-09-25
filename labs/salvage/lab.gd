@@ -109,6 +109,7 @@ func _ready() -> void:
 	hud.pause_requested.connect(toggle_pause)
 	hud.music_requested.connect(func(): set_music(not music_on))
 	hud.effects_requested.connect(func(): sfx.set_effects_enabled(not sfx.effects_enabled); refresh_hud())
+	hud.volume_requested.connect(func(music: float, effects: float): sfx.set_volumes(music, effects); refresh_hud())
 	hud.debug_requested.connect(_set_debug_overlay)
 	hud.layout_changed.connect(_fit)
 	hud.touch_controls.axes_changed.connect(controls.set_touch_axes)
@@ -171,6 +172,7 @@ func _build_world() -> void:
 		bin.delivered.connect(_delivered.bind(bin))
 		bins.append(bin)
 		var label := Label.new()
+		label.theme = hud.theme
 		label.text = str(entry.material).to_upper()
 		label.position = entry.position - Vector2(70,80)
 		label.size.x = 140
@@ -330,6 +332,7 @@ func _process(delta: float) -> void:
 
 func popup(at: Vector2, text: String, color: Color) -> void:
 	var label := Label.new()
+	label.theme = hud.theme
 	label.text = text
 	label.z_index = 4
 	label.add_theme_font_size_override("font_size",24)
@@ -494,14 +497,15 @@ func _delivered(body: RigidBody2D, material: StringName, bin: Node2D) -> void:
 
 func refresh_hud() -> void:
 	if hud == null or round_state == null: return
-	hud.present({"state":round_state.state,"score":round_state.score,"time_left":round_state.remaining_time,"correct":round_state.correct_count,"wrong":round_state.wrong_count,"total":payloads.size(),"delivered":round_state.delivered_count,"magnet_on":gripping,"grip_label":Heads.label(head,gripping,is_instance_valid(held_body)),"held_material":str(held_body.material_id) if is_instance_valid(held_body) else "","feedback":feedback if feedback_left > 0 else "Copper, rubber and steel each have a bin.","finish_reason":finish_reason,"time_bonus":round_state.time_bonus,"weather_label":weather_label(),"weather_tip":weather.profile.tip,"weather_bonus":round_state.weather_bonus,"music_on":music_on,"effects_on":sfx.effects_enabled,"control_scheme":controls.scheme,"navigation_hint":"" if OS.has_feature("standalone") else "F2 preview"})
+	hud.present({"state":round_state.state,"score":round_state.score,"time_left":round_state.remaining_time,"correct":round_state.correct_count,"wrong":round_state.wrong_count,"total":payloads.size(),"delivered":round_state.delivered_count,"magnet_on":gripping,"grip_label":Heads.label(head,gripping,is_instance_valid(held_body)),"held_material":str(held_body.material_id) if is_instance_valid(held_body) else "","feedback":feedback if feedback_left > 0 else "Copper, rubber and steel each have a bin.","finish_reason":finish_reason,"time_bonus":round_state.time_bonus,"weather_label":weather_label(),"weather_tip":weather.profile.tip,"weather_bonus":round_state.weather_bonus,"music_on":music_on,"effects_on":sfx.effects_enabled,"music_volume":sfx.music_volume,"effects_volume":sfx.effects_volume,"control_scheme":controls.scheme,"navigation_hint":"" if OS.has_feature("standalone") else "F2 preview"})
 
 func _command(command: StringName) -> void:
 	match command:
+		&"settings_up", &"settings_down", &"settings_left", &"settings_right": hud.settings_command(command)
 		&"primary":
 			match round_state.state:
 				&"ready": start_round()
-				&"paused": toggle_pause()
+				&"paused": hud.activate_paused_control()
 				&"finished": restart_round()
 				&"running": toggle_grip()
 		&"menu":

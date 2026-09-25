@@ -8,6 +8,8 @@ var _next := 0
 var played: Array[StringName] = []
 var _silent := AudioServer.get_driver_name() == "Dummy"
 var effects_enabled := true
+var music_volume := 1.0
+var effects_volume := 1.0
 var output_bus: StringName = &"Master"
 ## Looping motors: name -> {player, level (0..1 target), current, pitch}.
 var loops: Dictionary = {}
@@ -31,7 +33,7 @@ func _ready() -> void:
 
 ## Headless runs use the Dummy driver, which never mixes, so its playbacks would outlive the game.
 func play(sound: StringName, volume_db: float = 0.0, pitch_jitter: float = 0.0) -> void:
-	if not effects_enabled: return
+	if not effects_enabled or effects_volume == 0.0: return
 	played.append(sound)
 	if played.size() > 256: played.pop_front()
 	if _silent: return
@@ -42,7 +44,8 @@ func play(sound: StringName, volume_db: float = 0.0, pitch_jitter: float = 0.0) 
 	var voice := _voices[_next]
 	_next = (_next + 1) % _voices.size()
 	voice.stream = _streams[sound]
-	voice.volume_db = volume_db
+	voice.set_meta("base_volume_db", volume_db)
+	voice.volume_db = volume_db + _gain_db(effects_volume)
 	voice.pitch_scale = 1.0 + randf_range(-pitch_jitter, pitch_jitter)
 	voice.play()
 
@@ -77,6 +80,17 @@ func set_effects_enabled(value: bool) -> void:
 				loops[sound].player.stop()
 				loops[sound].current = 0.0
 
+## Independent session volumes; mute toggles never discard the chosen levels.
+func set_volumes(music: float, effects: float) -> void:
+	music_volume = clampf(music, 0.0, 1.0)
+	effects_volume = clampf(effects, 0.0, 1.0)
+	for voice in _voices:
+		voice.volume_db = float(voice.get_meta("base_volume_db", 0.0)) + _gain_db(effects_volume)
+		if effects_volume == 0.0: voice.stop()
+
+static func _gain_db(gain: float) -> float:
+	return linear_to_db(gain) if gain > 0.0 else -80.0
+
 func _process(delta: float) -> void:
 	for sound in loops:
 		var entry: Dictionary = loops[sound]
@@ -84,10 +98,11 @@ func _process(delta: float) -> void:
 		entry.current = move_toward(entry.current, entry.level, LOOP_FADE * delta)
 		var player: AudioStreamPlayer = entry.player
 		if _silent or player.stream == null: continue
-		if entry.current <= 0.01:
+		var gain: float = music_volume if sound == &"music_yard" else effects_volume
+		if entry.current <= 0.01 or gain == 0.0:
 			if player.playing: player.stop()
 			continue
-		var volume := lerpf(LOOP_FLOOR_DB, entry.volume, sqrt(entry.current))
+		var volume := lerpf(LOOP_FLOOR_DB, entry.volume, sqrt(entry.current)) + _gain_db(gain)
 		var pitch := lerpf(player.pitch_scale, entry.pitch * (0.85 + 0.15 * entry.current), minf(1.0, delta * 8.0))
 		# Web Sample setters cross into the browser audio graph. Stable loops need
 		# no new automation events; preserve fades/pitch changes while they settle.

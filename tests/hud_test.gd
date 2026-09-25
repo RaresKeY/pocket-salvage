@@ -22,6 +22,8 @@ func run() -> void:
 	await process_frame
 	await process_frame
 	assert(hud.action.has_focus())
+	assert(hud.theme.default_font is FontFile and hud.theme.default_font.get_font_name().contains("Tiny5"), "Pixel font is bundled")
+	assert(hud.theme.get_stylebox("panel", "PanelContainer").corner_radius_top_left == 0, "Square HUD panels")
 	await click(hud.music_button)
 	await click(hud.effects_button)
 	assert(music_changes == 1 and effects_changes == 1, "Audio controls work above ready modal")
@@ -40,6 +42,24 @@ func run() -> void:
 	hud.present({"state": "paused"})
 	await process_frame
 	assert(hud.action.has_focus() and hud.action.text == "Resume")
+	assert(hud.audio_settings.visible)
+	var levels := []
+	hud.volume_requested.connect(func(music: float, effects: float): levels.append(Vector2(music, effects)))
+	hud.music_slider.value = 35
+	hud.effects_slider.value = 65
+	assert(levels.back() == Vector2(0.35, 0.65) and hud.music_value.text == "35%" and hud.effects_value.text == "65%")
+	hud.present({"state":"paused", "music_volume":0.35, "effects_volume":0.65})
+	assert(hud.music_slider.value == 35 and hud.effects_slider.value == 65)
+	hud.action.grab_focus()
+	hud.settings_command(&"settings_down")
+	assert(hud.music_slider.has_focus())
+	hud.settings_command(&"settings_left")
+	assert(hud.music_slider.value == 30)
+	hud.settings_command(&"settings_down")
+	hud.settings_command(&"settings_right")
+	assert(hud.effects_slider.value == 70)
+	hud.action.grab_focus()
+
 	await click(hud.action)
 	assert(pauses == 2)
 	hud.present({"state": "finished", "correct": 4, "wrong": 2, "score": 200, "finish_reason": "All scrap sorted"})

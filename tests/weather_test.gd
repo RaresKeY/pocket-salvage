@@ -100,9 +100,14 @@ func run() -> void:
 	assert(not breezy.blown_bodies().has(thrown) and breezy.blown_bodies().has(resting), "thrown-back scrap is not blown; resting scrap is offered and friction holds it")
 	assert(breezy.ambience.wind == breezy.weather.wind_now(), "clouds follow the wind")
 	var wind_fx = breezy.weather.get_children().filter(func(e): return e.has_method("strength"))[0]
-	assert(wind_fx.streaks.emitting and wind_fx.dust.emitting, "wind shows streaks and blowing dust")
-	assert(signf(wind_fx.streaks.direction.x) == breezy.weather.direction, "streaks blow the way the wind goes")
-	assert(wind_fx.streaks.modulate.a > 0.2 and wind_fx.streaks.modulate.a <= 1.0, "streaks are visible and scale with strength")
+	assert(wind_fx.trails.trails.size() == 3, "wind uses a bounded set of curved trails")
+	assert(wind_fx.trails.direction == breezy.weather.direction, "trails drift downwind")
+	assert(wind_fx.trails.edge_alpha(0) == 0 and wind_fx.trails.edge_alpha(breezy.layout.bounds.end.x) == 0, "trails disappear at both edges")
+	assert(wind_fx.dust.one_shot and wind_fx.dust.amount == 7 and wind_fx.dust_wait > 0, "dust is an occasional small burst")
+	assert(wind_fx.dust.position.y + wind_fx.dust.emission_rect_extents.y < breezy.layout.ground_top, "dust starts above the ground")
+	assert(wind_fx.dust.initial_velocity_max <= 36 and wind_fx.dust.gravity.y < 0, "dust moves slowly above the ground")
+	assert(wind_fx.dust.scale_amount_min < wind_fx.dust.scale_amount_max and wind_fx.dust.color_initial_ramp != null, "dust varies size and brown shade")
+	assert(wind_fx.dust.color_ramp.get_color(wind_fx.dust.color_ramp.get_point_count() - 1).a == 0, "dust fades away")
 	var parked: float = breezy.suspension.anchor.x
 	for frame in 120:
 		await physics_frame

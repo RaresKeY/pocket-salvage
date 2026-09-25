@@ -15,7 +15,7 @@ Everything currently in `assets/audio/` is an **AI-generated placeholder** (Clau
 - Music: `music_yard`, a 32-second loop in A minor at 90 BPM with slow pad chords (Am, F, C, G), a soft bass and a sparse plucked arpeggio. Note tails wrap round the loop point so it has no seam. It plays quietly from the start screen onwards; M mutes it.
 - Headless test runs record which sounds would play instead of playing them, because the dummy audio driver never mixes and its playbacks would outlive the test.
 
-Open: final music, final effects, mix levels and whether to add persistent volume sliders beyond the session-only Music/SFX toggles. See [the salvage integration spec](../specs/salvage_prototype.md).
+Open: final music, final effects, mix levels and whether to persist the session-only Music/SFX volume and mute settings across launches. See [the salvage integration spec](../specs/salvage_prototype.md).
 
 AI-inferred v0.1.1 repair: explicit streamed playback, exact desktop audio socket forwarding, separate on/off controls, a quiet synthesized pause/resume click, and an independent audio lab/mixer test. No new music prompt or track is produced.
 

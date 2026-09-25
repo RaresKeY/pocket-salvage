@@ -4,21 +4,21 @@ Reviewed: 2026-09-25. Implementation revision: `df5ad76` (weather, on v0.1.5 `07
 
 ## Ownership and contract
 
-`scripts/ui/round_hud.gd` is a presentation-only full-rect `Control`. Mount it in a `CanvasLayer` above gameplay. It shares the art lab theme, reads no game nodes, handles no game shortcuts, and processes while the tree is paused.
+`scripts/ui/round_hud.gd` is a presentation-only full-rect `Control`. Mount it in a `CanvasLayer` above gameplay. It uses the shared `scripts/ui/yard_theme.gd` square theme and bundled Tiny5 font, reads no game nodes, handles no game shortcuts, and processes while the tree is paused.
 
 `present(data: Dictionary)` accepts:
 
 - `state`: `ready`, `running`, `paused` or `finished`.
 - `score`, `time_left` (seconds, shown as a nonnegative ceiling in m:ss), `correct`, `wrong`, `total`, `delivered` (correctly sorted).
 - `grip_label`: the fitted head and its state, such as "Claw READY"; falls back to Magnet ON/OFF from `magnet_on`.
-- `music_on`, `effects_on`: independent text-labeled audio toggle states.
+- `music_on`, `effects_on`: independent text-labeled audio toggle states; `music_volume`, `effects_volume`: normalized session volume levels.
 - `held_material`, `feedback`, `finish_reason`, `time_bonus` (added to results when positive), `weather_label` (a one-line top-bar badge, hidden when absent), `weather_tip` (start card: one line "label: tip"; below 420 px tall only the label is prefixed to the card's first line so Start stays on screen), `weather_bonus` (a results line after the label when positive), `navigation_hint` (appended to the controls footer).
 
-Missing fields use empty/zero defaults and `ready`; a call before readiness is buffered. Score and time carry the contributed coin and timer icons. While running at `HURRY_SECONDS` (10) or less the time turns `HURRY_COLOR` and pulses. The compact footer lists A/D move, W/S lift, Space grip, E swap, P pause and R restart. Music’s tooltip names the M shortcut. Long feedback wraps and grows the bottom inset.
+Missing fields use empty/zero defaults and `ready`; a call before readiness is buffered. Score, time and sorted counts occupy separate aligned columns with thin dividers. While running at `HURRY_SECONDS` (10) or less the time turns `HURRY_COLOR` and pulses. The compact footer lists A/D move, W/S lift, Space grip, E swap, P pause and R restart. Music’s tooltip names the M shortcut. Long feedback wraps and grows the bottom inset.
 
-Signals: `start_requested`, `restart_requested`, `pause_requested`, `music_requested`, `effects_requested`, and `layout_changed`; the caller chooses transitions. The HUD never keeps score, ticks the clock, pauses physics or decides outcomes.
+Signals: `start_requested`, `restart_requested`, `pause_requested`, `music_requested`, `effects_requested`, `volume_requested`, `debug_requested`, and `layout_changed`; the caller chooses transitions. The HUD never keeps score, ticks the clock, pauses physics or decides outcomes.
 
-A wrapping header holds score, time, sorted count, Music/SFX toggles and Pause. Head/load status sits above feedback and short hints in the compact footer. The playable yard fits between measured panel bounds with 6px clearance instead of fixed insets. Ready, paused and finished use a dimmed 460px modal with one focused action; entering running releases HUD focus. Audio toggles stay above the modal in all states and release focus after activation while running so Space still controls the crane. Decorative controls ignore the mouse. A small lower-right label shows `application/config/version` over every state.
+A wrapping header holds score, time, sorted count, Music/SFX toggles and Pause. Head/load status and weather occupy a second top row; feedback and short hints remain in the compact footer. The playable yard fits between measured panel bounds with 6px clearance instead of fixed insets. Ready, paused and finished use a dimmed 460px modal with one focused action; entering running releases HUD focus. Audio toggles stay above the modal in all states and release focus after activation while running so Space still controls the crane. Decorative controls ignore the mouse. A small lower-right label shows `application/config/version` over every state.
 
 ## Lab and verification
 
@@ -41,3 +41,7 @@ Resizing clears the displayed-value cache and re-presents the last data, so text
 Developer controls (reviewed 2026-09-25 against the source change based on `04feb18`; not in v0.1.6): native source runs expose a collapsed Developer options section only while paused. Hitbox/mask CheckButtons emit `debug_requested`; HUD presentation stays independent of world traversal. Normal HUD instances and exported builds do not enable this section.
 
 Verification: full managed engine suite passed in an isolated source copy, and hardware Gamescope captures on NVIDIA RTX 2080 Ti checked the expanded pause controls at 1920×1080, 1280×720, 960×540, 854×480 and 640×360 with Dummy audio. The final focused diagnostic test also covers new collision nodes while enabled. Export visibility is enforced by the source-run gate; no new release is created for this change.
+
+The top panel separates aligned score/time/sorted counters, audio/pause actions and head/weather status. Controls wrap as a group below counters under 760px. Pause has independent 0–100% Music/SFX sliders; `volume_requested` carries normalized values and `present` synchronizes them without feedback signals. Existing quick mute buttons remain. Local Developer options temporarily replaces the slider rows when expanded. The font and square styles are shared with touch controls, bin labels and score popups.
+
+The square theme, weather-visual refresh and volume-control verification are recorded in [the wind/UI review](../docs/wind-ui-review.md).

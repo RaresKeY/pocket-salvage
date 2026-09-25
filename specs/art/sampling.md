@@ -38,3 +38,5 @@ Preserve transparent source pixels during exact processing. Runtime alpha-edge r
 Godot's [resolution guide](https://docs.godotengine.org/en/stable/tutorials/rendering/multiple_resolutions.html) explains integer stretch and unused screen margins. [ProjectSettings](https://docs.godotengine.org/en/stable/classes/class_projectsettings.html) documents sampling, snapping, and MSAA boundaries. These references inform the convention; the local Godot 4.7 runtime and the lab checks establish the implemented behavior.
 
 Use the calibration chart and actual assets in the lab. Inspect opaque edges, one-pixel lines, alpha transitions, and motion at integer and fractional scales. Headless startup establishes no visual quality or hardware-renderer result.
+
+The game UI now uses bundled Tiny5 via `yard_theme.gd`, with antialiasing and subpixel positioning disabled on its runtime font copy. This explicit pixel-font choice does not change other lab fonts or sprite filtering. The smooth procedural wind trails intentionally use antialiasing; rain keeps its existing pixel textures. See [font provenance](../../vendored/tiny5.md).
