@@ -4,9 +4,13 @@ A four-minute scrapyard shift. Drive a swinging crane, swap between a magnet and
 
 **[Play in your browser](https://pocket-salvage.web.app/)** · **[Download for Windows or Linux](https://github.com/RaresKeY/pocket-salvage/releases/latest)**
 
-Firebase hosts the v0.1.5 snapshot. [GitHub Pages](https://rareskey.github.io/pocket-salvage/) follows new tagged releases.
+[Alternate play link: GitHub Pages](https://rareskey.github.io/pocket-salvage/). Firebase is a manually deployed **v0.1.5** snapshot; GitHub Pages updates with each tagged release.
 
 ![Pocket Salvage: a crane above a moonlit scrapyard, with copper, rubber and steel sorting bins.](marketing/pocket-salvage.png)
+
+## Current release
+
+[v0.1.5](https://github.com/RaresKeY/pocket-salvage/releases/tag/v0.1.5) improves Firefox audio continuity during frame stalls, reduces cable and HUD work, and targets 60 FPS on Web. Keyboard, standard controllers and mobile touch controls are supported. Music and SFX have separate controls; click **Start** to enable browser audio.
 
 ## How to play
 
@@ -26,14 +30,17 @@ Correct sorts earn **100 points**. A wrong bin throws the item back and costs **
 
 On mobile Web browsers, a **bottom-right touch controller** appears automatically: hold arrows to move and lift; tap **Grip** or **Swap**. You can use movement and action buttons together. Turn your phone sideways for a wider yard. Start, pause, resume and audio controls remain on-screen.
 
-For desktop downloads, extract the whole ZIP and keep the executable beside its PCK file.
+For desktop downloads, extract the whole ZIP and keep the executable beside its PCK file. Run `pocket-salvage.exe` on Windows or `pocket-salvage.x86_64` on Linux. The downloadable Web ZIP needs an HTTP server; use either hosted play link for immediate browser play.
 
 ## Development
 
-Made with **Godot 4.7**. Open `project.godot` and choose **Play prototype** from the yard preview. On a workstation configured with the shared Godot runner, `./play.sh` launches the game with desktop audio and `./tests/check` runs the test suite.
+Made with **Godot 4.7**. Import `project.godot`, run the project, then choose **Play prototype** from the yard preview. To open the playable scene directly, use `labs/salvage/lab.tscn`.
+
+On Linux with the shared `godot-podman` runner configured, `./play.sh` launches the game with desktop audio and `./tests/check` runs the suite. These scripts require that runner; `play.sh` also requires a PulseAudio-compatible desktop audio socket. Setup and alternative test commands are in the [contributor guide](docs/collaboration.md) and [test guide](tests/README.md).
 
 - [Contributor guide](docs/collaboration.md) — setup, direct-main workflow, and migration from `random-game`.
 - [Specs](specs/_readme.md) and [design](design/_readme.md) — current behavior, decisions, and human/AI attribution.
-- [Builds and releases](specs/builds.md) — local exports, checksums, tag automation, and platform validation.
+- [Builds and releases](specs/builds.md) — local exports, checksums, tag automation, Firebase hosting, and platform validation.
+- [Performance review](docs/performance-review.md) — Firefox/Linux measurements, audio checks, and remaining limitations.
 
-Main pushes run tests. Matching version tags test and build Windows, Linux and Web releases, then update GitHub Pages. Windows exports are built and checked but still need a Windows-machine playtest.
+Main pushes run tests. Matching version tags test and build Windows, Linux and Web releases, then update GitHub Pages. Linux and Firefox/Linux have runtime validation. Windows exports are built and hash-verified but still need a Windows-machine playtest.

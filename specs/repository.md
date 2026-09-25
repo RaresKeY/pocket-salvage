@@ -1,6 +1,6 @@
 # Repository Structure
 
-Reviewed: 2026-09-25. Game implementation revision: `07f1974` (v0.1.5); public-link/Firebase configuration reviewed 2026-09-25.
+Reviewed: 2026-09-25. Game implementation revision: `07f1974` (v0.1.5); hosting configuration revision: `8cb7b69`; README facts reviewed 2026-09-25.
 
 ## Current contract
 
@@ -37,3 +37,5 @@ The root README leads with browser play and desktop downloads, a selected live-g
 The main workstation checkout is now named `pocket-salvage`. Git links for its nine existing sibling worktrees were repaired after the move; their paths and branches remain intact. Launchers resolve the project from their own location, so they follow the rename without hard-coded path changes. Local instruction files moved with the checkout and remain ignored.
 
 The public About website is Firebase Hosting (`https://pocket-salvage.web.app/`), a manually deployed v0.1.5 snapshot. README retains GitHub Pages as the destination updated by tagged releases and labels that difference. Firebase configuration is tracked; credentials, deployment caches/logs and downloaded release payloads are not.
+
+The README summarizes published v0.1.5, its audio/performance changes, executable names, browser audio activation, Web ZIP serving requirements and Linux launcher prerequisites. It links the test guide and measured performance review; hosted version metadata and latest-release identity were checked during the refresh.

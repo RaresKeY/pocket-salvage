@@ -8,6 +8,8 @@ RaresKeY’s follow-up asks for the public README cleanup after the delivery wor
 
 RaresKeY, 2026-09-25: [Firebase directive](../prompts/source/firebase-hosting.md). Deploy the latest build once at `pocket-salvage.web.app`, use that URL in GitHub About, and retain the GitHub Pages URL in README.
 
+RaresKeY’s [follow-up](../prompts/source/firebase-hosting.md) requests refreshing the stale README.
+
 ## AI-inferred design
 
 Use `pocket-salvage` as the repository slug and `v0.1.3` as the first published automated patch release (`v0.1.2` exposed a draft-lookup defect and remains an unchanged historical tag). Test main pushes; stable `vMAJOR.MINOR.PATCH` tags must match the project version and belong to main. Tagged releases test and export Windows/Linux/Web twice, using the existing reproducible packager. Keep macOS outside automated releases until target-machine validation is available.
@@ -21,3 +23,5 @@ The original delivery pass kept the checkout folder unchanged. RaresKeY’s late
 Public README presentation: lead with Play/Download, a real gameplay capture and keyboard controls; link to contributor/spec/build details instead of reproducing the internal project map. Keep the selected promotional capture in `marketing/`, outside Godot’s import tree.
 
 Firebase uses a dedicated `pocket-salvage` project/site and the existing checksum-verified v0.1.5 Web release. Keep this a manual snapshot, leave tag-triggered GitHub Pages delivery in place, and label both destinations clearly. Host only the extracted release payload plus version/source metadata, revalidate cached files, and keep deployment artifacts/logs ignored.
+
+README refresh: summarize the published v0.1.5 audio/performance behavior, distinguish the manual Firebase snapshot from automatically updated Pages, and document actual desktop/source launch prerequisites. Keep detailed profiling evidence in its existing review.
