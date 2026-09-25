@@ -6,6 +6,8 @@ const DIR := "res://data/weather/"
 const EFFECTS := [
 	preload("res://scripts/weather/effects/grip_effect.gd"),
 	preload("res://scripts/weather/effects/wind_effect.gd"),
+	preload("res://scripts/weather/effects/rain_effect.gd"),
+	preload("res://scripts/weather/effects/fog_effect.gd"),
 ]
 signal lightning_warning
 signal lightning(x: float)

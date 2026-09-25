@@ -101,5 +101,28 @@ func run() -> void:
 	assert(breezy.ambience.wind == breezy.weather.wind_now(), "clouds follow the wind")
 	breezy.queue_free()
 	await process_frame
-	print("WEATHER_TEST_OK profiles, weighted pick, calm, wind and gusts, lightning sequence, pause, forced weather, grip, multiplier, wind")
+	var drizzle = Lab.instantiate()
+	drizzle.forced_weather = &"rain"
+	root.add_child(drizzle)
+	await process_frame
+	var rain_fx = drizzle.weather.get_children().filter(func(e): return e.has_method("rain_angle"))
+	assert(rain_fx.size() == 1 and rain_fx[0].streaks.amount > 0 and rain_fx[0].splashes.amount > 0, "rain shows streaks and splashes")
+	drizzle.queue_free()
+	var misty = Lab.instantiate()
+	misty.forced_weather = &"fog"
+	root.add_child(misty)
+	await process_frame
+	var fog_fx = misty.weather.get_children().filter(func(e): return e.has_method("density_at"))
+	var crane_x: float = misty.trolley.position.x
+	assert(fog_fx[0].density_at(crane_x) < fog_fx[0].density_at(crane_x + 700), "fog thickens away from the crane")
+	for label in misty.bin_labels: assert(label.modulate.a < 0.6, "fog dims bin labels")
+	var calm_lab = Lab.instantiate()
+	calm_lab.forced_weather = &"clear"
+	root.add_child(calm_lab)
+	await process_frame
+	assert(calm_lab.weather.get_child_count() == 0, "clear creates no effects")
+	misty.queue_free()
+	calm_lab.queue_free()
+	await process_frame
+	print("WEATHER_TEST_OK profiles, weighted pick, calm, wind and gusts, lightning sequence, pause, forced weather, grip, multiplier, wind, rain, fog")
 	quit()
