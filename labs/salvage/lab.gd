@@ -241,6 +241,9 @@ func _state_changed() -> void:
 		suspension.rope.finish_interpolation()
 	world.process_mode = next_mode
 	for bin in bins: bin.enabled = running
+	if not running:
+		sfx.set_loop(&"trolley_loop",0.0)
+		sfx.set_loop(&"winch_loop",0.0)
 	var second := ceili(round_state.remaining_time)
 	if running and second <= TICK_SECONDS and second != last_tick_second: sfx.play(&"tick",-4.0)
 	last_tick_second = second
@@ -264,9 +267,15 @@ func _physics_process(delta: float) -> void:
 	refresh_hud()
 
 func move_crane(horizontal: float, reel: float, delta: float) -> void:
+	var before := Vector2(suspension.anchor.x,suspension.cable_length)
 	suspension.anchor.x = clampf(suspension.anchor.x + horizontal * 220 * delta,80,1120)
 	suspension.cable_length = clampf(suspension.cable_length + reel * 130 * delta,50,335)
 	trolley.position = suspension.anchor
+	if delta <= 0.0: return
+	var travel: float = absf(suspension.anchor.x - before.x) / (220 * delta)
+	var reeled: float = (suspension.cable_length - before.y) / (130 * delta)
+	sfx.set_loop(&"trolley_loop",travel,1.0,-8.0)
+	sfx.set_loop(&"winch_loop",absf(reeled),1.12 if reeled < 0.0 else 0.92,-10.0)
 
 func toggle_magnet() -> void:
 	if round_state.state != &"running": return

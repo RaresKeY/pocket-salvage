@@ -55,6 +55,13 @@ RECIPES = {
 }
 
 
+## Loops last a whole second so every frequency (whole hertz) completes whole cycles and the seam is silent.
+LOOPS = {
+    "trolley_loop": lambda t, p, n: 0.32 * (tone(55, t, "saw") * 0.5 + tone(110, t, "square") * 0.2 + n * 0.25 * (0.5 + 0.5 * tone(12, t, "sine"))),
+    "winch_loop": lambda t, p, n: 0.22 * (tone(220, t, "saw") * 0.45 + tone(330, t, "triangle") * 0.35 + tone(6, t, "sine") * tone(440, t, "sine") * 0.2),
+}
+
+
 def write(name, samples):
     OUT.mkdir(parents=True, exist_ok=True)
     frames = b"".join(struct.pack("<h", int(max(-1.0, min(1.0, s)) * 32767)) for s in samples)
@@ -68,4 +75,6 @@ def write(name, samples):
 if __name__ == "__main__":
     for name, (seconds, sample) in RECIPES.items():
         write(name, render(seconds, sample))
-    print(f"wrote {len(RECIPES)} sounds to {OUT}")
+    for name, sample in LOOPS.items():
+        write(name, render(1.0, sample))
+    print(f"wrote {len(RECIPES) + len(LOOPS)} sounds to {OUT}")

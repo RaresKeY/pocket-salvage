@@ -56,7 +56,7 @@ func run() -> void:
 	await process_frame
 	lab.set_physics_process(false)
 	assert(lab.round_state.state == &"ready")
-	for sound in [&"magnet_on",&"magnet_off",&"pickup",&"land",&"correct",&"wrong",&"eject",&"tick",&"finish",&"start"]:
+	for sound in [&"magnet_on",&"magnet_off",&"pickup",&"land",&"correct",&"wrong",&"eject",&"tick",&"finish",&"start",&"trolley_loop",&"winch_loop"]:
 		assert(load("res://assets/audio/%s.wav" % sound) is AudioStreamWAV,"Generated sound %s imports" % sound)
 	assert(lab.world.process_mode == Node.PROCESS_MODE_DISABLED and lab.ambience.stars.size() == 70)
 	var scenery_clock: float = lab.ambience.time
@@ -122,6 +122,21 @@ func run() -> void:
 	lab.hud.restart_requested.emit()
 	assert(lab.round_state.state == &"running" and lab.round_state.score == 0)
 	assert(lab.payloads.size() == 6 and not lab.magnet_on and lab.held_body == null)
+	lab.move_crane(1,0,1.0/60.0)
+	assert(is_equal_approx(lab.sfx.loop_level(&"trolley_loop"),1.0) and lab.sfx.loop_level(&"winch_loop") == 0.0,"Trolley motor runs while travelling")
+	lab.move_crane(0,1,1.0/60.0)
+	assert(lab.sfx.loop_level(&"trolley_loop") == 0.0 and is_equal_approx(lab.sfx.loop_level(&"winch_loop"),1.0),"Winch runs while lowering")
+	lab.move_crane(0,0,1.0/60.0)
+	assert(lab.sfx.loop_level(&"trolley_loop") == 0.0 and lab.sfx.loop_level(&"winch_loop") == 0.0,"Motors fall silent when idle")
+	var start_x: float = lab.suspension.anchor.x
+	lab.suspension.anchor.x = 1120
+	lab.move_crane(1,0,1.0/60.0)
+	assert(lab.sfx.loop_level(&"trolley_loop") == 0.0,"No motor noise pushing against the end stop")
+	lab.suspension.anchor.x = start_x
+	lab.move_crane(-1,0,1.0/60.0)
+	lab.toggle_pause()
+	assert(lab.sfx.loop_level(&"trolley_loop") == 0.0,"Pausing silences the motors")
+	lab.toggle_pause()
 	for frame in 4: await physics_frame
 	assert(lab.round_state.delivered_count == 0)
 	var timeout_load: RigidBody2D = lab.payloads[0]
