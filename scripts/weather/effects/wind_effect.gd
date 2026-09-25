@@ -1,8 +1,9 @@
 extends "res://scripts/weather/weather_effect.gd"
 ## Pushes the head, the trolley and airborne scrap downwind, and shows it: gust streaks in the sky, dust along the ground.
-## The scrap push grows with a piece's size rather than its mass, so light scrap drifts most.
-const AREA_SCALE := 0.001
-const HEAD_AREA := 52.0 * 20.0
+## Scrap is pushed in proportion to its size, so its drift is size over mass: light scrap drifts most.
+const SCRAP_PUSH := 0.0008
+## The head's sideways acceleration per unit of wind, independent of its mass.
+const HEAD_PUSH := 1.04
 ## Trolley drift in world units per second per unit of wind; the player steers against it.
 const CRANE_DRIFT := 0.22
 var streaks: CPUParticles2D
@@ -53,7 +54,7 @@ func _physics_process(delta: float) -> void:
 	if context.round_state.state == &"running":
 		context.drift_crane(wind * CRANE_DRIFT * delta)
 	for body in context.blown_bodies():
-		var sized: bool = body.get("dimensions") != null
-		if sized and body.get_contact_count() > 0: continue
-		var area: float = body.dimensions.x * body.dimensions.y if sized else HEAD_AREA
-		body.apply_central_force(Vector2(wind * area * AREA_SCALE * body.mass, 0))
+		if body.get("dimensions") == null:
+			body.apply_central_force(Vector2(wind * HEAD_PUSH * body.mass, 0))
+		elif body.get_contact_count() == 0:
+			body.apply_central_force(Vector2(wind * body.dimensions.x * body.dimensions.y * SCRAP_PUSH, 0))

@@ -246,5 +246,29 @@ func run() -> void:
 	assert(noisy.sfx.loop_level(&"rain_loop") == 0.0 and noisy.sfx.loop_level(&"wind_loop") == 0.0, "a clear round after a storm is quiet")
 	noisy.queue_free()
 	await process_frame
+	var drift_lab = Lab.instantiate()
+	drift_lab.forced_weather = &"wind"
+	root.add_child(drift_lab)
+	await process_frame
+	drift_lab.start_round()
+	await frames(60)
+	var by_name := func(texture_name: String): return drift_lab.scrap_bodies().filter(func(b): return b.sprite.texture.resource_path.contains(texture_name))[0]
+	var light: RigidBody2D = by_name.call("scrap_tin_can")
+	var heavy: RigidBody2D = by_name.call("scrap_washing_machine")
+	var starts := {}
+	for pair in [[light, Vector2(300, 120)], [heavy, Vector2(800, 120)]]:
+		var body: RigidBody2D = pair[0]
+		body.gravity_scale = 0
+		PhysicsServer2D.body_set_state(body.get_rid(), PhysicsServer2D.BODY_STATE_TRANSFORM, Transform2D(0, pair[1]))
+		PhysicsServer2D.body_set_state(body.get_rid(), PhysicsServer2D.BODY_STATE_LINEAR_VELOCITY, Vector2.ZERO)
+		body.sleeping = false
+	await frames(2)
+	for body in [light, heavy]: starts[body] = body.global_position.x
+	await frames(60)
+	var light_moved: float = absf(light.global_position.x - starts[light])
+	var heavy_moved: float = absf(heavy.global_position.x - starts[heavy])
+	assert(light_moved > heavy_moved, "light scrap drifts further than heavy scrap (tin can %.1f, washing machine %.1f)" % [light_moved, heavy_moved])
+	drift_lab.queue_free()
+	await process_frame
 	print("WEATHER_TEST_OK profiles, weighted pick, calm, wind and gusts, lightning sequence, pause, forced weather, grip, multiplier, wind, rain, fog, lightning and power cuts, sounds, full rounds")
 	quit()
