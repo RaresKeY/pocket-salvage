@@ -1,6 +1,6 @@
 # Player input
 
-Reviewed: 2026-09-25. Implementation revision: `6488a44` (v0.1.4).
+Reviewed: 2026-09-25. Implementation revision: `53982f2` (source UI/wind pass; not in published v0.1.6).
 
 `scripts/input/salvage_input.gd` owns four `salvage_*` movement actions and device-neutral command signals. WASD/arrows, standard D-pad and left-stick axes share the action map with deadzone 0.2. Horizontal and reel axes remain independent, clamped to [-1, 1]; stick strength preserves proportional movement. Existing crane speeds, bounds and grip/stand rules are unchanged.
 

@@ -1,6 +1,6 @@
 # Weather
 
-Reviewed: 2026-09-25. Implementation revision: `4592b2f` (weather after review fixes, on v0.1.5).
+Reviewed: 2026-09-25. Implementation revision: `53982f2` (source UI/wind pass; not in published v0.1.6).
 
 Each salvage round rolls one weather that physically changes how the crane works and multiplies a positive final score. Intent and the split between Dale's direction and AI choices are in [design/weather.md](../design/weather.md).
 

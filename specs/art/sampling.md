@@ -1,6 +1,6 @@
 # Sampling and Aliasing
 
-Reviewed: 2026-09-24 integrating the scene preview with the physics components and 8× sprite playground.
+Reviewed: 2026-09-25. Implementation revision: `53982f2` (bundled pixel UI font and smooth wind-trail exception).
 
 ## Art classification
 

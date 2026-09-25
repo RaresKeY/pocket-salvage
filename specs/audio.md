@@ -1,6 +1,6 @@
 # Audio
 
-Reviewed: 2026-09-25. Implementation revision: `df5ad76` (weather, on v0.1.5 `07f1974`).
+Reviewed: 2026-09-25. Implementation revision: `53982f2` (source UI/wind pass; not in published v0.1.6).
 
 ## Ownership
 
