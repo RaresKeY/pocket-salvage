@@ -1,6 +1,6 @@
 # Standalone prototype builds
 
-Reviewed: 2026-09-25. Implementation revision: `07f1974` (published v0.1.5).
+Reviewed: 2026-09-25. Implementation revision: `4507eb6` (v0.1.6).
 
 The user requested a versioned standalone prototype and reproducible builds. Export presets cover Linux x86_64, Windows x86_64, Web (single-thread WebAssembly) and unsigned macOS universal. Mobile Web input is supported through the shared [input module](input.md); native mobile exports and signing remain outside this prototype. Platform availability is separate from tested runtime support: Linux and Web can be exercised on the development workstation; Windows and macOS require target-machine playtests.
 
@@ -70,4 +70,8 @@ RaresKeY requested a one-time deployment of the latest published Web release on 
 
 Firebase validation (2026-09-25): all ten hosted files matched local release/metadata SHA256 values, including WASM served as `application/wasm`. Firefox on the actual HTTPS site passed start, movement, pause/restart, music/mute/SFX/restore checks with zero game-console errors; automation was muted downstream of the audio analyser. The GitHub About URL was read back successfully. Generated download/extraction and deployment-cache files were removed after verification; ignored hash/browser evidence was retained.
 
-Requested v0.1.6 refresh: push a matching version tag to invoke the existing test/build/Pages pipeline, then deploy that verified release Web package to Firebase. This release includes Dale’s per-round weather implementation through `dbf34d1`, current hosting/docs and the version bump. Record the actual publication and hosted verification after completion.
+Requested v0.1.6 refresh: push a matching version tag to invoke the existing test/build/Pages pipeline, then deploy that verified release Web package to Firebase. This release includes Dale’s per-round weather implementation through `dbf34d1`, current hosting/docs and the version bump.
+
+2026-09-25 v0.1.6 delivery: [tag run 36179129237](https://github.com/RaresKeY/pocket-salvage/actions/runs/36179129237) passed the full suite including weather, compared Windows/Linux/Web exports from two clean snapshots, published verified assets and verified Pages. Firebase was deployed manually from the downloaded release ZIP after archive/manifest/file checksum checks. All ten Firebase-hosted files matched the verified payload and metadata. Both sites report source `4507eb64dda4a664832045885467725f448a377c` and version 0.1.6.
+
+Firefox loaded the actual Firebase HTTPS release and ran start/movement/reeling with no game-console errors and nonzero audio, measured upstream of a muted destination. This is a sampled exported-browser smoke test, not exhaustive weather performance profiling. Local release downloads and Firebase deployment caches were removed after verification; ignored evidence was retained.
