@@ -32,6 +32,15 @@ func _initialize() -> void:
 	var altered := Layout.create_layout()
 	altered.scrap[0].position = Vector2.ZERO
 	assert(Layout.create_layout().scrap[0].position != Vector2.ZERO, "Callers own independent data")
+	var Backdrop = load("res://scripts/level/yard_backdrop.gd")
+	var plan: Array = Backdrop.skyline_plan([102.0, 204.0, 204.0], 1200.0, 11)
+	assert(plan == Backdrop.skyline_plan([102.0, 204.0, 204.0], 1200.0, 11), "Skyline plan is the same every round")
+	for i in range(1, plan.size()): assert(plan[i].index != plan[i - 1].index, "Neighbouring skyline tiles are different designs")
+	assert(plan.any(func(piece): return piece.flip) and plan.any(func(piece): return not piece.flip), "Some tiles are mirrored")
+	var last: Dictionary = plan[-1]
+	assert(is_equal_approx(last.x + last.width, 1200.0), "Skyline fills the span exactly")
+	var single: Array = Backdrop.skyline_plan([102.0], 500.0, 11)
+	for i in range(1, single.size()): assert(single[i].flip != single[i - 1].flip, "A lone design alternates facing")
 	call_deferred("_check_lab")
 
 func _check_lab() -> void:

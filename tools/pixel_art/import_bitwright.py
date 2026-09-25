@@ -29,6 +29,10 @@ NAMES = {
     "stand": "tool_stand",
     "blood_moon": "backdrop_blood_moon",
     "blood_skyline": "backdrop_blood_skyline_tile",
+    "skyline_b": "backdrop_skyline_tile_b",
+    "skyline_c": "backdrop_skyline_tile_c",
+    "blood_skyline_b": "backdrop_blood_skyline_tile_b",
+    "blood_skyline_c": "backdrop_blood_skyline_tile_c",
 }
 
 

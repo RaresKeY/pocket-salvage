@@ -21,3 +21,7 @@ After the comparison screenshots:
 > I think instead of backgrop tint, we do stronger sky tint, on masked and light, 5% on other assets, and slight tint on screenspace
 
 > and maybe a new city scape from c but without the moon duplicates actually
+
+Dale, 2026-09-25 (spelling corrected):
+
+> Can we improve that skyline, as it repeats over and over?

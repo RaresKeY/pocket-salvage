@@ -1,0 +1,18 @@
+{
+	"algorithm": "integer-nearest-neighbor",
+	"factor": 8,
+	"format": "RGBA8",
+	"godot": "4.7-stable (official)",
+	"output": "assets/bitwright_8x/backdrop_blood_skyline_tile_b.png",
+	"output_sha256": "ff7ec852657d44e09b6e970bfde23342ab923731b33f682a1e6da58161a82e8e",
+	"output_size": [
+		1024,
+		256
+	],
+	"source": "assets/bitwright/backdrop_blood_skyline_tile_b.png",
+	"source_sha256": "5ce63b211326947019caee9a9d0b7697c128aafbce52947c2d57515be2babfa4",
+	"source_size": [
+		128,
+		32
+	]
+}

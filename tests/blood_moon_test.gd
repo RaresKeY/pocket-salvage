@@ -34,7 +34,7 @@ func run() -> void:
 	await process_frame
 	assert(game.ambience.blood_moon and game.blood_cycle != null)
 	assert(moon_of(game).texture.resource_path.contains("backdrop_blood_moon"), "Blood Moon shows the generated blood moon")
-	assert(backdrop_of(game).skyline.resource_path.contains("backdrop_blood_skyline"), "Blood Moon uses the crimson skyline")
+	assert(backdrop_of(game).skylines.all(func(tile): return tile.resource_name.begins_with("backdrop_blood_skyline")), "Blood Moon uses the crimson skylines")
 	game.ambience._spawn_gulls()
 	game.ambience.rat_wait = 0
 	game.ambience._process(1.0)
@@ -85,7 +85,7 @@ func run() -> void:
 	game.select_level(0)
 	assert(not game.ambience.blood_moon and game.blood_cycle == null)
 	assert(game.weather.profile.tint == Color.WHITE)
-	assert(not backdrop_of(game).skyline.resource_path.contains("blood") and not moon_of(game).texture.resource_path.contains("blood"), "Clear restores the normal skyline and moon")
+	assert(backdrop_of(game).skylines.all(func(tile): return not tile.resource_name.contains("blood")) and not moon_of(game).texture.resource_path.contains("blood"), "Clear restores the normal skylines and moon")
 	assert(Heads.grips(Heads.Kind.MAGNET, &"steel"))
 	print("BLOOD_MOON_TEST_OK")
 	quit()

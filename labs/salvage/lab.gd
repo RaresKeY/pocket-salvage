@@ -170,7 +170,7 @@ func _build_world() -> void:
 	backdrop.z_index = -10
 	backdrop.draw_sky = false
 	world.add_child(backdrop)
-	if selected_level == 3: backdrop.skyline = YardArt.texture("backdrop_blood_skyline_tile")
+	if selected_level == 3: backdrop.skylines = Backdrop.skyline_set("backdrop_blood_skyline_tile")
 	backdrop.configure(layout)
 	add_wall(Vector2(600,455),Vector2(1200,30))
 	add_wall(Vector2(-10,240),Vector2(20,480))

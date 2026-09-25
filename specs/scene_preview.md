@@ -10,7 +10,7 @@ Reviewed: 2026-09-25. Implementation: preview-shortcut removal based on `0734d3d
 
 ## Presentation contract
 
-`Stage/Viewport` renders at window resolution. The composition retains its 384×216 world-unit coordinates. Each Sprite2D uses an 8× texture with local scale 0.125, while region rectangles multiply by eight to preserve cropping and tile repetition. HUD textures also use the enlarged copies within their existing fixed display bounds. Originals remain untouched; all 119 derivatives, including masks, retain adjacent hash/provenance records. Only deliberately tiled sprites enable repeat.
+`Stage/Viewport` renders at window resolution. The composition retains its 384×216 world-unit coordinates. Each Sprite2D uses an 8× texture with local scale 0.125, while region rectangles multiply by eight to preserve cropping and tile repetition. HUD textures also use the enlarged copies within their existing fixed display bounds. Originals remain untouched; all 123 derivatives, including masks, retain adjacent hash/provenance records. Only deliberately tiled sprites enable repeat.
 
 Linear filtering is scene-local and happens at runtime on the enlarged textures; the stored PNGs contain exact replicated blocks. No mipmaps are enabled. Smooth zoom and fractional placement intentionally allow resampling and do not promise pixel-perfect blocks at every zoom.
 
