@@ -14,6 +14,8 @@ RaresKeY’s [next request](../prompts/source/firebase-hosting.md) authorizes a 
 
 RaresKeY’s latest [deployment directive](../prompts/source/firebase-hosting.md) requests updating both hosted sites with the new wind/UI changes.
 
+RaresKeY’s [marketing refresh request](../prompts/source/marketing-refresh.md) asks to remake the marketing PNG and update the stale README.
+
 ## AI-inferred design
 
 Use `pocket-salvage` as the repository slug and `v0.1.3` as the first published automated patch release (`v0.1.2` exposed a draft-lookup defect and remains an unchanged historical tag). Test main pushes; stable `vMAJOR.MINOR.PATCH` tags must match the project version and belong to main. Tagged releases test and export Windows/Linux/Web twice, using the existing reproducible packager. Keep macOS outside automated releases until target-machine validation is available.
@@ -33,3 +35,5 @@ README refresh: summarize the published v0.1.5 audio/performance behavior, disti
 Use v0.1.6 for the requested release, including Dale’s weather implementation that arrived before publication. Run the existing tag workflow, then deploy its verified Web package to Firebase manually.
 
 Use v0.1.7 for curved wind, sparse dust, square pixel UI, bundled Tiny5 and pause volume controls. Run tagged delivery, then deploy the same verified Web payload to Firebase. Local Developer options remain excluded from exported UI.
+
+Marketing refresh: use fresh, unmodified 1280×720 native gameplay and level-grid captures from `3557892`, with the existing game art and UI. Keep gameplay as the hero, place the grid beside its explanation, and explicitly distinguish source-only levels from hosted v0.1.7. This request changes documentation and promotional captures, not releases or deployments.

@@ -1,6 +1,6 @@
 # Repository Structure
 
-Reviewed: 2026-09-25. Implementation revision: `39312c3` (v0.1.7).
+Reviewed: 2026-09-25. Runtime revision: `3557892`; README/marketing refresh based on that revision.
 
 ## Current contract
 
@@ -32,10 +32,10 @@ Check Markdown links, the tracked/ignored boundary, Git attributes, and `git dif
 
 ## Public entry point
 
-The root README leads with browser play and desktop downloads, a selected live-game screenshot, controls, and short development links. Detailed contributor and build rules remain in their owning docs/specs. `marketing/.gdignore` prevents the README capture from becoming a game resource.
+The root README leads with browser play and desktop downloads, current-source gameplay and level-grid screenshots, controls, and short development links. Detailed contributor and build rules remain in their owning docs/specs. `marketing/.gdignore` prevents the README capture from becoming a game resource.
 
 The main workstation checkout is now named `pocket-salvage`. Git links for its nine existing sibling worktrees were repaired after the move; their paths and branches remain intact. Launchers resolve the project from their own location, so they follow the rename without hard-coded path changes. Local instruction files moved with the checkout and remain ignored.
 
 The public About website is Firebase Hosting (`https://pocket-salvage.web.app/`), a manually deployed v0.1.7 snapshot. README retains GitHub Pages as the destination updated by tagged releases and labels that difference. Firebase configuration is tracked; credentials, deployment caches/logs and downloaded release payloads are not.
 
-The README summarizes the current release’s weather and retained audio/performance changes, executable names, browser audio activation, Web ZIP serving requirements and Linux launcher prerequisites. It links the test guide and measured performance review; hosted version metadata and latest-release identity were checked during the refresh.
+The README describes controls, scoring, audio sliders, mobile support and source-only levels without mixing them with the published release. Both live `build.json` endpoints and GitHub latest-release metadata were verified as v0.1.7 (`39312c3`) during this refresh. Marketing provenance is recorded in `marketing/README.md`; captures show source `3557892`. Markdown destinations and diff whitespace are checked; this documentation/media-only change does not require an engine regression run.

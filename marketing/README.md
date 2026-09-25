@@ -1,5 +1,10 @@
 # Marketing
 
-Keep intentional promotional deliverables here, with their purpose, intended channel, and source/provenance links. Do not treat a file in this directory as authorization to publish it.
+Intentional public README captures, excluded from Godot imports/exports by `.gdignore`.
 
-Unfinished promotional work belongs in [artifacts/](../artifacts/README.md). Retain authored or non-reproducible sources; reproducible release outputs remain ephemeral. `pocket-salvage.png` is the selected public README screenshot: an unmodified Firefox capture of the live GitHub Pages v0.1.3 game on 2026-09-25, source `ee17e9ec4f64c103d311a1bda7188c271686974b`. It shows an actual running round; no scene elements were composited. Publication is covered by RaresKeY’s [public README request](../prompts/source/public-release.md). `.gdignore` keeps this documentation image out of game imports and exports.
+- `pocket-salvage.png`: current gameplay hero showing the pixel-font HUD and Clear level.
+- `levels.png`: ready screen showing three unlocked levels and nine locked placeholders.
+
+Both are unmodified 1280×720 native Godot 4.7 captures of source `3557892`, made on 2026-09-25 with the shared managed runner, headless Gamescope, NVIDIA RTX 2080 Ti hardware rendering and Dummy audio. Gameplay advances through crane movement before capture; no scene elements were composited or generated. Capture script/logs remain locally in `.local/marketing-refresh/`.
+
+RaresKeY requested this [refresh](../prompts/source/marketing-refresh.md). The root README identifies these as current-source captures: hosted v0.1.7 does not include level selection. Promotional files do not independently authorize a game release or deployment.
