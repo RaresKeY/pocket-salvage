@@ -87,6 +87,10 @@ func eject(body: RigidBody2D, landing: Vector2) -> void:
 	body.linear_damp_mode = RigidBody2D.DAMP_MODE_REPLACE
 	body.linear_damp = 0.0
 
+## True for the whole arc of a thrown-back body, not just while it is inside the bin.
+func is_thrown(body: Node) -> bool:
+	return _ejecting.has(body) and _ejecting[body].flight > 0.0
+
 func _release_ejected(delta: float) -> void:
 	var inside := sensor.get_overlapping_bodies()
 	for body in _ejecting.keys():

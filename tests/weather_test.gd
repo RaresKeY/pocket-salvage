@@ -201,5 +201,31 @@ func run() -> void:
 		assert(each.hud.weather_badge.text.begins_with(each.weather.profile.label), "%s shows on the HUD" % id)
 		each.queue_free()
 		await process_frame
+	var gale = Lab.instantiate()
+	gale.forced_weather = &"storm"
+	root.add_child(gale)
+	await process_frame
+	gale.start_round()
+	await frames(60)
+	gale.weather.direction = 1.0
+	var misfit: RigidBody2D = gale.scrap_bodies().filter(func(b): return b.material_id == &"steel")[0]
+	var copper_bin = gale.bins.filter(func(b): return b.material_id == &"copper")[0]
+	PhysicsServer2D.body_set_state(misfit.get_rid(), PhysicsServer2D.BODY_STATE_TRANSFORM, Transform2D(0, copper_bin.position))
+	misfit.sleeping = false
+	for frame in 120:
+		await physics_frame
+		if gale.round_state.wrong_count >= 1: break
+	assert(gale.round_state.wrong_count == 1, "the wrong drop is refused once")
+	var touchdown := INF
+	for frame in 240:
+		await physics_frame
+		if misfit.linear_velocity.y > 0 and misfit.global_position.y >= gale.reject_landing.y:
+			touchdown = misfit.global_position.x
+			break
+	assert(absf(touchdown - gale.reject_landing.x) < 15, "wind does not blow thrown-back scrap off its landing (landed %.0f, aimed %.0f)" % [touchdown, gale.reject_landing.x])
+	await frames(120)
+	assert(gale.round_state.wrong_count == 1, "no extra wrong-bin penalties from wind")
+	gale.queue_free()
+	await process_frame
 	print("WEATHER_TEST_OK profiles, weighted pick, calm, wind and gusts, lightning sequence, pause, forced weather, grip, multiplier, wind, rain, fog, lightning and power cuts, sounds, full rounds")
 	quit()

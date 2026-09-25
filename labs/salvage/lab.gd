@@ -218,7 +218,7 @@ func scrap_bodies() -> Array:
 
 ## What wind pushes: the head, and scrap that is loose, not carried and not being thrown back.
 func blown_bodies() -> Array:
-	return [tip] + scrap_bodies().filter(func(body): return not body.held and not body.delivered)
+	return [tip] + scrap_bodies().filter(func(body): return not body.held and not body.delivered and not bins.any(func(bin): return bin.is_thrown(body)))
 
 ## Lightning: a magnet loses power and drops its load; the mechanical claw is unaffected.
 func power_cut(seconds: float) -> void:
