@@ -6,7 +6,7 @@ static var _cache: Dictionary = {}
 static func frames_for(prefix: String) -> SpriteFrames:
 	if not _cache.has(prefix):
 		var result := SpriteFrames.new()
-		add_frames(result, &"default", prefix, range(1, 7), 16.0, false)
+		add_frames(result, &"default", prefix, frame_numbers(prefix), 16.0, false)
 		_cache[prefix] = result
 	return _cache[prefix]
 
@@ -16,6 +16,12 @@ static func add_frames(frames: SpriteFrames, animation: StringName, prefix: Stri
 	frames.set_animation_loop(animation, loop)
 	for number in numbers:
 		frames.add_frame(animation, load(ART + "%s_%02d.png" % [prefix, number]))
+
+static func frame_numbers(prefix: String) -> Array:
+	var numbers := []
+	while ResourceLoader.exists(ART + "%s_%02d.png" % [prefix, numbers.size() + 1]):
+		numbers.append(numbers.size() + 1)
+	return numbers
 
 func _init(prefix: String = "fx_sparks", at: Vector2 = Vector2.ZERO, world_per_pixel: float = 1.0) -> void:
 	sprite_frames = frames_for(prefix)

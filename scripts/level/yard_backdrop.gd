@@ -5,11 +5,22 @@ const FLOOR = preload("res://assets/bitwright_8x/ground_dirt_tile.png")
 const RAIL = preload("res://assets/bitwright_8x/crane_rail_tile.png")
 const FENCE = preload("res://assets/bitwright_8x/backdrop_scrapyard_tile.png")
 const TOWER = preload("res://assets/bitwright_8x/crane_tower.png")
+const SKYLINE_PATH := "res://assets/bitwright_8x/backdrop_skyline_tile.png"
+const HEAP_PATH := "res://assets/bitwright_8x/backdrop_junk_heap.png"
+const HEAP_SPOTS := [0.9]
+const HEAP_TINT := Color(0.55, 0.52, 0.66)
+## The fence tile's top rows are opaque sky; the skyline stands on them.
+const FENCE_SKY_ROWS := 10
 const SKY := Color("2e283e")
 const TOWER_CAP := 4
 const TOWER_PERIOD := 4
 const TOWER_FOOT := 16
 var layout: Dictionary = Layout.create_layout()
+## Off when a caller layers its own animated sky behind this node.
+var draw_sky := true
+## Held here, not loaded inside _draw: a texture freed after _draw returns renders white.
+var skyline: Texture2D = load(SKYLINE_PATH) if ResourceLoader.exists(SKYLINE_PATH) else null
+var heap: Texture2D = load(HEAP_PATH) if ResourceLoader.exists(HEAP_PATH) else null
 
 func _ready() -> void:
 	texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
@@ -22,9 +33,17 @@ func _draw() -> void:
 	var bounds: Rect2 = layout.bounds
 	var floor_y: float = layout.ground_top
 	var art_scale: float = layout.art_scale
-	draw_rect(bounds, SKY)
+	if draw_sky: draw_rect(bounds, SKY)
 	var fence_height := FENCE.get_height() / 8.0 * art_scale
 	_tile_row(FENCE, Rect2(bounds.position.x, floor_y - fence_height, bounds.size.x, fence_height))
+	if skyline:
+		var skyline_height := skyline.get_height() / 8.0 * art_scale
+		var horizon := floor_y - fence_height + FENCE_SKY_ROWS * art_scale
+		_tile_row(skyline, Rect2(bounds.position.x, horizon - skyline_height, bounds.size.x, skyline_height))
+	if heap:
+		var heap_size := heap.get_size() / 8.0 * art_scale
+		for spot in HEAP_SPOTS:
+			draw_texture_rect(heap, Rect2(Vector2(bounds.size.x * spot - heap_size.x * 0.5, floor_y - heap_size.y), heap_size), false, HEAP_TINT)
 	var tower_width := TOWER.get_width() / 8.0 * art_scale
 	for x in [bounds.position.x, bounds.end.x - tower_width]:
 		_tower(Rect2(x, 40, tower_width, floor_y - 40), art_scale)

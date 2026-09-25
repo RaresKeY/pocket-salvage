@@ -56,6 +56,12 @@ func run() -> void:
 	await process_frame
 	lab.set_physics_process(false)
 	assert(lab.round_state.state == &"ready")
+	for sound in [&"magnet_on",&"magnet_off",&"pickup",&"land",&"correct",&"wrong",&"eject",&"tick",&"finish",&"start"]:
+		assert(load("res://assets/audio/%s.wav" % sound) is AudioStreamWAV,"Generated sound %s imports" % sound)
+	assert(lab.world.process_mode == Node.PROCESS_MODE_DISABLED and lab.ambience.stars.size() == 70)
+	var scenery_clock: float = lab.ambience.time
+	for frame in 10: await process_frame
+	assert(lab.ambience.time > scenery_clock,"Scenery keeps moving on the start screen")
 	lab.hud.start_requested.emit()
 	assert(lab.round_state.state == &"running")
 	await step(0,0,60)
@@ -108,6 +114,8 @@ func run() -> void:
 		print("SALVAGE_DELIVERY count=%d elapsed=%.2f" % [lab.round_state.delivered_count,simulated])
 	assert(lab.round_state.state == &"finished")
 	assert(lab.round_state.time_bonus > 0 and lab.round_state.correct_count == 6)
+	for sound in [&"start",&"magnet_on",&"pickup",&"wrong",&"eject",&"correct",&"finish"]:
+		assert(lab.sfx.played.has(sound),"Round plays %s" % sound)
 	assert(lab.round_state.score == 600 - 25 + lab.round_state.time_bonus)
 	assert(lab.hud.details.text.contains("Time bonus  +%d" % lab.round_state.time_bonus))
 	assert(lab.hud.modal.visible)

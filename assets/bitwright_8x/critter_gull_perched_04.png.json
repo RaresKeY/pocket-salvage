@@ -1,0 +1,18 @@
+{
+	"algorithm": "integer-nearest-neighbor",
+	"factor": 8,
+	"format": "RGBA8",
+	"godot": "4.7-stable (official)",
+	"output": "assets/bitwright_8x/critter_gull_perched_04.png",
+	"output_sha256": "f71fb33f61241c098e0470696966558a2b832f6673d1f8a74e593c9e5e8c7e53",
+	"output_size": [
+		128,
+		96
+	],
+	"source": "assets/bitwright/critter_gull_perched_04.png",
+	"source_sha256": "d40d1f87e274328e03bd228b0e88264fe90f0f98daf5a32a828d77c85e88ed3c",
+	"source_size": [
+		16,
+		12
+	]
+}

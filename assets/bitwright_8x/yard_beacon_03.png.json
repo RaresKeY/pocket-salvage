@@ -1,0 +1,18 @@
+{
+	"algorithm": "integer-nearest-neighbor",
+	"factor": 8,
+	"format": "RGBA8",
+	"godot": "4.7-stable (official)",
+	"output": "assets/bitwright_8x/yard_beacon_03.png",
+	"output_sha256": "c6e9295f91407e6a5dd9e8165b555746cfe3019bce8b9bf335e427c0bc347353",
+	"output_size": [
+		64,
+		64
+	],
+	"source": "assets/bitwright/yard_beacon_03.png",
+	"source_sha256": "9a65f1c5963e5833564b2c898bcca950827ac18d30c8fb7a11527593ed0d37bb",
+	"source_size": [
+		8,
+		8
+	]
+}

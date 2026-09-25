@@ -1,0 +1,18 @@
+{
+	"algorithm": "integer-nearest-neighbor",
+	"factor": 8,
+	"format": "RGBA8",
+	"godot": "4.7-stable (official)",
+	"output": "assets/bitwright_8x/yard_floodlight.png",
+	"output_sha256": "3a13cbbc4dd8da7bd3b51fdca23503a117e2c4dadbf6eae29629c1adc6eacb83",
+	"output_size": [
+		160,
+		448
+	],
+	"source": "assets/bitwright/yard_floodlight.png",
+	"source_sha256": "6916013dd5947d9c81701dd57aac9239b4eb11e48b1c600e25301e869429ffe7",
+	"source_size": [
+		20,
+		56
+	]
+}

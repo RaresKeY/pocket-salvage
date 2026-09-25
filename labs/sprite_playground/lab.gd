@@ -27,7 +27,7 @@ func _ready() -> void:
 	var files := DirAccess.get_files_at("res://assets/bitwright_8x")
 	var index := 0
 	for file in files:
-		if not file.ends_with(".png") or "_mask" in file: continue
+		if not file.ends_with(".png") or "_mask" in file or _later_frame(file): continue
 		var sprite := Sprite2D.new()
 		sprite.texture = load("res://assets/bitwright_8x/" + file)
 		sprite.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
@@ -67,7 +67,7 @@ func toggle_filter() -> void:
 	update_status()
 
 func update_status() -> void:
-	status.text = "Texture: 192 × 224  /  Object: %.1f × %.1f world units  /  Filtering: %s  /  48 art previews; masks kept separately" % [24 * size_control.value, 28 * size_control.value, "linear" if smooth else "nearest"]
+	status.text = "Texture: 192 × 224  /  Object: %.1f × %.1f world units  /  Filtering: %s  /  %d art previews; masks kept separately" % [24 * size_control.value, 28 * size_control.value, "linear" if smooth else "nearest", gallery.size()]
 
 func caption(text: String, position: Vector2, font_size: int) -> void:
 	var label := Label.new()
@@ -89,3 +89,8 @@ func add_wall(position: Vector2, dimensions: Vector2) -> void:
 	visual.color = Color("527d70")
 	wall.add_child(visual)
 	world.add_child(wall)
+
+## Animations show their first frame only, so every sprite gets one tile and the grid fits.
+func _later_frame(file: String) -> bool:
+	var number := file.get_basename().get_slice("_", file.get_basename().get_slice_count("_") - 1)
+	return number.length() == 2 and number.is_valid_int() and int(number) > 1

@@ -1,0 +1,18 @@
+{
+	"algorithm": "integer-nearest-neighbor",
+	"factor": 8,
+	"format": "RGBA8",
+	"godot": "4.7-stable (official)",
+	"output": "assets/bitwright_8x/critter_crow_04.png",
+	"output_sha256": "36bdace84c17786687464d52347566de0ef76d8e6074a1f2bb332bf1b96f3bc9",
+	"output_size": [
+		96,
+		96
+	],
+	"source": "assets/bitwright/critter_crow_04.png",
+	"source_sha256": "0e2a5e7c59231a66d97e798dbb1a3f42ba94770eecac0dfd84e955769e0dad97",
+	"source_size": [
+		12,
+		12
+	]
+}

@@ -1,0 +1,18 @@
+{
+	"algorithm": "integer-nearest-neighbor",
+	"factor": 8,
+	"format": "RGBA8",
+	"godot": "4.7-stable (official)",
+	"output": "assets/bitwright_8x/critter_gull_03.png",
+	"output_sha256": "6a22deb103ecc9bec6fd6de679e9e8fa62d94992237668241540cff69b61f887",
+	"output_size": [
+		128,
+		96
+	],
+	"source": "assets/bitwright/critter_gull_03.png",
+	"source_sha256": "3f52a2cbe61c8d119ce11cf8e7b9ea1d69bb40e4b5278c766698acbb695db0e9",
+	"source_size": [
+		16,
+		12
+	]
+}

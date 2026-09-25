@@ -1,0 +1,18 @@
+{
+	"algorithm": "integer-nearest-neighbor",
+	"factor": 8,
+	"format": "RGBA8",
+	"godot": "4.7-stable (official)",
+	"output": "assets/bitwright_8x/backdrop_junk_heap.png",
+	"output_sha256": "2059abaab79e64dc382bc9b44fe110bf536b3b925634abd042c423767a0e9ee9",
+	"output_size": [
+		512,
+		224
+	],
+	"source": "assets/bitwright/backdrop_junk_heap.png",
+	"source_sha256": "3ac90d29d03fa6ed912e4b8ec557007fea93fde748dfbd1ac6718e7dea9231bd",
+	"source_size": [
+		64,
+		28
+	]
+}
