@@ -1,6 +1,6 @@
 # Wind and square pixel UI review
 
-Reviewed: 2026-09-25. Implementation revision: `53982f2`; not included in published v0.1.6.
+Reviewed: 2026-09-25. Implementation revision: `53982f2`; published in v0.1.7 after its release version bump.
 
 VERDICT: APPROVE for the inspected source UI and Linux/Firefox export scope.
 
@@ -26,8 +26,12 @@ Linux, Windows and Web exports succeeded; each packed the Tiny5 font resource, f
 
 ## Limits
 
-Windows was exported but not executed. Controller/touch checks are simulated, not physical-device playtests. Volume settings remain scene-session-only. No new performance benchmark or subjective listening claim is made. Weather balance is unchanged. Release sites still serve v0.1.6 until another release is requested.
+Windows was exported but not executed. Controller/touch checks are simulated, not physical-device playtests. Volume settings remain scene-session-only. No new performance benchmark or subjective listening claim is made. Weather balance is unchanged. The user subsequently requested deployment to both sites; v0.1.7 contains this implementation.
 
 Ignored evidence: `.local/ui-wind/` contains baseline/final screenshots, browser mixer evidence and managed logs. Temporary export payloads and the isolated source copy are removed after verification.
 
 The upstream OFL file is preserved byte-for-byte, including its existing trailing space on line 21. Application-source whitespace checks pass; that vendor-license whitespace is intentional provenance preservation.
+
+## Published verification
+
+v0.1.7 (`39312c3`) is deployed to Firebase and GitHub Pages. Every hosted payload file was hash-compared with the verified GitHub release on both hosts. The actual Firebase Firefox run repeated keyboard slider-zero/restore, mute and movement checks with nonzero restored audio, zero output at zero settings and no console errors; diagnostics remained hidden. See the [delivery record](../specs/builds.md).

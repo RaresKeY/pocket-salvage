@@ -1,6 +1,6 @@
 # Pocket Salvage Specs Map
 
-Reviewed: 2026-09-25. Implementation revision: `df5ad76` (weather, on v0.1.5 `07f1974`).
+Reviewed: 2026-09-25. Implementation revision: `39312c3` (v0.1.7).
 
 `specs/` is committed project memory for current intent and implementation. Read the relevant spec before changing its owning behavior, contract, boundary, source area, or verification flow, and update it with the implementation.
 

@@ -1,6 +1,6 @@
 # Standalone prototype builds
 
-Reviewed: 2026-09-25. Implementation revision: `4507eb6` (v0.1.6).
+Reviewed: 2026-09-25. Implementation revision: `39312c3` (v0.1.7).
 
 The user requested a versioned standalone prototype and reproducible builds. Export presets cover Linux x86_64, Windows x86_64, Web (single-thread WebAssembly) and unsigned macOS universal. Mobile Web input is supported through the shared [input module](input.md); native mobile exports and signing remain outside this prototype. Platform availability is separate from tested runtime support: Linux and Web can be exercised on the development workstation; Windows and macOS require target-machine playtests.
 
@@ -79,3 +79,5 @@ Firefox loaded the actual Firebase HTTPS release and ran start/movement/reeling 
 Bundled typography: all export presets explicitly include `assets/fonts/tiny5/OFL.txt` and `THIRD_PARTY_NOTICES.md`. The shared theme preloads Tiny5, so native and Web packages contain the font resource without system-font or network requirements. Validation exports are temporary and are not new published releases.
 
 Version 0.1.7 packages the verified `53982f2` wind/UI implementation with the displayed version bump, through the existing GitHub release/Pages workflow and a requested manual Firebase deployment of the same Web asset.
+
+2026-09-25 v0.1.7 delivery: [tag workflow 36185614817](https://github.com/RaresKeY/pocket-salvage/actions/runs/36185614817) passed tests, compared two Windows/Linux/Web exports, verified release assets and updated Pages. Firebase received the checksum-verified Web ZIP. All ten files on each host matched the release payload/metadata; both identify `39312c3eb2def90904d2e767b1f33d42aa1e0cb6`. A silent Firefox check of actual Firebase HTTPS verified pixel-font presentation, start/move/reel/pause, zero and restored output for both volume sliders, music mute, and zero game-console errors. Temporary downloads and deployment caches were removed after verification.
