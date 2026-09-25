@@ -19,3 +19,5 @@ Verification: `tests/input_test.gd` injects real Godot joypad/touch events and c
 On touch landscape screens shorter than 540 logical pixels, the controller occupies a separate bottom-right panel and the yard/footer reserve a right-side column. The redundant touch hints are hidden there to give the yard more height. Portrait and taller layouts keep the controller in the footer. This follows the same theme and leaves game rules unchanged.
 
 Local preflight: the full managed Godot test suite and eight offline release-contract tests passed. The input suite additionally guards against the header covering the modal title and verifies the short-landscape controller panel cannot overlap the yard. Exported-browser validation is required before this update is tagged.
+
+Direction buttons draw their arrows with canvas lines instead of font glyphs: exported Web fonts do not include Unicode arrows. The input regression test checks font-independent direction rendering; exported-browser screenshots verify the visible result.

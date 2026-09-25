@@ -15,3 +15,5 @@ Wrap the header on narrow viewports, bound the modal to screen width, and stack 
 Cancel touch ownership on pause, focus loss, restart, rotation and results. Dragging off a direction releases it; multiple fingers can independently move, reel and grip. Disconnecting the active controller pauses the round, and physical movement must return to neutral after interruption. Preserve keyboard shortcuts and mouse controls. Version the playable update as v0.1.4 and use the existing tag delivery workflow to update downloads and Pages.
 
 On touch landscape screens shorter than 540 logical pixels, the controller occupies a separate bottom-right panel and the yard/footer reserve a right-side column. The redundant touch hints are hidden there to give the yard more height. Portrait and taller layouts keep the controller in the footer. This follows the same theme and leaves game rules unchanged.
+
+Draw direction arrows with small theme-colored canvas lines so exported Web builds need no additional font or icon pack.

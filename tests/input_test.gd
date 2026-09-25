@@ -99,6 +99,8 @@ func run() -> void:
 	lab.toggle_pause()
 	await settle()
 	var touch = lab.hud.touch_controls
+	for key in touch.DIRECTIONS:
+		assert(touch.buttons[key].text.is_empty() and not touch.buttons[key].draw.get_connections().is_empty(), "Directions use drawn icons, independent of missing Web font glyphs")
 	var right: Vector2 = touch.buttons[&"right"].get_global_rect().get_center()
 	var lower: Vector2 = touch.buttons[&"down"].get_global_rect().get_center()
 	var grip: Vector2 = touch.buttons[&"grip"].get_global_rect().get_center()

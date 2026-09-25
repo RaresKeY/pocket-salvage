@@ -27,7 +27,7 @@ func _ready() -> void:
 			spacer.mouse_filter = MOUSE_FILTER_IGNORE
 			spacer.custom_minimum_size = Vector2(44, 44)
 			pad.add_child(spacer)
-		else: _button(pad, key, {&"up":"↑", &"down":"↓", &"left":"←", &"right":"→"}[key])
+		else: _button(pad, key, "")
 	var actions := VBoxContainer.new()
 	actions.mouse_filter = MOUSE_FILTER_IGNORE
 	actions.add_theme_constant_override("separation", 8)
@@ -40,6 +40,9 @@ func _ready() -> void:
 func _button(parent: Node, key: StringName, text: String) -> void:
 	var button := Button.new()
 	button.text = text
+	if DIRECTIONS.has(key):
+		button.tooltip_text = String(key).capitalize()
+		button.draw.connect(_draw_arrow.bind(button, DIRECTIONS[key]))
 	button.custom_minimum_size = Vector2(44 if DIRECTIONS.has(key) else 64, 44)
 	button.focus_mode = FOCUS_NONE
 	button.mouse_filter = MOUSE_FILTER_IGNORE
@@ -47,6 +50,16 @@ func _button(parent: Node, key: StringName, text: String) -> void:
 	button.disabled = not enabled
 	parent.add_child(button)
 	buttons[key] = button
+
+func _draw_arrow(button: Button, direction: Vector2) -> void:
+	# Font-independent icons: Web's bundled font has no Unicode arrow glyphs.
+	var center := button.size * 0.5
+	var tip := center + direction * 7
+	var side := direction.orthogonal() * 5
+	var color := button.get_theme_color("font_disabled_color" if button.disabled else "font_color")
+	button.draw_line(center - direction * 7, tip, color, 2, true)
+	button.draw_line(tip, tip - direction * 5 + side, color, 2, true)
+	button.draw_line(tip, tip - direction * 5 - side, color, 2, true)
 
 func _at(point: Vector2) -> StringName:
 	for key in buttons:
