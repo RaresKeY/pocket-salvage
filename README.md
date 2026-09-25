@@ -4,13 +4,15 @@ A four-minute scrapyard shift. Drive a swinging crane, swap between a magnet and
 
 **[Play in your browser](https://pocket-salvage.web.app/)** · **[Download for Windows or Linux](https://github.com/RaresKeY/pocket-salvage/releases/latest)**
 
-[Alternate play link: GitHub Pages](https://rareskey.github.io/pocket-salvage/). Firebase is a manually deployed **v0.1.5** snapshot; GitHub Pages updates with each tagged release.
+[Alternate play link: GitHub Pages](https://rareskey.github.io/pocket-salvage/). Firebase is a manually deployed release snapshot; GitHub Pages updates with each tagged release.
 
 ![Pocket Salvage: a crane above a moonlit scrapyard, with copper, rubber and steel sorting bins.](marketing/pocket-salvage.png)
 
 ## Current release
 
-[v0.1.5](https://github.com/RaresKeY/pocket-salvage/releases/tag/v0.1.5) improves Firefox audio continuity during frame stalls, reduces cable and HUD work, and targets 60 FPS on Web. Keyboard, standard controllers and mobile touch controls are supported. Music and SFX have separate controls; click **Start** to enable browser audio.
+The [latest release](https://github.com/RaresKeY/pocket-salvage/releases/latest) adds per-round weather: clear, fog, wind, rain or storm. Wind pushes the crane and airborne scrap, rain makes scrap slippery, and lightning briefly cuts magnet power. Harder weather multiplies a positive final score.
+
+It also retains the v0.1.5 improvements: better Firefox audio continuity during frame stalls, reduced cable and HUD work, and a 60 FPS target on Web. Keyboard, standard controllers and mobile touch controls are supported. Music and SFX have separate controls; click **Start** to enable browser audio.
 
 ## How to play
 

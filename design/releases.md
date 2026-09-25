@@ -10,6 +10,8 @@ RaresKeY, 2026-09-25: [Firebase directive](../prompts/source/firebase-hosting.md
 
 RaresKeY’s [follow-up](../prompts/source/firebase-hosting.md) requests refreshing the stale README.
 
+RaresKeY’s [next request](../prompts/source/firebase-hosting.md) authorizes a new GitHub build/release and deployment to Firebase.
+
 ## AI-inferred design
 
 Use `pocket-salvage` as the repository slug and `v0.1.3` as the first published automated patch release (`v0.1.2` exposed a draft-lookup defect and remains an unchanged historical tag). Test main pushes; stable `vMAJOR.MINOR.PATCH` tags must match the project version and belong to main. Tagged releases test and export Windows/Linux/Web twice, using the existing reproducible packager. Keep macOS outside automated releases until target-machine validation is available.
@@ -25,3 +27,5 @@ Public README presentation: lead with Play/Download, a real gameplay capture and
 Firebase uses a dedicated `pocket-salvage` project/site and the existing checksum-verified v0.1.5 Web release. Keep this a manual snapshot, leave tag-triggered GitHub Pages delivery in place, and label both destinations clearly. Host only the extracted release payload plus version/source metadata, revalidate cached files, and keep deployment artifacts/logs ignored.
 
 README refresh: summarize the published v0.1.5 audio/performance behavior, distinguish the manual Firebase snapshot from automatically updated Pages, and document actual desktop/source launch prerequisites. Keep detailed profiling evidence in its existing review.
+
+Use v0.1.6 for the requested release, including Dale’s weather implementation that arrived before publication. Run the existing tag workflow, then deploy its verified Web package to Firebase manually.

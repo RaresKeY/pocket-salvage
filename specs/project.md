@@ -35,3 +35,5 @@ Documentation changes require checking map links, source references, and the Git
 Player input is shared through `scripts/input/salvage_input.gd`; [input](input.md) owns keyboard/gamepad mappings and mobile touch controls. Minimum window dimensions are 320×320; phone layout is validated separately from desktop. Gamepad events are ignored while the application is unfocused.
 
 Web exports cap presentation at 60 FPS through `application/run/max_fps.web`; native builds retain the platform/VSync rate. Physics remains 60 Hz with interpolation. The cap avoids chasing a 165 Hz desktop refresh when the Web frame budget cannot reliably sustain it.
+
+Release refresh: project version is 0.1.6 for the explicitly requested GitHub/Firebase build. The release includes Dale’s per-round weather implementation through `dbf34d1`; tests and fresh exports are required by the tag workflow. See [weather](weather.md) for effects and verification.

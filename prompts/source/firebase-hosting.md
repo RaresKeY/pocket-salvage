@@ -7,3 +7,7 @@ RaresKeY, 2026-09-25:
 Follow-up, RaresKeY, 2026-09-25:
 
 > update stale README
+
+Follow-up, RaresKeY, 2026-09-25:
+
+> can we push new build for github to start and also to firebase?
