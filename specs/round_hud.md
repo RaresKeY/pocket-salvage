@@ -1,6 +1,6 @@
 # Round HUD
 
-Reviewed: 2026-09-25. Implementation revision: `9d21b8f` (v0.1.1 compact HUD).
+Reviewed: 2026-09-25. Implementation: controller/mobile update based on `d386f56`; release source revision recorded after validation.
 
 ## Ownership and contract
 
@@ -18,10 +18,16 @@ Missing fields use empty/zero defaults and `ready`; a call before readiness is b
 
 Signals: `start_requested`, `restart_requested`, `pause_requested`, `music_requested`, `effects_requested`, and `layout_changed`; the caller chooses transitions. The HUD never keeps score, ticks the clock, pauses physics or decides outcomes.
 
-A single-row header holds score, time, sorted count, Music/SFX toggles and Pause. Head/load status sits above feedback and short hints in the compact footer. The playable yard fits between measured panel bounds with 6px clearance instead of fixed insets. Ready, paused and finished use a dimmed 460px modal with one focused action; entering running releases HUD focus. Audio toggles stay above the modal in all states and release focus after activation while running so Space still controls the crane. Decorative controls ignore the mouse. A small lower-right label shows `application/config/version` over every state.
+A wrapping header holds score, time, sorted count, Music/SFX toggles and Pause. Head/load status sits above feedback and short hints in the compact footer. The playable yard fits between measured panel bounds with 6px clearance instead of fixed insets. Ready, paused and finished use a dimmed 460px modal with one focused action; entering running releases HUD focus. Audio toggles stay above the modal in all states and release focus after activation while running so Space still controls the crane. Decorative controls ignore the mouse. A small lower-right label shows `application/config/version` over every state.
 
 ## Lab and verification
 
 `labs/hud/lab.tscn` proves the module with synthetic data: 1 ready, 2 running, 3 paused, 4 finished; P toggles pause, R returns to ready. `--capture PATH --state STATE` supports automated hardware captures. `tests/hud_test.gd` checks buffered presentation, counters, modal states, real mouse activation of start/pause/resume/replay, focus release and action bounds at 768×480, 854×480, 960×540, 1280×720 and 1920×1080. The salvage test checks the grip label and time-bonus results line. Headless checks prove behaviour, not rendering.
 
 The HUD tests cover audio buttons above the ready modal, focus return, on/off labels, negative score and hurry-timer state. Hardware comparison and audio evidence: [v0.1.1 review](../docs/audio-ui-review.md).
+
+## Controller and phone layout
+
+`control_scheme` selects keyboard, gamepad or touch hints. `touch_enabled`, configured before readiness, adds `touch_controller.gd` to the footer’s right edge; gameplay enables it only while running. The footer changes to a vertical stack below 600 logical pixels, keeping controls right-aligned below feedback. The header uses a flow container, and the modal width is bounded by the current viewport. Direction/action targets are at least 44×44 CSS pixels on mobile Web. Root resize clears touch ownership even when the control’s own size stays unchanged. No controller art pack or second theme is introduced.
+
+On touch landscape screens shorter than 540 logical pixels, the controller occupies a separate bottom-right panel and the yard/footer reserve a right-side column. The redundant touch hints are hidden there to give the yard more height. Portrait and taller layouts keep the controller in the footer. This follows the same theme and leaves game rules unchanged.

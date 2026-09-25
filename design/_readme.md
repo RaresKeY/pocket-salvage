@@ -16,6 +16,7 @@ Design captures evolving intent. Every design document distinguishes explicit **
 | [Round HUD](round_hud.md) | Independent state-driven UI | Extending playable feedback |
 | [Level layouts](level_layout.md) | Provisional yard arrangements | Designing prototype layouts |
 | [Playable integration](salvage_prototype.md) | First combined playable experiment | Revising prototype rules or integration intent |
+| [Player controls](controls.md) | Keyboard, gamepad and mobile Web touch controls | Changing input, device hints or phone layout |
 | [Public delivery](releases.md) | Public repository, local agent files, tag releases and playable Pages site | Changing hosting or release automation |
 | [Audio](audio.md) | Sound effects, crane motor loops and music; current files are AI placeholders | Changing or replacing sound or music |
 

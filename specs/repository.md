@@ -1,6 +1,6 @@
 # Repository Structure
 
-Reviewed: 2026-09-25. Implementation revision: `ee17e9e` (published v0.1.3); public README/capture boundary reviewed with this documentation change.
+Reviewed: 2026-09-25. Implementation: controller/mobile update based on `d386f56`; release source revision recorded after validation.
 
 ## Current contract
 
@@ -33,3 +33,5 @@ Check Markdown links, the tracked/ignored boundary, Git attributes, and `git dif
 ## Public entry point
 
 The root README leads with browser play and desktop downloads, a selected live-game screenshot, controls, and short development links. Detailed contributor and build rules remain in their owning docs/specs. `marketing/.gdignore` prevents the README capture from becoming a game resource.
+
+The main workstation checkout is now named `pocket-salvage`. Git links for its nine existing sibling worktrees were repaired after the move; their paths and branches remain intact. Launchers resolve the project from their own location, so they follow the rename without hard-coded path changes. Local instruction files moved with the checkout and remain ignored.

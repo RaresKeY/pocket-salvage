@@ -12,18 +12,19 @@ The **magnet lifts steel**; the **claw grabs copper and rubber**. Park your curr
 
 Correct sorts earn **100 points**. A wrong bin throws the item back and costs **25 points**. Clear the yard early for **5 points per second remaining**.
 
-| Key | Action |
-|---|---|
-| Enter | Start the round |
-| A / D or ← / → | Move the crane |
-| W / S or ↑ / ↓ | Raise / lower the head |
-| Space | Grab / release |
-| E | Park / pick up a head at a tool stand |
-| P or Escape | Pause |
-| R | Restart |
-| M | Toggle music |
+| Action | Keyboard | Controller (standard layout) |
+|---|---|---|
+| Start / resume / replay | Enter or the on-screen button | A / south face button |
+| Move / raise / lower | WASD or arrow keys | Left stick or D-pad |
+| Grab / release | Space | A / south face button |
+| Park / pick up a head | E | X / west face button |
+| Pause / resume | P or Escape | Start or B / east face button |
+| Restart | R | Y / north face button |
+| Toggle music / SFX | M for music; HUD buttons | Left / right bumper |
 
-Play with a keyboard. The HUD also has music and sound-effect controls. For desktop downloads, extract the whole ZIP and keep the executable beside its PCK file.
+On mobile Web browsers, a **bottom-right touch controller** appears automatically: hold arrows to move and lift; tap **Grip** or **Swap**. You can use movement and action buttons together. Turn your phone sideways for a wider yard. Start, pause, resume and audio controls remain on-screen.
+
+For desktop downloads, extract the whole ZIP and keep the executable beside its PCK file.
 
 ## Development
 

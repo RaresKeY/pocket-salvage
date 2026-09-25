@@ -14,6 +14,8 @@ var ambience: Node2D
 var last_tick_second := -1
 const Round = preload("res://scripts/round/round_controller.gd")
 const Bin = preload("res://scripts/round/sorting_bin.gd")
+const Controls = preload("res://scripts/input/salvage_input.gd")
+var controls: Node
 const HUD = preload("res://scripts/ui/round_hud.gd")
 const Burst = preload("res://scripts/fx/burst_2d.gd")
 const Heads = preload("res://scripts/crane/crane_heads.gd")
@@ -59,6 +61,13 @@ var rebuilding := false
 var finish_reason := ""
 
 func _ready() -> void:
+	controls = Controls.new()
+	add_child(controls)
+	controls.command_requested.connect(_command)
+	controls.scheme_changed.connect(func(_scheme): refresh_hud())
+	if controls.mobile_touch and OS.has_feature("web"):
+		get_window().size_changed.connect(_scale_mobile_ui)
+		_scale_mobile_ui()
 	var bg := ColorRect.new()
 	bg.color = Color("101d24")
 	bg.set_anchors_and_offsets_preset(PRESET_FULL_RECT)
@@ -81,6 +90,7 @@ func _ready() -> void:
 	var hud_layer := CanvasLayer.new()
 	add_child(hud_layer)
 	hud = HUD.new()
+	hud.touch_enabled = controls.mobile_touch
 	hud.set_anchors_and_offsets_preset(PRESET_FULL_RECT)
 	hud_layer.add_child(hud)
 	hud.start_requested.connect(start_round)
@@ -89,6 +99,9 @@ func _ready() -> void:
 	hud.music_requested.connect(func(): set_music(not music_on))
 	hud.effects_requested.connect(func(): sfx.set_effects_enabled(not sfx.effects_enabled); refresh_hud())
 	hud.layout_changed.connect(_fit)
+	hud.touch_controls.axes_changed.connect(controls.set_touch_axes)
+	hud.touch_controls.command_requested.connect(controls.touch_command)
+	controls.controls_released.connect(hud.touch_controls.release_all)
 	resized.connect(_fit)
 	_build_world()
 	_fit()
@@ -99,7 +112,7 @@ func _fit() -> void:
 	var top: float = hud.top_panel.get_global_rect().end.y + 6 if hud != null else 100.0
 	var bottom: float = hud.bottom_panel.get_global_rect().position.y - 6 if hud != null else size.y - 121.0
 	stage.position = Vector2(0, top)
-	stage.size = Vector2(size.x, maxf(120, bottom - top))
+	stage.size = Vector2(maxf(1, size.x - hud.world_right_inset), maxf(1, bottom - top))
 	var zoom := minf(stage.size.x / 1200.0, stage.size.y / 480.0)
 	stage_transform = Transform2D(0,Vector2.ONE * zoom,0,(stage.size - Vector2(1200,480) * zoom)*0.5)
 	viewport.canvas_transform = stage_transform
@@ -224,7 +237,7 @@ func use_stand() -> bool:
 	if round_state.state != &"running" or is_instance_valid(held_body): return false
 	var stand := stand_under_head()
 	if stand.is_empty():
-		_say("Lower the %s onto a tool stand, then press E." % ("hook" if head == Heads.Kind.NONE else Heads.SPECS[head].name.to_lower()),4.0)
+		_say("Lower the %s onto a tool stand, then use Swap." % ("hook" if head == Heads.Kind.NONE else Heads.SPECS[head].name.to_lower()),4.0)
 		return false
 	if head != Heads.Kind.NONE and stand.holds == Heads.Kind.NONE:
 		gripping = false
@@ -304,10 +317,11 @@ func start_round() -> void:
 	if round_state.state != &"ready": return
 	round_state.start()
 	sfx.play(&"start")
-	_say("Magnet lifts steel. Swap to the claw at the tool stands (E) for copper and rubber.",7.0)
+	_say("Magnet lifts steel. Swap to the claw at the tool stands for copper and rubber.",7.0)
 	refresh_hud()
 
 func restart_round() -> void:
+	controls.release_controls()
 	_build_world()
 	start_round()
 
@@ -319,6 +333,7 @@ func toggle_pause() -> void:
 func _state_changed() -> void:
 	if rebuilding or world == null: return
 	var running: bool = round_state.state == &"running"
+	controls.set_playing(running)
 	var next_mode := Node.PROCESS_MODE_INHERIT if running else Node.PROCESS_MODE_DISABLED
 	if world.process_mode != next_mode:
 		world.reset_physics_interpolation()
@@ -342,9 +357,8 @@ func _finished(reason: StringName) -> void:
 
 func _physics_process(delta: float) -> void:
 	if round_state == null or round_state.state != &"running": return
-	var horizontal := float(Input.is_physical_key_pressed(KEY_D) or Input.is_physical_key_pressed(KEY_RIGHT)) - float(Input.is_physical_key_pressed(KEY_A) or Input.is_physical_key_pressed(KEY_LEFT))
-	var reel := float(Input.is_physical_key_pressed(KEY_S) or Input.is_physical_key_pressed(KEY_DOWN)) - float(Input.is_physical_key_pressed(KEY_W) or Input.is_physical_key_pressed(KEY_UP))
-	move_crane(horizontal,reel,delta)
+	var axes: Vector2 = controls.movement()
+	move_crane(axes.x, axes.y, delta)
 	if gripping and not is_instance_valid(held_body): try_pickup()
 	round_state.tick(delta)
 	feedback_left = maxf(0,feedback_left-delta)
@@ -364,7 +378,7 @@ func move_crane(horizontal: float, reel: float, delta: float) -> void:
 func toggle_grip() -> void:
 	if round_state.state != &"running": return
 	if head == Heads.Kind.NONE:
-		_say("No head fitted. Pick one up from a tool stand with E.",4.0)
+		_say("No head fitted. Pick one up from a tool stand with Swap.",4.0)
 		refresh_hud()
 		return
 	gripping = not gripping
@@ -398,7 +412,7 @@ func try_pickup() -> void:
 		_say("Carrying %s. Lift it over the bin rim, then release." % candidate.material_id,5.0)
 	elif candidate == null and refused != null and head != Heads.Kind.NONE:
 		var needed := Heads.for_material(refused.material_id)
-		_say("The %s won't hold %s. Swap to the %s at the tool stands (E)." % [Heads.SPECS[head].name.to_lower(),refused.material_id,Heads.SPECS[needed].name.to_lower()],3.0)
+		_say("The %s won't hold %s. Swap to the %s at the tool stands." % [Heads.SPECS[head].name.to_lower(),refused.material_id,Heads.SPECS[needed].name.to_lower()],3.0)
 
 ## The underside of the fitted head, where it meets scrap or a stand.
 func head_mount() -> Vector2:
@@ -428,21 +442,36 @@ func _delivered(body: RigidBody2D, material: StringName, bin: Node2D) -> void:
 
 func refresh_hud() -> void:
 	if hud == null or round_state == null: return
-	hud.present({"state":round_state.state,"score":round_state.score,"time_left":round_state.remaining_time,"correct":round_state.correct_count,"wrong":round_state.wrong_count,"total":payloads.size(),"delivered":round_state.delivered_count,"magnet_on":gripping,"grip_label":Heads.label(head,gripping,is_instance_valid(held_body)),"held_material":str(held_body.material_id) if is_instance_valid(held_body) else "","feedback":feedback if feedback_left > 0 else "Copper, rubber and steel each have a bin.","finish_reason":finish_reason,"time_bonus":round_state.time_bonus,"music_on":music_on,"effects_on":sfx.effects_enabled,"navigation_hint":"" if OS.has_feature("standalone") else "F2 preview"})
+	hud.present({"state":round_state.state,"score":round_state.score,"time_left":round_state.remaining_time,"correct":round_state.correct_count,"wrong":round_state.wrong_count,"total":payloads.size(),"delivered":round_state.delivered_count,"magnet_on":gripping,"grip_label":Heads.label(head,gripping,is_instance_valid(held_body)),"held_material":str(held_body.material_id) if is_instance_valid(held_body) else "","feedback":feedback if feedback_left > 0 else "Copper, rubber and steel each have a bin.","finish_reason":finish_reason,"time_bonus":round_state.time_bonus,"music_on":music_on,"effects_on":sfx.effects_enabled,"control_scheme":controls.scheme,"navigation_hint":"" if OS.has_feature("standalone") else "F2 preview"})
 
-func _unhandled_key_input(event: InputEvent) -> void:
-	if not event is InputEventKey or not event.pressed or event.echo: return
-	match event.physical_keycode:
-		KEY_SPACE: toggle_grip()
-		KEY_E: use_stand()
-		KEY_M: set_music(not music_on)
-		KEY_P, KEY_ESCAPE: toggle_pause()
-		KEY_R: restart_round()
-		KEY_ENTER:
-			if round_state.state == &"ready": start_round()
-		KEY_F2:
+func _command(command: StringName) -> void:
+	match command:
+		&"primary":
+			match round_state.state:
+				&"ready": start_round()
+				&"paused": toggle_pause()
+				&"finished": restart_round()
+				&"running": toggle_grip()
+		&"menu":
+			if round_state.state in [&"running", &"paused"]: toggle_pause()
+			else: _command(&"primary")
+		&"grip": toggle_grip()
+		&"swap": use_stand()
+		&"music": set_music(not music_on)
+		&"effects": sfx.set_effects_enabled(not sfx.effects_enabled); refresh_hud()
+		&"pause": toggle_pause()
+		&"restart": restart_round()
+		&"preview":
 			if not OS.has_feature("standalone"): get_tree().change_scene_to_file("res://scenes/main.tscn")
 
+func _scale_mobile_ui() -> void:
+	# Keep touch targets in CSS pixels even on high-DPI phone canvases.
+	var css_width = JavaScriptBridge.eval("document.getElementById('canvas').clientWidth")
+	if css_width != null and float(css_width) > 0.0:
+		var factor := maxf(1.0, get_window().size.x / float(css_width))
+		if not is_equal_approx(get_window().content_scale_factor, factor): get_window().content_scale_factor = factor
+
 func _notification(what: int) -> void:
+	if what == NOTIFICATION_WM_WINDOW_FOCUS_OUT and controls != null: controls.release_controls()
 	if what == NOTIFICATION_WM_WINDOW_FOCUS_OUT and round_state != null and round_state.state == &"running":
 		round_state.set_paused(true)

@@ -46,7 +46,7 @@ The repository was renamed from `random-game` to `pocket-salvage` and made publi
 git remote set-url origin https://github.com/RaresKeY/pocket-salvage.git
 ```
 
-Before pulling the removal commit, copy `AGENTS.md` and `CLAUDE.md` outside your checkout, then restore them after the pull. Git removes unchanged tracked copies when applying their deletion; modified copies may block the pull. They become ignored local files afterward. You can also recreate them from the portable example. Their earlier revisions remain in Git history; this change does not rewrite history. The local checkout directory need not be renamed.
+Before pulling the removal commit, copy `AGENTS.md` and `CLAUDE.md` outside your checkout, then restore them after the pull. Git removes unchanged tracked copies when applying their deletion; modified copies may block the pull. They become ignored local files afterward. You can also recreate them from the portable example. Their earlier revisions remain in Git history; this change does not rewrite history. Existing clones need not rename their local directory. At RaresKeY’s later request, the workstation’s main checkout was renamed to `pocket-salvage`, with Git links repaired for the existing sibling worktrees.
 
 `gh-pages` contains generated site files and deployment history only; never merge it into main. Pushed release tags now run the [delivery workflow](../specs/builds.md). Existing collaborator grants remain intact; the rename does not require a fresh clone.
 

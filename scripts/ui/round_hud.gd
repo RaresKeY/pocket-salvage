@@ -7,6 +7,16 @@ signal music_requested
 signal effects_requested
 signal layout_changed
 
+const TouchController = preload("res://scripts/ui/touch_controller.gd")
+var touch_enabled := false
+var touch_controls: HBoxContainer
+var modal_card: PanelContainer
+var modal_center: CenterContainer
+var modal_content: VBoxContainer
+var footer: BoxContainer
+var touch_panel: PanelContainer
+var world_right_inset := 0.0
+var compact_touch_landscape := false
 const ArtLab = preload("res://labs/pixel_scaling/lab.gd")
 const HURRY_SECONDS := 10
 const HURRY_COLOR := Color("ff6b5b")
@@ -46,14 +56,16 @@ func _ready() -> void:
 	compact.set_content_margin_all(8)
 	top.add_theme_stylebox_override("panel", compact)
 	add_child(top)
-	var row := HBoxContainer.new()
-	row.add_theme_constant_override("separation", 12)
+	var row := HFlowContainer.new()
+	row.add_theme_constant_override("h_separation", 8)
+	row.add_theme_constant_override("v_separation", 4)
 	top.add_child(row)
 	score_label = _stat(row, preload("res://assets/bitwright_8x/hud_coin.png"), "Score  0")
 	score_label.custom_minimum_size.x = 90
 	time_label = _stat(row, preload("res://assets/bitwright_8x/hud_timer.png"), "Time  0:00")
 	time_label.custom_minimum_size.x = 94
 	progress_label = _label(row, "Sorted  0 / 0")
+	progress_label.custom_minimum_size.x = 112
 	progress_label.size_flags_horizontal = SIZE_EXPAND_FILL
 	music_button = _audio_button(row, "Music on", "Toggle music (M)", func(): music_requested.emit())
 	effects_button = _audio_button(row, "SFX on", "Toggle sound effects and crane motors", func(): effects_requested.emit())
@@ -71,8 +83,27 @@ func _ready() -> void:
 	bottom.offset_right = -12
 	bottom.offset_bottom = -28
 	add_child(bottom)
+	footer = BoxContainer.new()
+	footer.add_theme_constant_override("separation", 12)
+	bottom.add_child(footer)
 	var foot := VBoxContainer.new()
-	bottom.add_child(foot)
+	foot.size_flags_horizontal = SIZE_EXPAND_FILL
+	foot.size_flags_vertical = SIZE_SHRINK_CENTER
+	footer.add_child(foot)
+	touch_controls = TouchController.new()
+	touch_controls.visible = touch_enabled
+	touch_controls.size_flags_horizontal = SIZE_SHRINK_END
+	touch_controls.size_flags_vertical = SIZE_SHRINK_CENTER
+	footer.add_child(touch_controls)
+	touch_panel = PanelContainer.new()
+	touch_panel.add_theme_stylebox_override("panel", compact)
+	touch_panel.set_anchors_and_offsets_preset(PRESET_BOTTOM_RIGHT)
+	touch_panel.grow_horizontal = GROW_DIRECTION_BEGIN
+	touch_panel.grow_vertical = GROW_DIRECTION_BEGIN
+	touch_panel.offset_right = -12
+	touch_panel.offset_bottom = -28
+	touch_panel.visible = false
+	add_child(touch_panel)
 	magnet_label = _label(foot, "Magnet OFF  ·  Empty")
 	magnet_label.add_theme_font_size_override("font_size", 14)
 	feedback_label = _label(foot, "")
@@ -84,20 +115,23 @@ func _ready() -> void:
 	modal.set_anchors_and_offsets_preset(PRESET_FULL_RECT)
 	add_child(modal)
 	var center := CenterContainer.new()
+	modal_center = center
 	center.set_anchors_and_offsets_preset(PRESET_FULL_RECT)
 	center.mouse_filter = MOUSE_FILTER_IGNORE
 	modal.add_child(center)
 	var card := PanelContainer.new()
+	modal_card = card
 	card.custom_minimum_size.x = 460
 	center.add_child(card)
 	var content := VBoxContainer.new()
+	modal_content = content
 	content.add_theme_constant_override("separation", 16)
 	card.add_child(content)
 	heading = _label(content, "Pocket Salvage")
 	heading.add_theme_font_size_override("font_size", 28)
 	heading.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	details = _label(content, "")
-	details.custom_minimum_size.x = 428
+	details.custom_minimum_size.x = 0
 	details.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	action = Button.new()
 	action.custom_minimum_size.y = 48
@@ -122,8 +156,10 @@ func _ready() -> void:
 	move_child(top, get_child_count() - 1)
 	_ignore_decoration(self)
 	modal.mouse_filter = MOUSE_FILTER_STOP
-	top.resized.connect(func(): layout_changed.emit())
+	top.resized.connect(func(): _layout_modal(); layout_changed.emit())
 	bottom.resized.connect(func(): layout_changed.emit())
+	resized.connect(_responsive_layout)
+	_responsive_layout()
 	present(_pending)
 
 func _audio_button(parent: Node, text: String, hint: String, callback: Callable) -> Button:
@@ -168,9 +204,14 @@ func present(data: Dictionary) -> void:
 	_pending = data.duplicate()
 	if not is_node_ready(): return
 	var navigation := str(data.get("navigation_hint", ""))
-	hints_label.text = CONTROL_HINTS + ("   ·   " + navigation if not navigation.is_empty() else "")
+	var scheme := str(data.get("control_scheme", "keyboard"))
+	var hints := CONTROL_HINTS
+	if scheme == "gamepad": hints = "Stick/D-pad move/lift · A grip · X swap · Start pause · Y restart · LB music · RB SFX"
+	elif touch_enabled: hints = "Hold arrows to move/lift. Tap Grip or Swap."
+	hints_label.text = hints + ("   ·   " + navigation if not navigation.is_empty() else "")
 	var previous := state
 	state = str(data.get("state", "ready"))
+	touch_controls.enabled = state == "running"
 	music_button.set_pressed_no_signal(data.get("music_on", true))
 	music_button.text = "Music on" if music_button.button_pressed else "Music off"
 	effects_button.set_pressed_no_signal(data.get("effects_on", true))
@@ -204,7 +245,7 @@ func present(data: Dictionary) -> void:
 			action.text = "Play again"
 		_:
 			heading.text = "Pocket Salvage"
-			details.text = "10 pieces · 4 minutes\nMagnet lifts steel. Claw lifts copper and rubber.\nPark and swap heads at the left stands with E.\nSort into matching bins. Wrong bin: −25."
+			details.text = "10 pieces · 4 minutes\nMagnet lifts steel. Claw lifts copper and rubber.\nPark and swap heads at the left stands.\nSort into matching bins. Wrong bin: −25."
 			action.text = "Start round"
 	if previous != state:
 		if modal.visible: action.grab_focus()
@@ -217,3 +258,29 @@ func _activate() -> void:
 		"ready": start_requested.emit()
 		"paused": pause_requested.emit()
 		"finished": restart_requested.emit()
+
+func _responsive_layout() -> void:
+	if modal_card == null: return
+	touch_controls.release_all()
+	compact_touch_landscape = touch_enabled and size.x > size.y and size.y < 540
+	var owner_container: Container = touch_panel if compact_touch_landscape else footer
+	if touch_controls.get_parent() != owner_container: touch_controls.reparent(owner_container)
+	touch_panel.visible = compact_touch_landscape
+	world_right_inset = touch_panel.get_combined_minimum_size().x + 24 if compact_touch_landscape else 0.0
+	bottom_panel.offset_right = -12 - world_right_inset
+	hints_label.visible = not compact_touch_landscape
+	footer.vertical = touch_enabled and size.x < 600
+	var compact_modal := touch_enabled and size.y < 400
+	modal_content.add_theme_constant_override("separation", 8 if compact_modal else 16)
+	heading.add_theme_font_size_override("font_size", 24 if compact_modal else 28)
+	details.add_theme_font_size_override("font_size", 14 if compact_modal else 16)
+	_layout_modal()
+	modal_card.custom_minimum_size.x = minf(460, maxf(280, size.x - 24))
+	score_label.custom_minimum_size.x = 60 if size.x < 600 else 90
+	time_label.custom_minimum_size.x = 74 if size.x < 600 else 94
+	layout_changed.emit()
+
+func _layout_modal() -> void:
+	if modal_center == null: return
+	modal_center.offset_top = top_panel.position.y + top_panel.size.y + 8
+	modal_center.offset_bottom = -8

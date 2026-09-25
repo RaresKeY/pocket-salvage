@@ -1,6 +1,6 @@
 # Project Contract
 
-Reviewed: 2026-09-25. Implementation revision: `ee17e9e` (published v0.1.3); public README/capture boundary reviewed with this documentation change.
+Reviewed: 2026-09-25. Implementation: controller/mobile update based on `d386f56`; release source revision recorded after validation.
 
 ## Status and scope
 
@@ -22,7 +22,7 @@ Pocket Salvage is the official game name; its public GitHub repository is `Rares
 
 The public GitHub repository uses direct commits to `main`, rebasing unpublished work onto the latest remote before pushing. Experimental branches are optional; pull requests are not part of the current workflow; release tags are permitted for explicitly requested GitHub releases. The [collaboration guide](../docs/collaboration.md) owns conflict, recovery, and build-identity rules. Optional future coordination automation lives in [design](../design/collaboration.md).
 
-`project.godot` declares version `0.1.3`, the assistant-selected patch version for the requested release. No project license has been selected.
+`project.godot` declares version `0.1.4`, the assistant-selected patch version for the requested release. No project license has been selected.
 
 Physics runs at 60 Hz with native 2D physics interpolation enabled. Physical bodies and the hoist move on physics ticks; custom cable geometry interpolates its previous/current particle positions at render cadence without modifying the solver. Explicit restart/spawn teleports reset interpolation history.
 
@@ -31,3 +31,5 @@ Physics runs at 60 Hz with native 2D physics interpolation enabled. Physical bod
 `./tests/check` runs editor import, exact-pixel and CLI tests, lab control checks, and a two-frame headless startup in one managed container. Each child process has a timeout; script errors and missing success markers fail the suite. These checks do not establish gameplay correctness, visual quality, or hardware rendering. The separate background GPU capture flow is described in [the lab spec](art/pixel_scaling.md).
 
 Documentation changes require checking map links, source references, and the Git diff. Future gameplay needs behavior-specific checks as it is implemented.
+
+Player input is shared through `scripts/input/salvage_input.gd`; [input](input.md) owns keyboard/gamepad mappings and mobile touch controls. Minimum window dimensions are 320×320; phone layout is validated separately from desktop. Gamepad events are ignored while the application is unfocused.

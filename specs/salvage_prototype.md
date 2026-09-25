@@ -1,6 +1,6 @@
 # Playable subsystem integration
 
-Reviewed: 2026-09-25. Implementation revision: `9d21b8f` (v0.1.1 audio/UI).
+Reviewed: 2026-09-25. Implementation: controller/mobile update based on `d386f56`; release source revision recorded after validation.
 
 ## Composition
 
@@ -17,6 +17,8 @@ Two solid tool stands sit at `layout.tool_stand` and 80 units right (`STAND_GAP`
 ## Controls
 
 A/D or arrows move the trolley at 220 units/s within x80 to 1120; W/S or arrows change cable length at 130 units/s within 50 to 335. The magnet is a rigid body with a top cable pivot, bottom load mount and ±35° tilt cap; the attached load exchanges equal/opposite spring forces with it. Space toggles the grip, E uses a stand, M mutes music, P/Escape pauses, R rebuilds and restarts, Enter or the modal button starts. Focus loss pauses. Pausing disables world simulation while keeping timer, bodies and attachment.
+
+The [input module](input.md) additionally supports a standard gamepad and automatically detected mobile Web touch controls. All devices route to the same round/grip/stand commands. Gamepad A selects the modal primary action or grips during play; Start is contextual start/pause/resume/replay. Focus loss, restart, pause and controller disconnect clear held virtual input; physical movement must return to neutral after an interruption. Mobile Web scales HUD coordinates to CSS pixels so high-DPI canvases preserve touch target sizes.
 
 ## Round rules
 

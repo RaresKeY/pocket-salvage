@@ -7,3 +7,5 @@ Keep exact user text separate from commentary, inference, and later decisions. T
 [Public delivery](public-release.md) records the later public rename, local-only agent files, tag automation and Pages request.
 
 [Audio/UI release](audio-ui-release.md) records the playback fix, compact UI and local GitHub-release request, including cancellation of new music generation.
+
+[Controller/mobile](controller-mobile.md) records the checkout rename and explicit gamepad/mobile Web controls request.
