@@ -53,6 +53,10 @@ On Level 3 specifically, lightning instead inverts the actual magnet switch for 
 
 The HUD shows `weather_label()` ("Storm x1.6", or just "Clear") as a badge, the label and tip on the start card, and the weather bonus on the results card. See [round HUD](round_hud.md) and [sorting and rounds](round.md) for the multiplier.
 
+## Intensity
+
+`intensity` (0 to 1, default 1) is set by level events. `wind_now()` scales by it, so wind force, crane drift, trails and wind sound follow. Fog density and rain streak/splash alpha and loop level scale by it. Lightning does not count down below `STRIKE_INTENSITY` (0.8). Effects share looping-sound handling with other nodes through `scripts/audio/sound_loops.gd` (`loop_sound`).
+
 ## Verification
 
 `tests/weather_test.gd` checks: every profile loads; seeded picking matches the chances within 2% over 10,000 rolls; clear has no wind or lightning; wind keeps its side and gusts within 12 s; the storm sequence is rumble, strike, power cut with the warning spacing; a disabled weather node stops its clock; forced weather, rain grip and the round multiplier; wind drifting an airborne piece downwind while grounded scrap stays and thrown-back scrap is exempt, showing direction-correct curved trails and sparse, slow, raised, fading dust, pushing an unsteered crane downwind and swinging the head more than 6 degrees within ten seconds; rain particles, fog density and dimmed labels, and no effects under clear; a power cut dropping a magnet's load, blocking pickup, freezing while paused, ending on a head change, sparing the claw and resetting on restart; the weather sounds existing and following the SFX toggle; and a full round under each weather finishing with its bonus and HUD badge. `tests/audio_test.gd` decodes the three new sounds with the rest. `tests/salvage_test.gd` forces clear to stay deterministic.

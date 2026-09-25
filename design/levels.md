@@ -31,3 +31,15 @@ Skyline variety (Dale asked, 2026-09-25: the skyline repeated over and over): Cl
 RaresKeY, 2026-09-25: [confirmed brief magnet inversion on Violent lightning](../prompts/source/lightning-rain.md). The 0.45s duration is AI-inferred; slight/normal/violent rain audio follows particle strength.
 
 Blood Moon tint controls (RaresKeY asked, 2026-09-25): the look is split into five strengths with developer-option sliders, defaulting to the shipped look. Ranges are Claude's choices: screen wash and asset edges 0 to 0.2 (default 0.05), sky 0 to 1 (default 1, blending night blue to blood red), light cones 0 to 2 (default 1), bulbs 0 to 1 (default 1). Session only, not saved.
+
+## Level 5 Storm
+
+User design: RaresKeY proposed Level 5 as a storm and asked about an animated pixel tornado; Dale approved Claude's design on 2026-09-25 and said the first twister art looked odd. [Exact words](../prompts/source/storm.md).
+
+AI-inferred design (approved as a whole by Dale; the numbers are Claude's and await playtesting):
+- Storm cycle: calm 40 to 60 s, building 15 s, storm 30 to 40 s, clearing 10 s, repeating. A weather intensity dial (calm 0.12, storm 1) scales Violent-strength weather, so calm is a light breeze and the storm is Violent. Lightning only strikes at 0.8 and above, and flips the magnet like Violent.
+- Warnings: a message and a far rumble as it builds, a message as it hits and as it passes. The sky darkens, the moon and stars fade, clouds go grey and gulls leave.
+- One twister per storm, 4 to 12 s in. A low dust ring grows for 3 s at one end of the pile area, then rises into a 300 px funnel and crosses at 90 px/s. Scrap of mass 1.0 or less inside 70 px is lifted about 140 px and spun; heavier scrap stays. The crane head is shoved along. It breaks up 110 px short of the bins and drops what it carries, so scrap never lands in a bin and never leaves the yard.
+- The twister is drawn in code (rings of dust streaks that snake and turn, with debris), not Bitwright frames: the Bitwright draws read as a stack of plates, which Dale flagged.
+- x1.7 multiplier and 12 pieces.
+- Level data: each level is one entry in `level_catalog.gd` (title, weather, scrap, look, reversed heads, lightning flips magnet, start tip, weather rolls, events). Level-number checks are gone; Blood Moon behaves as before.

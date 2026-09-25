@@ -69,7 +69,7 @@ func _physics_process(delta: float) -> void:
 	var wind: float = weather.wind_now()
 	var level := strength()
 	context.ambience.wind = wind
-	_loop(&"wind_loop", level, -12.0)
+	loop_sound(&"wind_loop", level, -12.0)
 	trails.direction = weather.direction
 	trails.strength = level
 	trails.modulate.a = absf(weather.direction)

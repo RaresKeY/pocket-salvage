@@ -24,8 +24,10 @@ const BLOOD_GRADE = preload("res://shaders/blood_moon_grade.gdshader")
 const TintSettings = preload("res://scripts/level/tint_settings.gd")
 ## Blood Moon tint strengths from the developer options; kept across restarts, session only.
 var tint := TintSettings.defaults()
-const BloodMoon = preload("res://scripts/level/blood_moon.gd")
-var blood_cycle: Node
+## Round-owned level events (Levels "events"), rebuilt with the world.
+var events: Array[Node] = []
+var blood_cycle: Node:
+	get: return event(load(Levels.BLOOD_MOON))
 const HUD = preload("res://scripts/ui/round_hud.gd")
 const Burst = preload("res://scripts/fx/burst_2d.gd")
 const Heads = preload("res://scripts/crane/crane_heads.gd")
@@ -159,7 +161,8 @@ func _build_world() -> void:
 	head = Heads.Kind.MAGNET
 	stands.clear()
 	stage.material = null
-	if selected_level == 3:
+	var blood_moon := Levels.look(selected_level) == &"blood_moon"
+	if blood_moon:
 		var grade := ShaderMaterial.new()
 		grade.shader = BLOOD_GRADE
 		stage.material = grade
@@ -171,12 +174,12 @@ func _build_world() -> void:
 	reject_landing = Vector2(layout.bins[0].position.x - layout.bins[0].size.x * 0.5 - REJECT_CLEARANCE, layout.ground_top - 25)
 	ambience = Ambience.new()
 	world.add_child(ambience)
-	ambience.configure(layout, selected_level == 3)
+	ambience.configure(layout, blood_moon)
 	var backdrop := Backdrop.new()
 	backdrop.z_index = -10
 	backdrop.draw_sky = false
 	world.add_child(backdrop)
-	if selected_level == 3: backdrop.skylines = Backdrop.skyline_set("backdrop_blood_skyline_tile")
+	if blood_moon: backdrop.skylines = Backdrop.skyline_set("backdrop_blood_skyline_tile")
 	backdrop.configure(layout)
 	add_wall(Vector2(600,455),Vector2(1200,30))
 	add_wall(Vector2(-10,240),Vector2(20,480))
@@ -230,11 +233,12 @@ func _build_world() -> void:
 	world.add_child(weather)
 	weather.configure(Weather.find(forced_weather) if forced_weather != &"" else Levels.roll_weather(selected_level, _weather_rng),_weather_rng.randi())
 	weather.attach(self)
-	blood_cycle = null
-	if selected_level == 3:
-		blood_cycle = BloodMoon.new()
-		world.add_child(blood_cycle)
-		blood_cycle.configure(self, _weather_rng.randi())
+	events.clear()
+	for path in Levels.get_value(selected_level, "events"):
+		var level_event: Node = load(path).new()
+		world.add_child(level_event)
+		level_event.configure(self, _weather_rng.randi())
+		events.append(level_event)
 	if DebugOverlay.available():
 		if debug_overlay == null:
 			debug_overlay = DebugOverlay.new()
@@ -257,6 +261,16 @@ func weather_label() -> String:
 	if profile.wind != 0 or profile.gust != 0: text += " / " + weather.direction_label()
 	return text
 
+## The live event of this level made from `script`, or null.
+func event(script: Script) -> Node:
+	for level_event in events:
+		if is_instance_valid(level_event) and level_event.get_script() == script: return level_event
+	return null
+
+## Blood Moon swaps which head grips which material.
+func reversed_heads() -> bool:
+	return Levels.get_value(selected_level, "reversed_heads")
+
 func scrap_bodies() -> Array:
 	return payloads.filter(func(body): return is_instance_valid(body))
 
@@ -266,7 +280,7 @@ func blown_bodies() -> Array:
 
 ## The electrically powered role drops its load; Blood Moon assigns that role to the claw.
 func power_cut(seconds: float) -> void:
-	if selected_level == 2 and head == Heads.Kind.MAGNET:
+	if Levels.get_value(selected_level, "lightning_flips_magnet") and head == Heads.Kind.MAGNET:
 		if magnet_flicker_left <= 0.0:
 			_magnet_restore = gripping
 			gripping = not gripping
@@ -275,7 +289,7 @@ func power_cut(seconds: float) -> void:
 		_say("Lightning! Magnet briefly switched %s." % ("ON" if gripping else "OFF"), 1.5)
 		refresh_hud()
 		return
-	if Heads.function_kind(head, selected_level == 3) != Heads.Kind.MAGNET: return
+	if Heads.function_kind(head, reversed_heads()) != Heads.Kind.MAGNET: return
 	power_out_left = maxf(power_out_left,seconds)
 	release_load()
 	if is_instance_valid(head_sprite): head_sprite.play(&"open")
@@ -338,7 +352,7 @@ func use_stand() -> bool:
 		var fitted: Heads.Kind = stand.holds
 		_set_stand(stand,Heads.Kind.NONE)
 		_fit_head(fitted)
-		_say("%s fitted. It grips %s." % [Heads.SPECS[fitted].name," and ".join(Heads.materials(fitted, selected_level == 3))],4.0)
+		_say("%s fitted. It grips %s." % [Heads.SPECS[fitted].name," and ".join(Heads.materials(fitted, reversed_heads()))],4.0)
 	else:
 		_say("That stand is taken. Park on the empty one." if head != Heads.Kind.NONE else "That stand is empty.",3.0)
 		return false
@@ -408,7 +422,7 @@ func start_round() -> void:
 	if round_state.state != &"ready": return
 	round_state.start()
 	sfx.play(&"start")
-	_say("Blood Moon: magnet lifts copper/rubber; claw lifts steel. Watch the generator." if selected_level == 3 else "Magnet lifts steel. Swap to the claw at the tool stands for copper and rubber.",7.0)
+	_say(Levels.get_value(selected_level, "start_tip"),7.0)
 	refresh_hud()
 
 func restart_round() -> void:
@@ -501,7 +515,7 @@ func try_pickup() -> void:
 	var nearest := PICKUP_RANGE
 	for body in payloads:
 		if not is_instance_valid(body) or body.delivered or body.held: continue
-		if not Heads.grips(head,body.material_id, selected_level == 3):
+		if not Heads.grips(head,body.material_id, reversed_heads()):
 			if head_mount().distance_to(body.grip_point()) < PICKUP_RANGE: refused = body
 			continue
 		var grip: Vector2 = body.grip_point()
@@ -519,7 +533,7 @@ func try_pickup() -> void:
 		burst(candidate.grip_point(),"fx_sparks")
 		_say("Carrying %s. Lift it over the bin rim, then release." % candidate.material_id,5.0)
 	elif candidate == null and refused != null and head != Heads.Kind.NONE:
-		var needed := Heads.for_material(refused.material_id, selected_level == 3)
+		var needed := Heads.for_material(refused.material_id, reversed_heads())
 		_say("The %s won't hold %s. Swap to the %s at the tool stands." % [Heads.SPECS[head].name.to_lower(),refused.material_id,Heads.SPECS[needed].name.to_lower()],3.0)
 
 ## The underside of the fitted head, where it meets scrap or a stand.

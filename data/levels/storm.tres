@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="WeatherProfile" load_steps=2 format=3]
+[ext_resource type="Script" path="res://scripts/weather/weather_profile.gd" id="1"]
+[resource]
+script = ExtResource("1")
+id = &"storm"
+label = "Storm"
+tip = "Storms come and go. Twisters carry off light scrap and lightning flips the magnet."
+multiplier = 1.7
+wind = 100.0
+gust = 180.0
+gust_every = Vector2(4, 6)
+gust_rise = 0.8
+grip = 0.5
+fog = 0.3
+rain = 260.0
+lightning_every = Vector2(6, 12)
+warning = 1.0
+power_cut = 0.45

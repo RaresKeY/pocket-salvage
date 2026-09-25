@@ -115,6 +115,10 @@ func _perch(delta: float) -> void:
 	if perch_timer <= 0.0 or is_threatened.call(perch):
 		_take_off()
 
+## Flies off the yard for good, from wherever it is.
+func leave() -> void:
+	if state != State.LEAVING: _take_off()
+
 func _take_off() -> void:
 	state = State.LEAVING
 	sprite.speed_scale = 1.6

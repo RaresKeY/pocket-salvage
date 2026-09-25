@@ -64,6 +64,7 @@ RECIPES = {
 LOOPS = {
     "trolley_loop": lambda t, p, n: 0.32 * (tone(55, t, "saw") * 0.5 + tone(110, t, "square") * 0.2 + n * 0.25 * (0.5 + 0.5 * tone(12, t, "sine"))),
     "wind_loop": lambda t, p, n: 0.3 * n * (0.55 + 0.45 * tone(1, t, "sine")) + 0.08 * tone(170, t, "sine") * tone(3, t, "sine"),
+    "twister_loop": lambda t, p, n: 0.34 * n * (0.6 + 0.4 * tone(2, t, "sine")) + 0.18 * tone(48, t, "saw") * (0.55 + 0.45 * tone(3, t, "sine")) + 0.06 * tone(96, t, "sine"),
     "winch_loop": lambda t, p, n: 0.22 * (tone(220, t, "saw") * 0.45 + tone(330, t, "triangle") * 0.35 + tone(6, t, "sine") * tone(440, t, "sine") * 0.2),
 }
 

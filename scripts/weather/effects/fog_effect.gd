@@ -20,7 +20,7 @@ func _start() -> void:
 
 func density_at(x: float) -> float:
 	var distance := absf(x - context.trolley.position.x)
-	return weather.profile.fog * clampf((distance - CLEAR_RADIUS) / (FULL_AT - CLEAR_RADIUS), 0.0, 1.0)
+	return weather.profile.fog * weather.intensity * clampf((distance - CLEAR_RADIUS) / (FULL_AT - CLEAR_RADIUS), 0.0, 1.0)
 
 func _process(_delta: float) -> void:
 	layer.queue_redraw()

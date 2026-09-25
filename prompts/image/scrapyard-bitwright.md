@@ -431,3 +431,15 @@ the same distant scrapyard skyline silhouette under a blood moon: near black mar
 
 Settings: size: [64, 32], tile: x, like: skyline (redraw-key). Status: selected.
 Output: `assets/bitwright/backdrop_blood_skyline_tile.png` (8x copy under `assets/bitwright_8x/`).
+
+### tornado and dust_swirl (dropped)
+
+```
+a tornado twister: a curved cone of swirling grey wind shaped like an upside down triangle, wide at the top edge and tapering to a thin point at the bottom centre, made of diagonal curved bands of pale grey and brown dust with dark gaps between them so the background shows through, ragged see through edges, a few tiny scraps spinning beside it, the bands slide sideways as it spins, transparent background outside the cone, no ground, no box, no frame
+```
+
+```
+a small swirl of blowing dust low on the ground: a flat spiral of light brown dust puffs and specks curling round, loose and see through with lots of transparent gaps, no container, no bucket, no basket, no box, transparent background, the puffs rotate round the spiral
+```
+
+Settings: tornado 48x96, dust_swirl 32x24, motion loop, appended to the scrapyard set. Status: rejected. The first wording drew a rectangle and a basket; this second wording drew stacked plates, which Dale said looked odd. The twister is drawn in code instead (`scripts/level/tornado.gd`).

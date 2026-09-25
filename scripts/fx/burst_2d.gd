@@ -17,6 +17,18 @@ static func add_frames(frames: SpriteFrames, animation: StringName, prefix: Stri
 	for number in numbers:
 		frames.add_frame(animation, YardArt.texture("%s_%02d" % [prefix, number]))
 
+## A looping animation from `prefix`'s frames sized for `art_scale`, or null when the art is missing.
+static func looping_sprite(prefix: String, fps: float, art_scale: float) -> AnimatedSprite2D:
+	var numbers := frame_numbers(prefix)
+	if numbers.is_empty(): return null
+	var frames := SpriteFrames.new()
+	add_frames(frames, &"default", prefix, numbers, fps, true)
+	var sprite := AnimatedSprite2D.new()
+	sprite.sprite_frames = frames
+	YardArt.fit(sprite, art_scale)
+	sprite.play()
+	return sprite
+
 static func frame_numbers(prefix: String) -> Array:
 	var numbers := []
 	while YardArt.exists("%s_%02d" % [prefix, numbers.size() + 1]):

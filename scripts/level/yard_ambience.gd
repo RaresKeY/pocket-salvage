@@ -39,6 +39,18 @@ var bulb_strength := 1.0:
 		bulb_strength = value
 		for material in bulb_materials: material.set_shader_parameter("strength", value)
 var bulb_materials: Array[ShaderMaterial] = []
+const STORM_CLOUD := Color(0.32, 0.33, 0.4)
+const STORM_SKY := Color("07070c")
+var moon: Sprite2D
+## 0 to 1 storm darkness from the storm cycle: clouds darken, and past GULLS_LEAVE the gulls go and stay away.
+const GULLS_LEAVE := 0.3
+var gloom := 0.0:
+	set(value):
+		gloom = value
+		for cloud in clouds: cloud.modulate = Color(_cloud_tint(), cloud.modulate.a)
+		if moon: moon.modulate.a = 1.0 - gloom * 0.85
+		if gloom >= GULLS_LEAVE:
+			for gull in get_tree().get_nodes_in_group(&"yard_gull"): gull.leave()
 const CROW_HEIGHT := 12
 const Backdrop = preload("res://scripts/level/yard_backdrop.gd")
 
@@ -74,7 +86,7 @@ func configure(value: Dictionary, cursed: bool = false) -> void:
 	for index in STAR_COUNT:
 		stars.append({"at": Vector2(rng.randf_range(0, bounds.size.x), rng.randf_range(44, layout.ground_top - 140)),
 			"size": rng.randf_range(1.0, 2.6), "phase": rng.randf() * TAU, "rate": rng.randf_range(0.8, 2.6)})
-	var moon := _sprite(far, "backdrop_blood_moon" if blood_moon else "backdrop_moon", Vector2(bounds.size.x * 0.8, 100))
+	moon = _sprite(far, "backdrop_blood_moon" if blood_moon else "backdrop_moon", Vector2(bounds.size.x * 0.8, 100))
 	if moon: moon.scale *= 1.5
 	for index in CLOUD_COUNT:
 		var cloud := _sprite(far, "backdrop_cloud", Vector2(rng.randf_range(0, bounds.size.x), rng.randf_range(70, 220)))
@@ -116,17 +128,11 @@ func _sprite(parent: Node2D, name: String, at: Vector2) -> Sprite2D:
 	return sprite
 
 func _animated(parent: Node2D, prefix: String, at: Vector2, fps: float) -> AnimatedSprite2D:
-	var numbers := Burst.frame_numbers(prefix)
-	if numbers.is_empty(): return null
-	var frames := SpriteFrames.new()
-	Burst.add_frames(frames, &"default", prefix, numbers, fps, true)
-	var sprite := AnimatedSprite2D.new()
-	sprite.sprite_frames = frames
-	YardArt.fit(sprite, art_scale)
+	var sprite := Burst.looping_sprite(prefix, fps, art_scale)
+	if sprite == null: return null
 	sprite.position = at
-	sprite.frame = rng.randi_range(0, numbers.size() - 1)
+	sprite.frame = rng.randi_range(0, sprite.sprite_frames.get_frame_count(&"default") - 1)
 	parent.add_child(sprite)
-	sprite.play()
 	return sprite
 
 func _process(delta: float) -> void:
@@ -138,7 +144,7 @@ func _process(delta: float) -> void:
 		if cloud.position.x < -60: cloud.position.x = width + 60
 		elif cloud.position.x > width + 60: cloud.position.x = -60
 	gull_wait -= delta
-	if gull_wait <= 0.0 and not blood_moon:
+	if gull_wait <= 0.0 and not blood_moon and gloom < GULLS_LEAVE:
 		gull_wait = rng.randf_range(10, 24)
 		_spawn_gulls()
 	rat_wait -= delta
@@ -215,15 +221,18 @@ func _draw_far(layer: Node2D) -> void:
 	var bands := 16
 	var sky_top := SKY_TOP.lerp(BLOOD_SKY_TOP, sky_strength) if blood_moon else SKY_TOP
 	var sky_bottom := SKY_BOTTOM.lerp(BLOOD_SKY_BOTTOM, sky_strength) if blood_moon else SKY_BOTTOM
+	sky_top = sky_top.lerp(STORM_SKY, gloom * 0.7)
+	sky_bottom = sky_bottom.lerp(STORM_SKY, gloom * 0.5)
 	for band in bands:
 		var top := horizon * band / bands
 		layer.draw_rect(Rect2(0, top, bounds.size.x, horizon / bands + 1), sky_top.lerp(sky_bottom, float(band) / (bands - 1)))
 	layer.draw_rect(Rect2(0, horizon, bounds.size.x, bounds.size.y - horizon), sky_bottom)
 	for star in stars:
-		var twinkle := 0.35 + 0.65 * absf(sin(time * star.rate + star.phase))
+		var twinkle := (0.35 + 0.65 * absf(sin(time * star.rate + star.phase))) * (1.0 - gloom)
 		layer.draw_rect(Rect2(star.at, Vector2.ONE * star.size), Color(0.95, 0.93, 1.0, twinkle))
-	layer.draw_circle(Vector2(bounds.size.x * 0.8, 100), 60, Color(BLOOD_TINT if blood_moon else Color(0.85, 0.85, 1.0), 0.05))
-	layer.draw_circle(Vector2(bounds.size.x * 0.8, 100), 40, Color(BLOOD_TINT if blood_moon else Color(0.85, 0.85, 1.0), 0.06))
+	var halo := BLOOD_TINT if blood_moon else Color(0.85, 0.85, 1.0)
+	layer.draw_circle(Vector2(bounds.size.x * 0.8, 100), 60, Color(halo, 0.05 * (1.0 - gloom)))
+	layer.draw_circle(Vector2(bounds.size.x * 0.8, 100), 40, Color(halo, 0.06 * (1.0 - gloom)))
 
 func _draw_near(layer: Node2D) -> void:
 	var flicker := 0.9 + 0.1 * sin(time * 17.0) * sin(time * 3.1)
@@ -246,4 +255,5 @@ func bulb_material(is_beacon: bool) -> ShaderMaterial:
 	return material
 
 func _cloud_tint() -> Color:
-	return Color.WHITE.lerp(BLOOD_TINT, sky_strength) if blood_moon else Color.WHITE
+	var base := Color.WHITE.lerp(BLOOD_TINT, sky_strength) if blood_moon else Color.WHITE
+	return base.lerp(STORM_CLOUD, gloom)

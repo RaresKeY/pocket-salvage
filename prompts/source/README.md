@@ -12,6 +12,8 @@ Keep exact user text separate from commentary, inference, and later decisions. T
 
 [Weather](weather.md) records Dale's weather request and design approvals.
 
+[Storm](storm.md) records the Level 5 request, Dale's approval and his note on the first twister art.
+
 Records of Dale's directives correct typing errors in spelling and punctuation; the wording and meaning stay exactly as given.
 
 [Performance/audio](performance-audio.md) records the Web/native profiling and crackle-reduction request.

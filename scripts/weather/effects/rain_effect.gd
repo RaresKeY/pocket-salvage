@@ -9,6 +9,8 @@ static func sound_tier(rate: float) -> int:
 	return 0 if rate < 100.0 else (1 if rate < 200.0 else 2)
 
 var streaks: CPUParticles2D
+var _tier := 0
+var _intensity := 1.0
 var splashes: CPUParticles2D
 
 func applies(profile) -> bool:
@@ -39,7 +41,8 @@ func _start() -> void:
 	sheen.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	context.world.add_child(sheen)
 	var tier := sound_tier(weather.profile.rain)
-	_loop(SOUND_TIERS[tier], 1.0, MIX_DB[tier])
+	loop_sound(SOUND_TIERS[tier], 1.0, MIX_DB[tier])
+	_tier = tier
 
 func _particles(amount: int, at: Vector2, extents: Vector2, color: Color, life: float) -> CPUParticles2D:
 	var particles := CPUParticles2D.new()
@@ -65,6 +68,10 @@ func rain_angle() -> float:
 	return atan2(weather.wind_now() * 1.5, FALL)
 
 func _process(_delta: float) -> void:
+	if weather.intensity != _intensity:
+		_intensity = weather.intensity
+		for layer in [streaks, splashes]: layer.modulate.a = _intensity
+		loop_sound(SOUND_TIERS[_tier], _intensity, MIX_DB[_tier])
 	var angle := rain_angle()
 	streaks.direction = Vector2(sin(angle), cos(angle))
 	streaks.angle_min = -rad_to_deg(angle)

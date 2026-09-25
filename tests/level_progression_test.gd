@@ -4,7 +4,7 @@ const Levels = preload("res://scripts/level/level_catalog.gd")
 func _initialize() -> void: call_deferred("run")
 func run() -> void:
 	assert(ProjectSettings.get_setting("application/run/main_scene") == "res://labs/salvage/lab.tscn")
-	for level in 4:
+	for level in 5:
 		for variant in 2:
 			var layout := Layout.create_layout(variant, Levels.scrap_count(level))
 			assert(layout.scrap.size() == Levels.scrap_count(level))
@@ -21,7 +21,7 @@ func run() -> void:
 	root.add_child(game)
 	await process_frame
 	assert(game.round_state.state == &"ready" and game.hud.level_grid.visible)
-	for level in 4:
+	for level in 5:
 		assert(game.selected_level == level)
 		var count := Levels.scrap_count(level)
 		assert(game.payloads.size() == count and game.round_state.total_items == count)
@@ -40,14 +40,14 @@ func run() -> void:
 		else: game._command(&"primary")
 		assert(game.round_state.state == &"ready" and game.hud.level_grid.visible)
 		assert(game.feedback_left == 0 and game.feedback.is_empty())
-		assert(game.selected_level == mini(level + 1, 3))
+		assert(game.selected_level == mini(level + 1, 4))
 	game.start_round()
 	game.round_state.tick(241)
 	assert(not game.victory and game.hud.action.text == "Retry" and game.hud.levels_button.visible)
 	game._command(&"primary")
-	assert(game.round_state.state == &"running" and game.selected_level == 3)
+	assert(game.round_state.state == &"running" and game.selected_level == 4)
 	game.round_state.tick(241)
 	game.hud.levels_button.pressed.emit()
-	assert(game.round_state.state == &"ready" and game.selected_level == 3)
+	assert(game.round_state.state == &"ready" and game.selected_level == 4)
 	print("LEVEL_PROGRESSION_TEST_OK")
 	quit()

@@ -118,3 +118,7 @@ User design (RaresKeY): [exact request](../prompts/source/wind-ribbons.md) repla
 AI-inferred design: keep the existing randomized curves and continuous directional movement. Use a 4–5.5 unit vertical front flush with the ribbon, taper its width to zero over 4.5s of history (30Hz, at most 144 points), and reduce opacity to 0.055–0.12. Retain quadratic age and boundary fades. One indexed mesh per ribbon with transparent edge strips gives smooth variable width without a draw call per segment; the leading edge is a faint 0.8-unit stroke, not a bright round marker. This changes visual wind only; forces, weather audio and dust retain their current behavior.
 
 AI-inferred edge handling: fade the whole long ribbon as its head reaches the yard edge, preserving the existing per-point boundary fade; this hides the history reset on wrap.
+
+### Weather intensity, 2026-09-25
+
+AI-inferred, for Level 5 Storm (see [levels](levels.md)): the weather node has an intensity from 0 to 1, default 1, that level events set. Wind force, fog density and rain visibility and volume scale with it, and lightning waits while it is under 0.8. Other levels never change it.

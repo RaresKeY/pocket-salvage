@@ -14,6 +14,9 @@ signal lightning_warning
 signal lightning(x: float)
 signal power_cut(seconds: float)
 var profile: Profile
+## 0 to 1 scale on the profile's strength, set by level events such as the storm cycle. Lightning only strikes at STRIKE_INTENSITY and above.
+var intensity := 1.0
+const STRIKE_INTENSITY := 0.8
 var rng := RandomNumberGenerator.new()
 var time := 0.0
 var direction := 1.0
@@ -74,7 +77,7 @@ func attach(owner_context: Node) -> void:
 
 func wind_now() -> float:
 	if profile == null: return 0.0
-	var value := direction * (profile.wind + profile.gust * gust_level)
+	var value := direction * (profile.wind + profile.gust * gust_level) * intensity
 	return clampf(value, -profile.wind_cap, profile.wind_cap) if profile.wind_cap > 0 else value
 
 func _physics_process(delta: float) -> void:
@@ -102,6 +105,7 @@ func _tick_gust(delta: float) -> void:
 		_gust_in = _between(profile.gust_every)
 
 func _tick_lightning(delta: float) -> void:
+	if intensity < STRIKE_INTENSITY: return
 	_strike_in -= delta
 	if not _warned and _strike_in <= profile.warning:
 		_warned = true
