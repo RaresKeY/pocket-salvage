@@ -18,10 +18,13 @@ var correct_count: int = 0
 var wrong_count: int = 0
 var delivered_count: int = 0
 var time_bonus: int = 0
+var multiplier: float = 1.0
+var weather_bonus: int = 0
 var _delivered: Dictionary = {}
 
-func configure(seconds: float = 90.0, item_count: int = 0) -> void:
+func configure(seconds: float = 90.0, item_count: int = 0, multiplier_value: float = 1.0) -> void:
 	duration = maxf(seconds, 0.0)
+	multiplier = maxf(multiplier_value, 1.0)
 	total_items = maxi(item_count, 0)
 	state = &"ready"
 	_reset()
@@ -34,6 +37,7 @@ func _reset() -> void:
 	wrong_count = 0
 	delivered_count = 0
 	time_bonus = 0
+	weather_bonus = 0
 	_delivered.clear()
 
 func start() -> void:
@@ -82,6 +86,9 @@ func accept_delivery(item_id: int, material: StringName, bin_material: StringNam
 func finish(reason: StringName = &"manual") -> void:
 	if state != &"running" and state != &"paused":
 		return
+	if multiplier > 1.0 and score > 0:
+		weather_bonus = roundi(score * (multiplier - 1.0))
+		score += weather_bonus
 	state = &"finished"
 	changed.emit()
 	finished.emit(reason)
