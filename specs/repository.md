@@ -1,6 +1,6 @@
 # Repository Structure
 
-Reviewed: 2026-09-25. Implementation revision: `cdd8a61`. Reference conventions: Jam Sync `d2c801a`, with the user's direct-main collaboration rules.
+Reviewed: 2026-09-25. Implementation: public-delivery change based on `815c9b9`; final verification revision recorded below after deployment.
 
 ## Current contract
 
@@ -16,7 +16,7 @@ The repository implements Jam Sync's organizational conventions through tracked 
 
 ## Local and shared state
 
-`AGENTS.md` at the root is tracked and shared by every contributor's agent; `CLAUDE.md` imports it with `@AGENTS.md`. It requires reading specs and design before a change, updating both compactly with it, and keeping explicit human direction (quoted in `prompts/source/`) separate from AI inference. Machine-specific rules stay in untracked notes. Tracked since 2026-09-25 at RaresKeY's request; before that both files were ignored.
+Root `AGENTS.md` and `CLAUDE.md` are ignored and untracked, preserved locally when removed from the index. Portable rules remain in `examples_agents/` and `docs/collaboration.md`: read and update specs/design with changes, quote explicit human direction in `prompts/source/`, and distinguish AI inference. This follows RaresKeY’s latest 2026-09-25 directive. Older tracked revisions remain in public Git history; collaborator migration notes explain backing up local copies before pulling the deletion.
 
 `.gitignore` excludes engine caches, build/export output, local journals and scratch state, secrets files, and the reproducible `artifacts/tmp/` and `artifacts/generated/` buckets. It does not blanket-ignore `artifacts/`, visual candidates, or shared source. Preserve non-reproducible evidence and authored deliverables according to purpose, and review them before tracking. Reproducible release outputs are ephemeral under the owning release workflow.
 
@@ -24,8 +24,8 @@ The repository implements Jam Sync's organizational conventions through tracked 
 
 ## Collaboration and verification
 
-The private GitHub `origin` is the collaboration remote. Contributors commit directly to `main`, rebase unpublished commits before every push, preserve work during conflicts, and recover with bisect and corrective commits. Experimental branches and external worktrees are optional. Pull requests are not used. Release tags are reserved for explicitly requested GitHub releases. Atomic ownership locks remain an optional future design; no lock manager or automatic recovery is implemented. No branch protection or access changes are part of this bootstrap.
+The public GitHub `origin`, `RaresKeY/pocket-salvage`, is the collaboration remote, renamed from `random-game`. Contributors commit directly to `main`, rebase unpublished commits before every push, preserve work during conflicts, and recover with bisect and corrective commits. Experimental branches and external worktrees are optional. Pull requests are not used. Release tags are reserved for explicitly requested GitHub releases. Atomic ownership locks remain an optional future design; no lock manager or automatic recovery is implemented. Existing collaborator grants are retained. `.github/workflows/delivery.yml` tests main pushes and publishes stable tag releases; generated Web output lives on the separate `gh-pages` deployment branch, never in main. See [builds](builds.md).
 
-README, collaboration guidance and the portable instruction example explicitly require fetching before push and rebasing if origin has advanced, including a push race. AI preserves all work through simple compatible conflicts. If that is impossible or the direction bifurcates, stop and ask the user before resolving or pushing; preserve both versions. The shared `AGENTS.md` carries the same policy.
+README, collaboration guidance and the portable instruction example explicitly require fetching before push and rebasing if origin has advanced, including a push race. AI preserves all work through simple compatible conflicts. If that is impossible or the direction bifurcates, stop and ask the user before resolving or pushing; preserve both versions. Local agent instructions can import or copy the portable example.
 
 Check Markdown links, the tracked/ignored boundary, Git attributes, and `git diff --check` after structure changes. Run `./tests/check` when engine sources or the check entry point change. Keep current behavior in specs and unfinished implementation work in `TODO.md`.

@@ -2,7 +2,7 @@
 
 Reference: the user's `jam-sync` repository at `d2c801a`, reviewed 2026-09-24, especially `README.md`, `.gitattributes`, `examples_agents/jam-sync.md`, and `examples/visual-style.md`. This is a structural adaptation of those conventions, not a claim that the reference installs tooling.
 
-The user's later [collaboration rules](../prompts/source/collaboration-rules.md) take precedence: direct commits to `main`, experimental branches only when useful, rebase before push, no PRs or release tags, and SHA-based private-build identity. Jam Sync's advanced worktree coordination remains optional.
+The user's later [collaboration rules](../prompts/source/collaboration-rules.md) take precedence: direct commits to `main`, experimental branches only when useful, rebase before push, no PRs, and clean source identity. The later [public-delivery request](../prompts/source/public-release.md) permits tagged releases and public hosting. Jam Sync's advanced worktree coordination remains optional.
 
 | Jam Sync idea | Location here | Bootstrap status |
 |---|---|---|
@@ -22,7 +22,7 @@ The user's later [collaboration rules](../prompts/source/collaboration-rules.md)
 | Shared source versus local/generated outputs | [.gitignore](../.gitignore), [artifacts](../artifacts/README.md) | Generated buckets ignored; authored and non-reproducible material considered separately. |
 | Portable references | [repository contract](../specs/repository.md), [tests/check](../tests/check) | Project-relative documentation; runner override or sibling lookup. |
 | Godot text/LF rules and explicit binary attributes | [.gitattributes](../.gitattributes) | Applied to Godot sources, scripts, and media. |
-| Agent instructions | [AGENTS.md](../AGENTS.md), [CLAUDE.md](../CLAUDE.md), [instruction examples](../examples_agents/README.md) | Shared and tracked since 2026-09-25 at RaresKeY's request; machine-specific rules stay in untracked notes. |
+| Agent instructions | Local `AGENTS.md` and `CLAUDE.md`, [instruction examples](../examples_agents/README.md) | Root agent files are ignored and untracked at RaresKeY’s latest request; portable rules remain committed. |
 | Reusable instruction examples | [random-game example](../examples_agents/random-game.md) | Portable guidance tracked separately from machine policy. |
 | Clearly labeled convention examples | [examples](../examples/README.md), [visual-style example](../examples/visual-style.md) | Illustration only; not approved art or an actual prompt record. |
 | External owned worktree lanes and separate atomic locks | [collaboration design](../design/collaboration.md) | Design-only; no locking tool installed. |

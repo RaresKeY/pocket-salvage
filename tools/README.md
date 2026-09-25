@@ -6,6 +6,6 @@ Prototype and orchestrate in Python; use native code for measured bottlenecks. F
 
 [superscale](superscale) enlarges pixel PNGs through the shared Godot runner; [pixel_art/](pixel_art/README.md) owns the portable CLI and diagnostic-image construction. Verification lives in [tests/check](../tests/check); interactive comparisons live in [labs/](../labs/README.md).
 
-[build/build_all.py](build/build_all.py) exports the standalone prototype from clean source; [build contract](../specs/builds.md).
+[build/build_all.py](build/build_all.py) exports the standalone prototype from clean source; `build/publish_release.py` validates tags, publishes verified release assets and updates the generated Pages branch; [build contract](../specs/builds.md).
 
 [audio/make_sfx.py](audio/make_sfx.py) synthesises the round's retro sound effects into `assets/audio/` as 16-bit mono WAVs, standard library only and seeded, so rerunning it reproduces the files exactly. Edit a recipe and rerun to change a sound. [audio/make_music.py](audio/make_music.py) writes the 32-second background loop the same way, reusing the effect generator's tone and WAV helpers.

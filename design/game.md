@@ -4,7 +4,7 @@
 
 The user requested a new repository named along the lines of `random-game` for a collaboration experiment, specified private GitHub hosting, and requested that the structure reflect Jam Sync's ideas. Exact directives are recorded in [the source record](../prompts/source/repository-bootstrap.md).
 
-The official game name is **Pocket Salvage**. Keep the repository name, checkout and upstream as `random-game`. The user-selected loop is: **control a magnetic crane, collect scrap, and sort it before the timer expires**. Audience and delivery platforms remain open.
+The official game name is **Pocket Salvage**. The original instruction kept `random-game`; RaresKeY’s [2026-09-25 public-delivery request](../prompts/source/public-release.md) supersedes it with a public repository named after the game. The user-selected loop is: **control a magnetic crane, collect scrap, and sort it before the timer expires**. Audience remains open; requested public builds cover Windows, Linux and Web.
 
 The next agreed phase is a lightweight shared design spike, followed by a small MVP. Contributors work freeform as time allows. Preserve explicit user decisions separately from AI proposals as the game takes shape.
 

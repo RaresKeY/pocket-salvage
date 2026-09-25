@@ -2,7 +2,7 @@
 
 ## User design
 
-The user selected direct commits to `main`, optional experimental branches, continuous spec synchronization, checkpoints as useful, rebase before every push, no release tags, and recovery through bisect and corrective commits. Work is freeform and asynchronous, starting with a shared design spike before an MVP. Preserve all work during conflicts; AI can resolve compatible edits, while conflicting intent needs contributor agreement. See [the exact directives](../prompts/source/collaboration-rules.md).
+The user selected direct commits to `main`, optional experimental branches, continuous spec synchronization, checkpoints as useful, rebase before every push, originally no release tags (superseded by the [public-delivery request](releases.md)), and recovery through bisect and corrective commits. Work is freeform and asynchronous, starting with a shared design spike before an MVP. Preserve all work during conflicts; AI can resolve compatible edits, while conflicting intent needs contributor agreement. See [the exact directives](../prompts/source/collaboration-rules.md).
 
 Jam Sync's owned-worktree and locking ideas remain an optional future design. They do not impose mandatory task branches or integration ceremony on this experiment.
 

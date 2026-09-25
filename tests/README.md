@@ -18,6 +18,6 @@ Use [the background capture flow](../labs/pixel_scaling/README.md) for hardware-
 
 `physical_suspension_test.gd` verifies rigid-body pivot tilt, angular stops, inertial lag, slack tension, load feedback and cable draw order. Rope tests separately retain moving/reeling history through taut-to-slack transitions.
 
-`rope_interpolation_test.gd` samples render frames between physics ticks and checks endpoint interpolation, physics-history isolation, pause and reset. Reproducible exports are verified separately with `python3 tools/build/build_all.py --verify`.
+`rope_interpolation_test.gd` samples render frames between physics ticks and checks endpoint interpolation, physics-history isolation, pause and reset. `python3 tests/test_release.py` tests release version/ancestry guards, candidate identity, payload integrity and ZIP/payload agreement without engine execution or network. Main pushes run it plus the full engine suite; stable tags additionally build and publish. Reproducible exports are verified separately with `python3 tools/build/build_all.py --verify`.
 
 `audio_test.gd` decodes every cue, checks independent SFX/music control and the audio lab. Optional `--require-pulse` validates each cue against actual mixer frames with Master muted downstream. HUD checks cover audio buttons, focus return and hurry-timer state. See [audio](../specs/audio.md).

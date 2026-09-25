@@ -21,7 +21,7 @@ Reviewed: 2026-09-25. Implementation revision: `cdd8a61`.
 | [Level layouts](level_layout.md) | `scripts/level/`, `labs/level/` | Prototype placements, backdrop, animated ambience and gulls | Changing layout fixtures or scenery |
 | [Playable integration](salvage_prototype.md) | `labs/salvage/` | Combined crane, heads, sorting, round, UI, level and audio prototype | Changing playable integration or controls |
 | [Audio](audio.md) | `scripts/audio/`, `tools/audio/`, `assets/audio/`, `labs/audio/`, `play.sh` | Effect pool, motor and music loops, generated placeholder sounds | Changing or replacing sounds |
-| [Standalone builds](builds.md) | `tools/build/`, `export_presets.cfg` | Clean-source multi-platform exports and reproducibility | Building the versioned prototype |
+| [Standalone builds](builds.md) | `tools/build/`, `export_presets.cfg`, `.github/workflows/delivery.yml`, `tests/test_release.py` | Clean-source exports, tag releases, reproducibility and Pages | Building the versioned prototype |
 
 ## Maintenance
 

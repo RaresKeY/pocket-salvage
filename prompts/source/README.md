@@ -4,4 +4,6 @@ Keep exact user text separate from commentary, inference, and later decisions. T
 
 [Pixel scaling](pixel-scaling.md) records the tool, art-convention, and lab request. [Jam polish](jam-polish.md) records Dale's and RaresKeY's directives from the 2026-09-25 polish session.
 
+[Public delivery](public-release.md) records the later public rename, local-only agent files, tag automation and Pages request.
+
 [Audio/UI release](audio-ui-release.md) records the playback fix, compact UI and local GitHub-release request, including cancellation of new music generation.

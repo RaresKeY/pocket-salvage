@@ -18,3 +18,7 @@ export_credentials.cfg
 Thumbs.db
 __pycache__/
 *.py[cod]
+
+# Per-contributor instructions stay local.
+/AGENTS.md
+/CLAUDE.md

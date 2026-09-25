@@ -63,7 +63,7 @@ def inside(args):
         if path.is_file():
             os.utime(path, (epoch, epoch))
     engine = command(['godot', '--version'])
-    templates = Path('/opt/godot-export-templates/4.7.stable')
+    templates = Path(os.environ.get('GODOT_EXPORT_TEMPLATES', '/opt/godot-export-templates/4.7.stable'))
     info = {'engine': engine, 'engine_sha256': digest(Path(shutil.which('godot'))), 'python': platform.python_version(), 'zlib': zlib.ZLIB_VERSION, 'templates': {key: digest(templates / TARGETS[key][2]) for key in args.targets}}
     subprocess.run(['godot', '--headless', '--editor', '--import', '--quit'], check=True)
     for key in args.targets:
@@ -85,10 +85,14 @@ def build_once(destination, args, source, epoch, runner):
         archive = subprocess.check_output(['git', 'archive', source], cwd=ROOT)
         with tarfile.open(fileobj=io.BytesIO(archive)) as stream:
             stream.extractall(snapshot, filter='data')
-        subprocess.run([str(runner), 'run', '--project', str(snapshot), '--image', args.image,
-                        '--purpose', 'reproducible-prototype-export', '--display', 'none',
-                        '--env', f'SOURCE_DATE_EPOCH={epoch}', '--env', 'TZ=UTC',
-                        '--', 'python3', 'tools/build/build_all.py', '--inside', '--targets', *args.targets], check=True)
+        if args.ci_direct:
+            subprocess.run(['python3', 'tools/build/build_all.py', '--inside', '--targets', *args.targets],
+                           cwd=snapshot, env={**os.environ, 'SOURCE_DATE_EPOCH': str(epoch), 'TZ': 'UTC'}, check=True)
+        else:
+            subprocess.run([str(runner), 'run', '--project', str(snapshot), '--image', args.image,
+                            '--purpose', 'reproducible-prototype-export', '--display', 'none',
+                            '--env', f'SOURCE_DATE_EPOCH={epoch}', '--env', 'TZ=UTC',
+                            '--', 'python3', 'tools/build/build_all.py', '--inside', '--targets', *args.targets], check=True)
         toolchain = json.loads((snapshot / 'toolchain.json').read_text())
         shutil.copytree(snapshot / 'output', destination)
     return toolchain
@@ -104,17 +108,20 @@ def main():
     parser.add_argument('--verify', action='store_true', help='rebuild a second clean snapshot and require identical exported bytes')
     parser.add_argument('--image', default='localhost/godot-podman:4.7')
     parser.add_argument('--inside', action='store_true', help=argparse.SUPPRESS)
+    parser.add_argument('--ci-direct', action='store_true', help='use the pinned engine in the GitHub Actions job container')
     args = parser.parse_args()
     if args.inside:
         inside(args)
         return
+    if args.ci_direct and os.environ.get('GITHUB_ACTIONS') != 'true':
+        raise SystemExit('--ci-direct is restricted to GitHub Actions; use the managed runner locally.')
     if command(['git', 'status', '--porcelain'], cwd=ROOT):
         raise SystemExit('Build requires a clean committed checkout (including untracked source files).')
     source = command(['git', 'rev-parse', 'HEAD'], cwd=ROOT)
     epoch = int(command(['git', 'show', '-s', '--format=%ct', source], cwd=ROOT))
     version = re.search(r'config/version="([^"]+)"', (ROOT / 'project.godot').read_text()).group(1)
     runner = Path(os.environ.get('GODOT_PODMAN_RUNNER', ROOT.parent / 'godot-podman/bin/godot-podman')).resolve()
-    if not runner.is_file():
+    if not args.ci_direct and not runner.is_file():
         raise SystemExit('Set GODOT_PODMAN_RUNNER to the shared godot-podman wrapper.')
     (ROOT / 'build').mkdir(exist_ok=True)
     (ROOT / 'build/.gdignore').touch()

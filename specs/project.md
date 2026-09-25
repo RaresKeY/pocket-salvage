@@ -1,10 +1,10 @@
 # Project Contract
 
-Reviewed: 2026-09-25. Implementation revision: `9d21b8f`.
+Reviewed: 2026-09-25. Implementation: public-delivery change based on `815c9b9`; final verification revision recorded below after deployment.
 
 ## Status and scope
 
-Pocket Salvage is the official game name; its private GitHub repository remains `random-game`. The selected loop is a magnetic crane collecting and sorting scrap before time expires. Godot 4.7 opens the [scrapyard scene preview](scene_preview.md) in `scenes/main.tscn`, arranging Dale Mooney’s contributed sprites. The pixel-scaling and rope labs remain separate runnable scenes. The preview remains a static arrangement with a Play prototype entry to [the combined lab](salvage_prototype.md). That lab implements a crane with swappable magnet and claw heads and two tool stands, a ten-piece physical scrap heap, three wall-sharing bins with throw-back on a wrong sort, scoring with a time bonus, a 240-second timer, pause/results/restart, animated night scenery and generated audio. Bin-front masking and final gameplay integration remain open. Final art direction and delivery platforms remain open.
+Pocket Salvage is the official game name; its public GitHub repository is `RaresKeY/pocket-salvage`. The selected loop is a magnetic crane collecting and sorting scrap before time expires. Godot 4.7 opens the [scrapyard scene preview](scene_preview.md) in `scenes/main.tscn`, arranging Dale Mooney’s contributed sprites. The pixel-scaling and rope labs remain separate runnable scenes. The preview remains a static arrangement with a Play prototype entry to [the combined lab](salvage_prototype.md). That lab implements a crane with swappable magnet and claw heads and two tool stands, a ten-piece physical scrap heap, three wall-sharing bins with throw-back on a wrong sort, scoring with a time bonus, a 240-second timer, pause/results/restart, animated night scenery and generated audio. Bin-front masking and final gameplay integration remain open. Final art direction remains open. Public delivery covers Windows, Linux and Web; native target-machine verification is recorded separately.
 
 ## Source ownership
 
@@ -20,9 +20,9 @@ Pocket Salvage is the official game name; its private GitHub repository remains 
 
 ## Collaboration contract
 
-The private GitHub repository uses direct commits to `main`, rebasing unpublished work onto the latest remote before pushing. Experimental branches are optional; pull requests are not part of the current workflow; release tags are permitted for explicitly requested GitHub releases. The [collaboration guide](../docs/collaboration.md) owns conflict, recovery, and build-identity rules. Optional future coordination automation lives in [design](../design/collaboration.md).
+The public GitHub repository uses direct commits to `main`, rebasing unpublished work onto the latest remote before pushing. Experimental branches are optional; pull requests are not part of the current workflow; release tags are permitted for explicitly requested GitHub releases. The [collaboration guide](../docs/collaboration.md) owns conflict, recovery, and build-identity rules. Optional future coordination automation lives in [design](../design/collaboration.md).
 
-`project.godot` declares version `0.1.1`, the assistant-selected patch version for the requested release. No project license has been selected.
+`project.godot` declares version `0.1.2`, the assistant-selected patch version for the requested release. No project license has been selected.
 
 Physics runs at 60 Hz with native 2D physics interpolation enabled. Physical bodies and the hoist move on physics ticks; custom cable geometry interpolates its previous/current particle positions at render cadence without modifying the solver. Explicit restart/spawn teleports reset interpolation history.
 
