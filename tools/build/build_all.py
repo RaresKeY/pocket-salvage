@@ -108,7 +108,7 @@ def main():
     parser.add_argument('--verify', action='store_true', help='rebuild a second clean snapshot and require identical exported bytes')
     parser.add_argument('--image', default='localhost/godot-podman:4.7')
     parser.add_argument('--inside', action='store_true', help=argparse.SUPPRESS)
-    parser.add_argument('--ci-direct', action='store_true', help='use the pinned engine in the GitHub Actions job container')
+    parser.add_argument('--ci-direct', action='store_true', help='use the checksum-pinned engine on a GitHub Actions hosted runner')
     args = parser.parse_args()
     if args.inside:
         inside(args)
@@ -145,7 +145,8 @@ def main():
             zip_files(staging / f'pocket-salvage-{version}-{key}.zip',
                       [(str(path.relative_to(folder)), path.read_bytes(), path.stat().st_mode) for path in folder.rglob('*') if path.is_file()], epoch)
         manifest = {'version': version, 'source_commit': source, 'source_date_epoch': epoch,
-                    'startup_scene': 'res://labs/salvage/lab.tscn', 'image_reference': args.image,
+                    'startup_scene': 'res://labs/salvage/lab.tscn', 'image_reference': None if args.ci_direct else args.image,
+                    'toolchain_reference': 'official Godot 4.7 checksum-pinned downloads' if args.ci_direct else args.image,
                     'toolchain': toolchain, 'packager': {'python': platform.python_version(), 'zlib': zlib.ZLIB_VERSION}, 'targets': args.targets,
                     'reproducibility': 'two-clean-snapshots-identical' if args.verify else 'not-compared',
                     'sha256': hashes(staging)}

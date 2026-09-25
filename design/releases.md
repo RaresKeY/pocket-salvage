@@ -8,7 +8,7 @@ RaresKeY, 2026-09-25: [exact directive](../prompts/source/public-release.md). Ma
 
 Use `pocket-salvage` as the repository slug and `v0.1.2` as the first automated patch release. Test main pushes; stable `vMAJOR.MINOR.PATCH` tags must match the project version and belong to main. Tagged releases test and export Windows/Linux/Web twice, using the existing reproducible packager. Keep macOS outside automated releases until target-machine validation is available.
 
-Use a digest-pinned Godot 4.7 job container, Python and shell, with bounded jobs and no dependency installation through JavaScript tooling. Hosted headless checks prove behavior/export consistency, not hardware rendering. Local engine work retains the shared managed runner.
+Use checksum-pinned official Godot 4.7 downloads on an ephemeral Ubuntu runner, Python and shell, with bounded jobs and no dependency installation through JavaScript tooling. Main checks download only the editor; tags also fetch templates. This avoids downloading the 5 GB general-purpose CI image on every push. Hosted headless checks prove behavior/export consistency, not hardware rendering. Local engine work retains the shared managed runner.
 
 Release ZIPs and manifests belong to GitHub Releases. A separate `gh-pages` deployment branch holds the extracted Web package, `.nojekyll`, and source/version metadata; it never merges into main. Request a Pages build explicitly after pushing because workflow-token pushes alone do not trigger Pages. Preserve deployment history without force-pushing. Deploy only the newest stable release and verify the live metadata and payload. Local candidates are removed after verified publication.
 
