@@ -16,6 +16,7 @@ const Round = preload("res://scripts/round/round_controller.gd")
 const Bin = preload("res://scripts/round/sorting_bin.gd")
 const Controls = preload("res://scripts/input/salvage_input.gd")
 var controls: Node
+const DebugOverlay = preload("res://scripts/debug/yard_debug_overlay.gd")
 const HUD = preload("res://scripts/ui/round_hud.gd")
 const Burst = preload("res://scripts/fx/burst_2d.gd")
 const Heads = preload("res://scripts/crane/crane_heads.gd")
@@ -40,6 +41,7 @@ const REJECT_CLEARANCE := 120.0
 var viewport: SubViewport
 var stage: SubViewportContainer
 var world: Node2D
+var debug_overlay: Node2D
 var hud: Control
 var round_state: Node
 var suspension: Node2D
@@ -98,6 +100,7 @@ func _ready() -> void:
 	var hud_layer := CanvasLayer.new()
 	add_child(hud_layer)
 	hud = HUD.new()
+	hud.developer_enabled = DebugOverlay.available()
 	hud.touch_enabled = controls.mobile_touch
 	hud.set_anchors_and_offsets_preset(PRESET_FULL_RECT)
 	hud_layer.add_child(hud)
@@ -106,6 +109,7 @@ func _ready() -> void:
 	hud.pause_requested.connect(toggle_pause)
 	hud.music_requested.connect(func(): set_music(not music_on))
 	hud.effects_requested.connect(func(): sfx.set_effects_enabled(not sfx.effects_enabled); refresh_hud())
+	hud.debug_requested.connect(_set_debug_overlay)
 	hud.layout_changed.connect(_fit)
 	hud.touch_controls.axes_changed.connect(controls.set_touch_axes)
 	hud.touch_controls.command_requested.connect(controls.touch_command)
@@ -202,6 +206,11 @@ func _build_world() -> void:
 	world.add_child(weather)
 	weather.configure(Weather.find(forced_weather) if forced_weather != &"" else Weather.pick(Weather.profiles(),_weather_rng),_weather_rng.randi())
 	weather.attach(self)
+	if DebugOverlay.available():
+		if debug_overlay == null:
+			debug_overlay = DebugOverlay.new()
+			viewport.add_child(debug_overlay)
+		debug_overlay.configure(world, hud.hitboxes_check.button_pressed, hud.masks_check.button_pressed)
 	world.reset_physics_interpolation()
 	finish_reason = ""
 	round_state.configure(ROUND_SECONDS,payloads.size(),weather.profile.multiplier)
@@ -518,3 +527,6 @@ func _notification(what: int) -> void:
 	if what == NOTIFICATION_WM_WINDOW_FOCUS_OUT and controls != null: controls.release_controls()
 	if what == NOTIFICATION_WM_WINDOW_FOCUS_OUT and round_state != null and round_state.state == &"running":
 		round_state.set_paused(true)
+
+func _set_debug_overlay(hitboxes: bool, masks: bool) -> void:
+	if debug_overlay != null: debug_overlay.configure(world, hitboxes, masks)

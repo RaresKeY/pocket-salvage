@@ -17,3 +17,5 @@ Records of Dale's directives correct typing errors in spelling and punctuation; 
 [Performance/audio](performance-audio.md) records the Web/native profiling and crackle-reduction request.
 
 [Firebase Hosting](firebase-hosting.md) records the one-time latest-release deployment and public link change.
+
+[Local Developer options](local-developer-options.md) records pause-menu diagnostics, the audio-slider question, and permission to push the source change.

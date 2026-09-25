@@ -21,3 +21,13 @@ Exact scoring language, feedback wording, final styling and final control bindin
 User design (RaresKeY): [exact request](../prompts/source/audio-ui-release.md) to compactly simplify using Supper Guard and Plug Charge. AI-inferred choices: single-row status, shorter footer, measured yard clearances, clear primary action and separate Music/SFX toggles above modals. Retain this game’s dark/mint theme, art and gameplay.
 
 AI-inferred performance follow-up to [RaresKeY’s profiling request](../prompts/source/performance-audio.md): present one current HUD snapshot per physics tick and rebuild presentation only when displayed data changes; preserve the hurry pulse and immediate interaction feedback.
+
+## Local developer controls
+
+### User design
+
+RaresKeY, 2026-09-25: [exact directive](../prompts/source/local-developer-options.md). Add pause-menu Developer options for hitboxes and masks locally, and report on absent audio sliders.
+
+### AI-inferred design
+
+Interpret local-only as native source runs using the editor binary, excluding Web and standalone exports; the follow-up explicitly authorizes rebasing and pushing the source change, while retaining the local-run feature gate. Default-off toggles persist across round restarts within a scene. Put them under a collapsed Developer options button. Green physical shapes and blue sensors are distinct from pink reference art masks and orange active occlusion masks. Never modify physics or mask materials; stop overlay processing when disabled. Audio sliders remain deferred pending direction; the recorded audio design currently specifies toggles.

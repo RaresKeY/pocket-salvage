@@ -37,3 +37,7 @@ Direction buttons draw their arrows with canvas lines instead of font glyphs: ex
 HUD presentation compares snapshots after rounding the remaining time to its displayed second. Unchanged values skip label/button/theme rebuilding; the hurry alpha is still updated on every presentation. Ready buffering and state transitions remain immediate. The playable physics loop advances feedback before ticking the round and uses its changed signal for one HUD refresh per tick.
 
 Resizing clears the displayed-value cache and re-presents the last data, so text that depends on screen size (the weather line) is rebuilt even when the game sends nothing new, as on the start card.
+
+Developer controls (reviewed 2026-09-25 against the source change based on `04feb18`; not in v0.1.6): native source runs expose a collapsed Developer options section only while paused. Hitbox/mask CheckButtons emit `debug_requested`; HUD presentation stays independent of world traversal. Normal HUD instances and exported builds do not enable this section.
+
+Verification: full managed engine suite passed in an isolated source copy, and hardware Gamescope captures on NVIDIA RTX 2080 Ti checked the expanded pause controls at 1920×1080, 1280×720, 960×540, 854×480 and 640×360 with Dummy audio. The final focused diagnostic test also covers new collision nodes while enabled. Export visibility is enforced by the source-run gate; no new release is created for this change.

@@ -5,9 +5,16 @@ signal restart_requested
 signal pause_requested
 signal music_requested
 signal effects_requested
+signal debug_requested(hitboxes: bool, masks: bool)
 signal layout_changed
 
 const TouchController = preload("res://scripts/ui/touch_controller.gd")
+var developer_enabled := false
+var developer_section: VBoxContainer
+var developer_button: Button
+var developer_controls: HBoxContainer
+var hitboxes_check: CheckButton
+var masks_check: CheckButton
 var touch_enabled := false
 var touch_controls: HBoxContainer
 var modal_card: PanelContainer
@@ -147,6 +154,7 @@ func _ready() -> void:
 	action.add_theme_stylebox_override("normal", primary)
 	action.pressed.connect(_activate)
 	content.add_child(action)
+	if developer_enabled: _build_developer_options(content)
 	var version := Label.new()
 	version.name = "Version"
 	version.text = "v" + str(ProjectSettings.get_setting("application/config/version", "0.1.0"))
@@ -170,6 +178,34 @@ func _ready() -> void:
 	resized.connect(func(): _displayed = {}; present(_pending))
 	_responsive_layout()
 	present(_pending)
+
+func _build_developer_options(parent: VBoxContainer) -> void:
+	developer_section = VBoxContainer.new()
+	developer_section.add_theme_constant_override("separation", 4)
+	parent.add_child(developer_section)
+	developer_button = Button.new()
+	developer_button.text = "Developer options"
+	developer_button.toggle_mode = true
+	developer_button.custom_minimum_size.y = 40
+	developer_section.add_child(developer_button)
+	developer_controls = HBoxContainer.new()
+	developer_controls.visible = false
+	developer_section.add_child(developer_controls)
+	developer_button.toggled.connect(func(open: bool): developer_controls.visible = open)
+	hitboxes_check = CheckButton.new()
+	hitboxes_check.text = "Hitboxes"
+	hitboxes_check.custom_minimum_size.y = 40
+	hitboxes_check.size_flags_horizontal = SIZE_EXPAND_FILL
+	developer_controls.add_child(hitboxes_check)
+	masks_check = CheckButton.new()
+	masks_check.text = "Masks (art / active)"
+	masks_check.custom_minimum_size.y = 40
+	masks_check.size_flags_horizontal = SIZE_EXPAND_FILL
+	developer_controls.add_child(masks_check)
+	for button in [hitboxes_check, masks_check]:
+		button.toggled.connect(func(_on: bool): debug_requested.emit(hitboxes_check.button_pressed, masks_check.button_pressed))
+	hitboxes_check.tooltip_text = "Green: physical shapes. Blue: Area2D sensors. Disabled shapes are omitted."
+	masks_check.tooltip_text = "Pink: source art masks, not collision geometry. Orange: active visual occlusion masks."
 
 func _audio_button(parent: Node, text: String, hint: String, callback: Callable) -> Button:
 	var button := Button.new()
@@ -246,12 +282,19 @@ func present(data: Dictionary) -> void:
 	magnet_label.text = "%s  ·  %s" % [grip, "Carrying " + held if not held.is_empty() else "Empty"]
 	feedback_label.text = str(data.get("feedback", ""))
 	feedback_label.visible = not feedback_label.text.is_empty()
+	if developer_section != null:
+		developer_section.visible = state == "paused"
+		if state != "paused":
+			developer_button.set_pressed_no_signal(false)
+			developer_controls.hide()
 	modal.visible = state != "running"
 	pause_button.visible = state == "running"
+	details.visible = true
 	match state:
 		"paused":
 			heading.text = "Paused"
-			details.text = "Take your time. Your round is waiting."
+			details.text = "" if developer_enabled else "Take your time. Your round is waiting."
+			details.visible = not developer_enabled
 			action.text = "Resume"
 		"finished":
 			heading.text = "Round complete"
@@ -292,7 +335,7 @@ func _responsive_layout() -> void:
 	bottom_panel.offset_right = -12 - world_right_inset
 	hints_label.visible = not compact_touch_landscape
 	footer.vertical = touch_enabled and size.x < 600
-	var compact_modal := touch_enabled and size.y < 400
+	var compact_modal := (touch_enabled or developer_enabled) and size.y < 420
 	modal_content.add_theme_constant_override("separation", 8 if compact_modal else 16)
 	heading.add_theme_font_size_override("font_size", 24 if compact_modal else 28)
 	details.add_theme_font_size_override("font_size", 14 if compact_modal else 16)
