@@ -77,3 +77,5 @@ Requested v0.1.6 refresh: push a matching version tag to invoke the existing tes
 Firefox loaded the actual Firebase HTTPS release and ran start/movement/reeling with no game-console errors and nonzero audio, measured upstream of a muted destination. This is a sampled exported-browser smoke test, not exhaustive weather performance profiling. Local release downloads and Firebase deployment caches were removed after verification; ignored evidence was retained.
 
 Bundled typography: all export presets explicitly include `assets/fonts/tiny5/OFL.txt` and `THIRD_PARTY_NOTICES.md`. The shared theme preloads Tiny5, so native and Web packages contain the font resource without system-font or network requirements. Validation exports are temporary and are not new published releases.
+
+Version 0.1.7 packages the verified `53982f2` wind/UI implementation with the displayed version bump, through the existing GitHub release/Pages workflow and a requested manual Firebase deployment of the same Web asset.

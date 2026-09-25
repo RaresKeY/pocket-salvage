@@ -37,3 +37,5 @@ Player input is shared through `scripts/input/salvage_input.gd`; [input](input.m
 Web exports cap presentation at 60 FPS through `application/run/max_fps.web`; native builds retain the platform/VSync rate. Physics remains 60 Hz with interpolation. The cap avoids chasing a 165 Hz desktop refresh when the Web frame budget cannot reliably sustain it.
 
 Release refresh: project version is 0.1.6 for the explicitly requested GitHub/Firebase build. The release includes Dale’s per-round weather implementation through `dbf34d1`; tests and fresh exports are required by the tag workflow. See [weather](weather.md) for effects and verification.
+
+Current release version is 0.1.7: curved wind and sparse dust, square pixel-font UI and independent pause-menu volumes from `53982f2`, with local Developer controls hidden in exports.

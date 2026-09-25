@@ -11,3 +11,7 @@ Follow-up, RaresKeY, 2026-09-25:
 Follow-up, RaresKeY, 2026-09-25:
 
 > can we push new build for github to start and also to firebase?
+
+Follow-up, RaresKeY, 2026-09-25, after confirming both sites still served v0.1.6:
+
+> update both
