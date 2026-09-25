@@ -79,9 +79,17 @@ func run() -> void:
 	assert(hud.score_label.text == "Score  75", "A score change within the same displayed second appears immediately")
 	hud.present({"state":"paused", "time_left":9})
 	assert(hud.time_label.modulate.a == 1.0, "Pulse stops outside running")
+	hud.present({"state": "ready", "weather_label": "Storm x1.6", "weather_tip": "Gusts, slick ground and lightning."})
+	assert(hud.details.text.contains("Storm x1.6") and hud.details.text.contains("Gusts") and hud.weather_badge.text == "Storm x1.6" and hud.weather_badge.visible)
+	await process_frame
+	assert(hud.weather_badge.get_line_count() == 1 and hud.top_panel.size.y < 90, "weather badge stays on one line and the top bar stays compact")
+	hud.present({"state": "finished", "score": 500, "weather_label": "Storm x1.6", "weather_bonus": 188})
+	assert(hud.details.text.contains("Storm x1.6  +188"))
+	hud.present({"state": "running"})
+	assert(not hud.weather_badge.visible, "no badge without weather data")
 	hud.queue_free()
 	await process_frame
-	print("HUD_TEST_OK states, signals, real mouse clicks, focus, counters, responsive actions")
+	print("HUD_TEST_OK states, signals, real mouse clicks, focus, counters, responsive actions, weather")
 	quit()
 
 func click(button: Button) -> void:

@@ -174,5 +174,18 @@ func run() -> void:
 	assert(loud.sfx.effects_enabled == false, "music toggle leaves the SFX setting alone")
 	loud.queue_free()
 	await process_frame
-	print("WEATHER_TEST_OK profiles, weighted pick, calm, wind and gusts, lightning sequence, pause, forced weather, grip, multiplier, wind, rain, fog, lightning and power cuts, sounds")
+	for id in [&"clear", &"fog", &"wind", &"rain", &"storm"]:
+		var each = Lab.instantiate()
+		each.forced_weather = id
+		root.add_child(each)
+		await process_frame
+		each.start_round()
+		for body in each.scrap_bodies(): each.round_state.accept_delivery(body.item_id, body.material_id, body.material_id)
+		var earned: int = each.round_state.score - each.round_state.weather_bonus
+		assert(each.round_state.state == &"finished" and each.round_state.weather_bonus == roundi(earned * (each.weather.profile.multiplier - 1.0)), "%s round finishes with its bonus" % id)
+		each.refresh_hud()
+		assert(each.hud.weather_badge.text.begins_with(each.weather.profile.label), "%s shows on the HUD" % id)
+		each.queue_free()
+		await process_frame
+	print("WEATHER_TEST_OK profiles, weighted pick, calm, wind and gusts, lightning sequence, pause, forced weather, grip, multiplier, wind, rain, fog, lightning and power cuts, sounds, full rounds")
 	quit()

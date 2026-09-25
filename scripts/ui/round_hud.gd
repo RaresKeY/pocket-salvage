@@ -29,6 +29,7 @@ var hints_label: Label
 var score_label: Label
 var time_label: Label
 var progress_label: Label
+var weather_badge: Label
 var magnet_label: Label
 var feedback_label: Label
 var modal: ColorRect
@@ -65,6 +66,9 @@ func _ready() -> void:
 	score_label.custom_minimum_size.x = 90
 	time_label = _stat(row, preload("res://assets/bitwright_8x/hud_timer.png"), "Time  0:00")
 	time_label.custom_minimum_size.x = 94
+	weather_badge = _label(row, "")
+	weather_badge.autowrap_mode = TextServer.AUTOWRAP_OFF
+	weather_badge.visible = false
 	progress_label = _label(row, "Sorted  0 / 0")
 	progress_label.custom_minimum_size.x = 112
 	progress_label.size_flags_horizontal = SIZE_EXPAND_FILL
@@ -230,6 +234,9 @@ func present(data: Dictionary) -> void:
 	if hurry: time_label.add_theme_color_override("font_color", HURRY_COLOR)
 	else: time_label.remove_theme_color_override("font_color")
 	progress_label.text = "Sorted  %d / %d" % [int(data.get("delivered", 0)), int(data.get("total", 0))]
+	var weather := str(data.get("weather_label", ""))
+	weather_badge.text = weather
+	weather_badge.visible = not weather.is_empty()
 	var held := str(data.get("held_material", ""))
 	var grip := str(data.get("grip_label", "Magnet " + ("ON" if data.get("magnet_on", false) else "OFF")))
 	magnet_label.text = "%s  ·  %s" % [grip, "Carrying " + held if not held.is_empty() else "Empty"]
@@ -248,10 +255,13 @@ func present(data: Dictionary) -> void:
 			details.text = "%s\nScore  %d\nCorrect  %d  ·  Wrong  %d" % [reason, int(data.get("score", 0)), int(data.get("correct", 0)), int(data.get("wrong", 0))]
 			var bonus := int(data.get("time_bonus", 0))
 			if bonus > 0: details.text += "\nTime bonus  +%d" % bonus
+			var weather_bonus := int(data.get("weather_bonus", 0))
+			if weather_bonus > 0: details.text += "\n%s  +%d" % [weather, weather_bonus]
 			action.text = "Play again"
 		_:
 			heading.text = "Pocket Salvage"
 			details.text = "10 pieces · 4 minutes\nMagnet lifts steel. Claw lifts copper and rubber.\nPark and swap heads at the left stands.\nSort into matching bins. Wrong bin: −25."
+			if not weather.is_empty(): details.text = "%s\n%s\n\n%s" % [weather, str(data.get("weather_tip", "")), details.text]
 			action.text = "Start round"
 	if previous != state:
 		if modal.visible: action.grab_focus()

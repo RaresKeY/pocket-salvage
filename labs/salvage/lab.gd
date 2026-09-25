@@ -208,6 +208,11 @@ func _build_world() -> void:
 	rebuilding = false
 	_state_changed()
 
+## "Storm x1.6", or just "Clear" when the weather has no multiplier.
+func weather_label() -> String:
+	var profile = weather.profile
+	return profile.label if profile.multiplier <= 1.0 else "%s x%s" % [profile.label,String.num(profile.multiplier,1)]
+
 func scrap_bodies() -> Array:
 	return payloads.filter(func(body): return is_instance_valid(body))
 
@@ -475,7 +480,7 @@ func _delivered(body: RigidBody2D, material: StringName, bin: Node2D) -> void:
 
 func refresh_hud() -> void:
 	if hud == null or round_state == null: return
-	hud.present({"state":round_state.state,"score":round_state.score,"time_left":round_state.remaining_time,"correct":round_state.correct_count,"wrong":round_state.wrong_count,"total":payloads.size(),"delivered":round_state.delivered_count,"magnet_on":gripping,"grip_label":Heads.label(head,gripping,is_instance_valid(held_body)),"held_material":str(held_body.material_id) if is_instance_valid(held_body) else "","feedback":feedback if feedback_left > 0 else "Copper, rubber and steel each have a bin.","finish_reason":finish_reason,"time_bonus":round_state.time_bonus,"music_on":music_on,"effects_on":sfx.effects_enabled,"control_scheme":controls.scheme,"navigation_hint":"" if OS.has_feature("standalone") else "F2 preview"})
+	hud.present({"state":round_state.state,"score":round_state.score,"time_left":round_state.remaining_time,"correct":round_state.correct_count,"wrong":round_state.wrong_count,"total":payloads.size(),"delivered":round_state.delivered_count,"magnet_on":gripping,"grip_label":Heads.label(head,gripping,is_instance_valid(held_body)),"held_material":str(held_body.material_id) if is_instance_valid(held_body) else "","feedback":feedback if feedback_left > 0 else "Copper, rubber and steel each have a bin.","finish_reason":finish_reason,"time_bonus":round_state.time_bonus,"weather_label":weather_label(),"weather_tip":weather.profile.tip,"weather_bonus":round_state.weather_bonus,"music_on":music_on,"effects_on":sfx.effects_enabled,"control_scheme":controls.scheme,"navigation_hint":"" if OS.has_feature("standalone") else "F2 preview"})
 
 func _command(command: StringName) -> void:
 	match command:

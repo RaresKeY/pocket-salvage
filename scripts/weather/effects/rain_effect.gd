@@ -11,7 +11,7 @@ func applies(profile) -> bool:
 func _start() -> void:
 	var floor_y: float = context.layout.ground_top
 	var width: float = context.layout.bounds.size.x
-	streaks = _particles(int(weather.profile.rain * 0.6), Vector2(width * 0.5, -20), Vector2(width * 0.6, 4), Color(0.8, 0.86, 1.0, 0.7), 0.6)
+	streaks = _particles(int(weather.profile.rain * 0.6), Vector2(width * 0.5, -20), Vector2(width * 0.5, 4), Color(0.8, 0.86, 1.0, 0.7), 0.6)
 	streaks.texture = _line_texture()
 	streaks.spread = 2
 	streaks.initial_velocity_min = FALL
