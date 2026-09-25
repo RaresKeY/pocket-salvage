@@ -13,6 +13,8 @@ Dale Mooney, 2026-09-25 ([exact record](../prompts/source/weather.md)):
 - It must be **a DRY system that is extendable and easy to implement and integrate**.
 - Dale approved the data-profile approach, and each of the three design sections below as presented.
 
+RaresKeY’s later [level-grid request](levels.md) replaces random weather selection in the playable scene with three fixed difficulty choices.
+
 ## AI-inferred design
 
 Everything below is Claude's proposal, approved as a whole by Dale. The numbers are starting points for playtesting, not tuned values.

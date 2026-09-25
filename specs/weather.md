@@ -1,8 +1,8 @@
 # Weather
 
-Reviewed: 2026-09-25. Implementation revision: `53982f2` (source UI/wind pass; not in published v0.1.6).
+Reviewed: 2026-09-25. Implementation: level-grid change based on `eba13f6`.
 
-Each salvage round rolls one weather that physically changes how the crane works and multiplies a positive final score. Intent and the split between Dale's direction and AI choices are in [design/weather.md](../design/weather.md).
+Each salvage round uses its selected level’s weather that physically changes how the crane works and multiplies a positive final score. Intent and the split between Dale's direction and AI choices are in [design/weather.md](../design/weather.md).
 
 ## Ownership
 
@@ -47,7 +47,7 @@ Fields: `id`, `label`, `tip`, `chance`, `multiplier`, `wind`, `gust`, `gust_ever
 
 The salvage round is the effects' context and provides: `layout`, `world`, `weather`, `trolley`, `ambience`, `sfx`, `round_state`, `bin_labels`, `drift_crane(dx)`, `scrap_bodies()` (valid scrap), `blown_bodies()` (the head plus scrap that is not held and not being thrown back), and `power_cut(seconds)`.
 
-The round picks the weather when it builds its world, from `forced_weather` when set (tests) or by chance from a generator randomized once in `_ready()`. It passes the profile's multiplier to `round_state.configure`. `power_cut` affects only a fitted magnet: it drops the load, shows the open frame and blocks pickup until `power_out_left` runs out in the round's physics step, which only runs while the round is running, so the cut freezes while paused. Fitting a head or rebuilding the world clears it. The claw is unaffected.
+The round picks the weather when it builds its world, from `forced_weather` when set (tests) or from the [level catalog](levels.md); its gust/lightning seed is randomized. It passes the profile's multiplier to `round_state.configure`. `power_cut` affects only a fitted magnet: it drops the load, shows the open frame and blocks pickup until `power_out_left` runs out in the round's physics step, which only runs while the round is running, so the cut freezes while paused. Fitting a head or rebuilding the world clears it. The claw is unaffected.
 
 The HUD shows `weather_label()` ("Storm x1.6", or just "Clear") as a badge, the label and tip on the start card, and the weather bonus on the results card. See [round HUD](round_hud.md) and [sorting and rounds](round.md) for the multiplier.
 

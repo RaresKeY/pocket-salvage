@@ -1,6 +1,6 @@
 # Round HUD
 
-Reviewed: 2026-09-25. Implementation revision: `53982f2` (source UI/wind pass; not in published v0.1.6).
+Reviewed: 2026-09-25. Implementation: level-grid change based on `eba13f6`.
 
 ## Ownership and contract
 
@@ -45,3 +45,5 @@ Verification: full managed engine suite passed in an isolated source copy, and h
 The top panel separates aligned score/time/sorted counters, audio/pause actions and head/weather status. Controls wrap as a group below counters under 760px. Pause has independent 0–100% Music/SFX sliders; `volume_requested` carries normalized values and `present` synchronizes them without feedback signals. Existing quick mute buttons remain. Local Developer options temporarily replaces the slider rows when expanded. The font and square styles are shared with touch controls, bin labels and score popups.
 
 The square theme, weather-visual refresh and volume-control verification are recorded in [the wind/UI review](../docs/wind-ui-review.md).
+
+The playable ready modal supports the [level grid](levels.md), with Levels navigation from pause/results. Standalone HUD fixtures omit `level_menu` and keep the simple Start modal.

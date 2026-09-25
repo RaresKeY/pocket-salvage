@@ -10,6 +10,8 @@ A four-minute scrapyard shift. Drive a swinging crane, swap between a magnet and
 
 ## Current release
 
+Source on `main` adds a 12-slot level grid: Clear, Breezy and Violent are unlocked; the remaining nine are placeholders. Replay keeps your chosen level. This is not yet in the published Web builds.
+
 The [latest release](https://github.com/RaresKeY/pocket-salvage/releases/latest) adds per-round weather: clear, fog, wind, rain or storm. Wind pushes the crane and airborne scrap, rain makes scrap slippery, and lightning briefly cuts magnet power. Harder weather multiplies a positive final score.
 
 It also retains the v0.1.5 improvements: better Firefox audio continuity during frame stalls, reduced cable and HUD work, and a 60 FPS target on Web. Keyboard, standard controllers and mobile touch controls are supported. Music and SFX have separate controls; click **Start** to enable browser audio. This release also adds square pixel-font menus, pause-menu volume sliders, curved wind trails and sparse fading dust.

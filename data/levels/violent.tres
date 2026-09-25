@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="WeatherProfile" load_steps=2 format=3]
+[ext_resource type="Script" path="res://scripts/weather/weather_profile.gd" id="1"]
+[resource]
+script = ExtResource("1")
+id = &"violent"
+label = "Violent"
+tip = "Strong gusts, heavy rain and frequent lightning."
+multiplier = 1.8
+wind = 100.0
+gust = 180.0
+gust_every = Vector2(4, 6)
+gust_rise = 0.8
+grip = 0.3
+fog = 0.3
+rain = 260.0
+lightning_every = Vector2(8, 16)
+warning = 1.0
+power_cut = 1.4

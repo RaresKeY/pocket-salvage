@@ -1,5 +1,7 @@
 extends Control
 ## Presentation-only round HUD. The caller owns game state and shortcuts.
+signal level_selected(index: int)
+signal levels_requested
 signal start_requested
 signal restart_requested
 signal pause_requested
@@ -9,6 +11,11 @@ signal volume_requested(music: float, effects: float)
 signal debug_requested(hitboxes: bool, masks: bool)
 signal layout_changed
 
+const Levels = preload("res://scripts/level/level_catalog.gd")
+var level_grid: GridContainer
+var level_buttons: Array[Button] = []
+var levels_button: Button
+var selected_level := 0
 const TouchController = preload("res://scripts/ui/touch_controller.gd")
 var developer_enabled := false
 var developer_section: VBoxContainer
@@ -166,6 +173,7 @@ func _ready() -> void:
 	heading = _label(content, "Pocket Salvage")
 	heading.add_theme_font_size_override("font_size", 30)
 	heading.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_build_level_grid(content)
 	details = _label(content, "")
 	details.custom_minimum_size.x = 0
 	details.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
@@ -175,7 +183,15 @@ func _ready() -> void:
 	primary.bg_color = Color("355c50")
 	action.add_theme_stylebox_override("normal", primary)
 	action.pressed.connect(_activate)
-	content.add_child(action)
+	var action_row := HBoxContainer.new()
+	content.add_child(action_row)
+	action.size_flags_horizontal = SIZE_EXPAND_FILL
+	action_row.add_child(action)
+	levels_button = Button.new()
+	levels_button.text = "Levels"
+	levels_button.custom_minimum_size = Vector2(80, 44)
+	levels_button.pressed.connect(func(): levels_requested.emit())
+	action_row.add_child(levels_button)
 	_build_audio_settings(content)
 	if developer_enabled: _build_developer_options(content)
 	var version := Label.new()
@@ -201,6 +217,33 @@ func _ready() -> void:
 	resized.connect(func(): _displayed = {}; present(_pending))
 	_responsive_layout()
 	present(_pending)
+
+func _build_level_grid(parent: VBoxContainer) -> void:
+	level_grid = GridContainer.new()
+	level_grid.columns = 6
+	level_grid.add_theme_constant_override("h_separation", 4)
+	level_grid.add_theme_constant_override("v_separation", 4)
+	parent.add_child(level_grid)
+	for index in Levels.SLOT_COUNT:
+		var button := Button.new()
+		button.text = "%02d" % (index + 1) if Levels.unlocked(index) else "%02d\nLOCKED" % (index + 1)
+		button.tooltip_text = Levels.title(index)
+		button.disabled = not Levels.unlocked(index)
+		button.toggle_mode = true
+		button.custom_minimum_size = Vector2(44, 44)
+		button.size_flags_horizontal = SIZE_EXPAND_FILL
+		button.add_theme_font_size_override("font_size", 16)
+		button.pressed.connect(func():
+			if Levels.unlocked(index): level_selected.emit(index))
+		level_grid.add_child(button)
+		level_buttons.append(button)
+
+func _unhandled_key_input(event: InputEvent) -> void:
+	if state != "ready" or not level_grid.visible: return
+	if event is InputEventKey and event.pressed and not event.echo:
+		if event.physical_keycode in [KEY_LEFT, KEY_RIGHT]:
+			settings_command(&"settings_left" if event.physical_keycode == KEY_LEFT else &"settings_right")
+			get_viewport().set_input_as_handled()
 
 func _build_audio_settings(parent: VBoxContainer) -> void:
 	audio_settings = VBoxContainer.new()
@@ -315,6 +358,10 @@ func present(data: Dictionary) -> void:
 	hints_label.text = hints + ("   ·   " + navigation if not navigation.is_empty() else "")
 	var previous := state
 	state = str(data.get("state", "ready"))
+	selected_level = int(data.get("selected_level", 0))
+	level_grid.visible = state == "ready" and bool(data.get("level_menu", false))
+	levels_button.visible = state in ["paused", "finished"] and bool(data.get("level_menu", false))
+	for index in level_buttons.size(): level_buttons[index].set_pressed_no_signal(index == selected_level)
 	touch_controls.enabled = state == "running"
 	music_button.set_pressed_no_signal(data.get("music_on", true))
 	music_button.text = "Music on" if music_button.button_pressed else "Music off"
@@ -367,6 +414,10 @@ func present(data: Dictionary) -> void:
 				if get_viewport_rect().size.y < SHORT_SCREEN: details.text = "%s · %s" % [weather, details.text]
 				else: details.text = "%s: %s\n%s" % [weather, str(data.get("weather_tip", "")), details.text]
 			action.text = "Start round"
+			if level_grid.visible:
+				heading.text = "Choose a level"
+				details.text = "%02d  %s" % [selected_level + 1, Levels.title(selected_level)]
+				if get_viewport_rect().size.y >= 500: details.text += "\n" + str(data.get("weather_tip", ""))
 	if previous != state:
 		if modal.visible: action.grab_focus()
 		else:
@@ -390,8 +441,10 @@ func _responsive_layout() -> void:
 	bottom_panel.offset_right = -12 - world_right_inset
 	hints_label.visible = not compact_touch_landscape
 	footer.vertical = touch_enabled and size.x < 600
+	level_grid.columns = 4 if size.x < 500 else 6
 	header_row.vertical = size.x < 760
 	var compact_modal := size.y < 500
+	for button in level_buttons: button.add_theme_font_size_override("font_size", 14 if compact_modal or size.x < 360 else 16)
 	modal_content.add_theme_constant_override("separation", 4 if compact_modal else 10)
 	heading.add_theme_font_size_override("font_size", 24 if compact_modal else 30)
 	details.add_theme_font_size_override("font_size", 16 if compact_modal else 20)
@@ -403,14 +456,21 @@ func _responsive_layout() -> void:
 
 func _layout_modal() -> void:
 	if modal_center == null: return
-	modal_center.offset_top = top_panel.position.y + top_panel.size.y + 8
+	var available_top := get_viewport_rect().size.y - modal_card.get_combined_minimum_size().y - 16
+	modal_center.offset_top = maxf(8, minf(top_panel.position.y + top_panel.size.y + 8, available_top))
 	modal_center.offset_bottom = -8
 
 ## Explicit controller navigation keeps D-pad crane commands out of implicit GUI input.
 func settings_command(command: StringName) -> void:
+	if state == "ready" and level_grid.visible:
+		var step := -1 if command in [&"settings_left", &"settings_up"] else 1
+		var next := selected_level + step
+		if Levels.unlocked(next): level_selected.emit(next)
+		return
 	if state != "paused": return
 	var choices: Array[Control] = [action]
 	if audio_settings.visible: choices.append_array([music_slider, effects_slider])
+	if levels_button.visible: choices.append(levels_button)
 	if developer_section != null:
 		choices.append(developer_button)
 		if developer_controls.visible: choices.append_array([hitboxes_check, masks_check])

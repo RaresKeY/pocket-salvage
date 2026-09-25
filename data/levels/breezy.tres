@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="WeatherProfile" load_steps=2 format=3]
+[ext_resource type="Script" path="res://scripts/weather/weather_profile.gd" id="1"]
+[resource]
+script = ExtResource("1")
+id = &"breezy"
+label = "Breezy"
+tip = "Light wind, rain and fog. Occasional short power cuts."
+multiplier = 1.2
+wind = 18.0
+gust = 24.0
+gust_every = Vector2(7, 12)
+gust_rise = 1.5
+grip = 0.7
+fog = 0.18
+rain = 70.0
+lightning_every = Vector2(35, 50)
+warning = 1.4
+power_cut = 0.35

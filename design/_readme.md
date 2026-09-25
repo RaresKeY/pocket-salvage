@@ -14,6 +14,7 @@ Design captures evolving intent. Every design document distinguishes explicit **
 | [Crane suspension](crane.md) | Reusable suspension and load handling | Extending crane handling |
 | [Sorting and rounds](round.md) | Provisional sorting/round rules | Changing scoring or round intent |
 | [Round HUD](round_hud.md) | Independent state-driven UI | Extending playable feedback |
+| [Level selection](levels.md) | Classic grid and weather difficulty | Changing playable level intent |
 | [Level layouts](level_layout.md) | Provisional yard arrangements | Designing prototype layouts |
 | [Playable integration](salvage_prototype.md) | First combined playable experiment | Revising prototype rules or integration intent |
 | [Player controls](controls.md) | Keyboard, gamepad and mobile Web touch controls | Changing input, device hints or phone layout |

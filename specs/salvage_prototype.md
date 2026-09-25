@@ -1,6 +1,6 @@
 # Playable subsystem integration
 
-Reviewed: 2026-09-25. Implementation revision: `df5ad76` (weather, on v0.1.5 `07f1974`).
+Reviewed: 2026-09-25. Implementation: level-grid change based on `eba13f6`.
 
 ## Composition
 
@@ -30,7 +30,7 @@ Heads animate from their own frames. `scripts/fx/burst_2d.gd` plays sparks at th
 
 ## Weather
 
-Each round rolls one weather (or uses `forced_weather`), adds a `Weather` node to the world, passes its multiplier to the round and provides the effects' context: `scrap_bodies()`, `blown_bodies()`, `bin_labels`, `layout` and `power_cut(seconds)`, which drops a fitted magnet's load and blocks pickup for the cut. Contract and verification: [weather](weather.md).
+Each round uses the [selected level’s weather](levels.md) (or the test override `forced_weather`), adds a `Weather` node to the world, passes its multiplier to the round and provides the effects' context: `scrap_bodies()`, `blown_bodies()`, `bin_labels`, `layout` and `power_cut(seconds)`, which drops a fitted magnet's load and blocks pickup for the cut. Contract and verification: [weather](weather.md).
 
 ## Audio
 

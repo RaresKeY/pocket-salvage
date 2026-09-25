@@ -1,0 +1,47 @@
+extends SceneTree
+func _initialize() -> void: call_deferred("run")
+func run() -> void:
+	var game = load("res://labs/salvage/lab.tscn").instantiate()
+	root.add_child(game)
+	await process_frame
+	assert(game.weather.profile.id == &"clear" and game.weather.get_child_count() == 0)
+	assert(game.hud.level_buttons.size() == 12)
+	for i in 12: assert(game.hud.level_buttons[i].disabled == (i >= 3))
+	game.select_level(3)
+	game.select_level(-1)
+	assert(game.selected_level == 0)
+	game.hud.level_buttons[1].pressed.emit()
+	assert(game.selected_level == 1 and game.weather.profile.id == &"breezy")
+	assert(game.weather.get_child_count() == 5)
+	var mild = game.weather.profile
+	game._command(&"settings_right")
+	assert(game.selected_level == 2 and game.weather.profile.id == &"violent")
+	assert(game.weather.profile.wind > mild.wind and game.weather.profile.rain > mild.rain)
+	assert(game.weather.profile.lightning_every.y < mild.lightning_every.x)
+	game._command(&"settings_right")
+	assert(game.selected_level == 2)
+	game._command(&"primary")
+	assert(game.round_state.state == &"running")
+	game.select_level(0)
+	assert(game.selected_level == 2)
+	game.restart_round()
+	assert(game.weather.profile.id == &"violent")
+	game.toggle_pause()
+	game.hud.levels_button.pressed.emit()
+	assert(game.round_state.state == &"ready" and game.hud.level_grid.visible)
+	game.select_level(0)
+	assert(game.weather.get_child_count() == 0)
+	for size in [Vector2i(1920,1080),Vector2i(1280,720),Vector2i(960,540),Vector2i(854,480),Vector2i(640,360),Vector2i(390,844),Vector2i(320,568)]:
+		root.size = size
+		for frame in 5: await process_frame
+		assert(root.get_visible_rect().encloses(game.hud.action.get_global_rect()))
+		assert(root.get_visible_rect().encloses(game.hud.modal_card.get_global_rect()))
+		for button in game.hud.level_buttons:
+			assert(root.get_visible_rect().encloses(button.get_global_rect()))
+	game.start_round()
+	game.round_state.finish(&"time_up")
+	assert(game.hud.levels_button.visible)
+	game.show_levels()
+	assert(game.round_state.state == &"ready")
+	print("LEVEL_SELECTION_TEST_OK")
+	quit()

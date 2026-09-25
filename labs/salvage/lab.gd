@@ -17,13 +17,15 @@ const Bin = preload("res://scripts/round/sorting_bin.gd")
 const Controls = preload("res://scripts/input/salvage_input.gd")
 var controls: Node
 const DebugOverlay = preload("res://scripts/debug/yard_debug_overlay.gd")
+const Levels = preload("res://scripts/level/level_catalog.gd")
+var selected_level := 0
 const HUD = preload("res://scripts/ui/round_hud.gd")
 const Burst = preload("res://scripts/fx/burst_2d.gd")
 const Heads = preload("res://scripts/crane/crane_heads.gd")
 const YardArt = preload("res://scripts/art/yard_art.gd")
 const Weather = preload("res://scripts/weather/weather.gd")
 var weather: Node
-## Set before the world is built to fix the weather (tests); empty rolls one by chance.
+## Set before the world is built to fix the weather (tests); empty uses the selected level.
 var forced_weather: StringName = &""
 var layout: Dictionary
 var bin_labels: Array[Label] = []
@@ -104,6 +106,8 @@ func _ready() -> void:
 	hud.touch_enabled = controls.mobile_touch
 	hud.set_anchors_and_offsets_preset(PRESET_FULL_RECT)
 	hud_layer.add_child(hud)
+	hud.level_selected.connect(select_level)
+	hud.levels_requested.connect(show_levels)
 	hud.start_requested.connect(start_round)
 	hud.restart_requested.connect(restart_round)
 	hud.pause_requested.connect(toggle_pause)
@@ -206,7 +210,7 @@ func _build_world() -> void:
 	ambience.crane_points = func() -> Array: return [trolley.position, tip.global_position]
 	weather = Weather.new()
 	world.add_child(weather)
-	weather.configure(Weather.find(forced_weather) if forced_weather != &"" else Weather.pick(Weather.profiles(),_weather_rng),_weather_rng.randi())
+	weather.configure(Weather.find(forced_weather) if forced_weather != &"" else Levels.weather(selected_level),_weather_rng.randi())
 	weather.attach(self)
 	if DebugOverlay.available():
 		if debug_overlay == null:
@@ -497,7 +501,7 @@ func _delivered(body: RigidBody2D, material: StringName, bin: Node2D) -> void:
 
 func refresh_hud() -> void:
 	if hud == null or round_state == null: return
-	hud.present({"state":round_state.state,"score":round_state.score,"time_left":round_state.remaining_time,"correct":round_state.correct_count,"wrong":round_state.wrong_count,"total":payloads.size(),"delivered":round_state.delivered_count,"magnet_on":gripping,"grip_label":Heads.label(head,gripping,is_instance_valid(held_body)),"held_material":str(held_body.material_id) if is_instance_valid(held_body) else "","feedback":feedback if feedback_left > 0 else "Copper, rubber and steel each have a bin.","finish_reason":finish_reason,"time_bonus":round_state.time_bonus,"weather_label":weather_label(),"weather_tip":weather.profile.tip,"weather_bonus":round_state.weather_bonus,"music_on":music_on,"effects_on":sfx.effects_enabled,"music_volume":sfx.music_volume,"effects_volume":sfx.effects_volume,"control_scheme":controls.scheme,"navigation_hint":"" if OS.has_feature("standalone") else "F2 preview"})
+	hud.present({"level_menu":true,"selected_level":selected_level,"state":round_state.state,"score":round_state.score,"time_left":round_state.remaining_time,"correct":round_state.correct_count,"wrong":round_state.wrong_count,"total":payloads.size(),"delivered":round_state.delivered_count,"magnet_on":gripping,"grip_label":Heads.label(head,gripping,is_instance_valid(held_body)),"held_material":str(held_body.material_id) if is_instance_valid(held_body) else "","feedback":feedback if feedback_left > 0 else "Copper, rubber and steel each have a bin.","finish_reason":finish_reason,"time_bonus":round_state.time_bonus,"weather_label":weather_label(),"weather_tip":weather.profile.tip,"weather_bonus":round_state.weather_bonus,"music_on":music_on,"effects_on":sfx.effects_enabled,"music_volume":sfx.music_volume,"effects_volume":sfx.effects_volume,"control_scheme":controls.scheme,"navigation_hint":"" if OS.has_feature("standalone") else "F2 preview"})
 
 func _command(command: StringName) -> void:
 	match command:
@@ -534,3 +538,14 @@ func _notification(what: int) -> void:
 
 func _set_debug_overlay(hitboxes: bool, masks: bool) -> void:
 	if debug_overlay != null: debug_overlay.configure(world, hitboxes, masks)
+
+func select_level(index: int) -> void:
+	if not Levels.unlocked(index) or round_state.state != &"ready": return
+	selected_level = index
+	controls.release_controls()
+	_build_world()
+
+func show_levels() -> void:
+	if round_state.state not in [&"paused", &"finished"]: return
+	controls.release_controls()
+	_build_world()
