@@ -77,5 +77,29 @@ func run() -> void:
 	assert(wet.round_state.multiplier == 1.6, "the round takes the weather's multiplier")
 	wet.queue_free()
 	await process_frame
-	print("WEATHER_TEST_OK profiles, weighted pick, calm, wind and gusts, lightning sequence, pause, forced weather, grip, multiplier")
+	var breezy = Lab.instantiate()
+	breezy.forced_weather = &"wind"
+	root.add_child(breezy)
+	await process_frame
+	breezy.start_round()
+	await frames(60)
+	var loose: RigidBody2D = breezy.scrap_bodies()[0]
+	var resting: RigidBody2D = breezy.scrap_bodies()[1]
+	loose.gravity_scale = 0
+	PhysicsServer2D.body_set_state(loose.get_rid(), PhysicsServer2D.BODY_STATE_TRANSFORM, Transform2D(0, Vector2(600, 150)))
+	PhysicsServer2D.body_set_state(loose.get_rid(), PhysicsServer2D.BODY_STATE_LINEAR_VELOCITY, Vector2.ZERO)
+	loose.sleeping = false
+	await frames(3)
+	var start_x := loose.global_position.x
+	var rest_x := resting.global_position.x
+	await frames(90)
+	assert(signf(loose.global_position.x - start_x) == breezy.weather.direction and absf(loose.global_position.x - start_x) > 5, "wind drifts airborne scrap downwind")
+	assert(absf(resting.global_position.x - rest_x) < 2, "grounded scrap is held by friction")
+	var thrown: RigidBody2D = breezy.scrap_bodies()[2]
+	thrown.delivered = true
+	assert(not breezy.blown_bodies().has(thrown) and breezy.blown_bodies().has(resting), "thrown-back scrap is not blown; resting scrap is offered and friction holds it")
+	assert(breezy.ambience.wind == breezy.weather.wind_now(), "clouds follow the wind")
+	breezy.queue_free()
+	await process_frame
+	print("WEATHER_TEST_OK profiles, weighted pick, calm, wind and gusts, lightning sequence, pause, forced weather, grip, multiplier, wind")
 	quit()

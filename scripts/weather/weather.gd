@@ -5,6 +5,7 @@ const DIR := "res://data/weather/"
 ## Each effect enables itself only for profiles that use it; adding one is a file plus a line here.
 const EFFECTS := [
 	preload("res://scripts/weather/effects/grip_effect.gd"),
+	preload("res://scripts/weather/effects/wind_effect.gd"),
 ]
 signal lightning_warning
 signal lightning(x: float)
