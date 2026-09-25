@@ -65,11 +65,11 @@ func _tile_row(texture: Texture2D, area: Rect2) -> void:
 			Rect2(0, 0, texture.get_width() * width / tile_width, texture.get_height()))
 		x += tile_width
 
-## Every variant of a skyline that exists on disk (`name`, `name_b`, `name_c`), sky cut out.
+## Every variant of a skyline that exists on disk (`name`, `name_b`, `name_c`), repainted to `name`'s sky.
 static func skyline_set(name: String) -> Array[Texture2D]:
 	var found: Array[Texture2D] = []
 	for suffix in SKYLINE_VARIANTS:
-		if YardArt.exists(name + suffix): found.append(YardArt.cut_sky(name + suffix))
+		if YardArt.exists(name + suffix): found.append(YardArt.match_sky(name + suffix, name))
 	return found
 
 ## Lays tiles of the given widths across `span`: a seeded shuffle that never repeats a design twice in a row,
@@ -96,9 +96,11 @@ func _skyline_row(area: Rect2) -> void:
 	for piece in skyline_plan(widths, area.size.x, SKYLINE_SEED):
 		var tile: Texture2D = skylines[piece.index]
 		var source_width: float = tile.get_width() * piece.width / widths[piece.index]
-		var target := Rect2(area.position.x + piece.x, area.position.y, piece.width, area.size.y)
-		if piece.flip: target = Rect2(target.end.x, target.position.y, -target.size.x, target.size.y)
-		draw_texture_rect_region(tile, target, Rect2(0, 0, source_width, tile.get_height()))
+		var left: float = area.position.x + piece.x
+		# A negative-width rect is silently not drawn, so mirror with a flipped transform instead.
+		if piece.flip: draw_set_transform(Vector2(left * 2.0 + piece.width, 0.0), 0.0, Vector2(-1.0, 1.0))
+		draw_texture_rect_region(tile, Rect2(left, area.position.y, piece.width, area.size.y), Rect2(0, 0, source_width, tile.get_height()))
+		if piece.flip: draw_set_transform(Vector2.ZERO)
 
 ## Stretches the lattice by repeating one period between the cap and the foot.
 func _tower(area: Rect2, art_scale: float) -> void:

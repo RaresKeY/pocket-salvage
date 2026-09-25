@@ -26,6 +26,6 @@ Lighting refinement: shader masks use the existing sprites’ lens regions/color
 
 Blood Moon art (RaresKeY chose, 2026-09-25, [record](../prompts/source/blood-moon.md)): his screen-space wash, edge light and bulb masks stay as the lighting. Claude compared tinting against four generated assets; RaresKeY picked the generated blood moon and a crimson skyline redrawn without the repeated moons of the first draw. A 60% backdrop layer tint was tried and dropped in favour of this. The sky carries the strong red; other assets keep his 5%.
 
-Skyline variety (Dale asked, 2026-09-25: the skyline repeated over and over): Claude drew two more 128 px skyline designs in each palette (normal and Blood Moon), cut the painted sky out of every tile at load so mismatched sky bands no longer show as blocks, and mixes them in a fixed shuffle with mirroring.
+Skyline variety (Dale asked, 2026-09-25: the skyline repeated over and over): Claude drew two more 128 px skyline designs in each palette (normal and Blood Moon), repaints every tile's sky and ground with the first tile's colours at load (an earlier cut-out version turned silhouettes into stripes in Clear, which Dale flagged), and mixes them in a fixed shuffle with mirroring.
 
 RaresKeY, 2026-09-25: [confirmed brief magnet inversion on Violent lightning](../prompts/source/lightning-rain.md). The 0.45s duration is AI-inferred; slight/normal/violent rain audio follows particle strength.

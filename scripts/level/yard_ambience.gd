@@ -7,9 +7,6 @@ const SKY_TOP := Color("0c0a18")
 ## The skyline tile's own top row, so the gradient meets it without a seam.
 const SKY_BOTTOM := Color("181222")
 const SKYLINE_ROWS := 32
-## Skyline tiles have their painted sky cut out, so the sky keeps lightening behind them down to the fence.
-const HORIZON_GLOW := Color("4a3358")
-const BLOOD_HORIZON_GLOW := Color("64131a")
 const STAR_COUNT := 70
 const CLOUD_COUNT := 4
 const CLOUD_SPEED := Vector2(-6, 0)
@@ -208,12 +205,7 @@ func _draw_far(layer: Node2D) -> void:
 	for band in bands:
 		var top := horizon * band / bands
 		layer.draw_rect(Rect2(0, top, bounds.size.x, horizon / bands + 1), sky_top.lerp(sky_bottom, float(band) / (bands - 1)))
-	var glow := BLOOD_HORIZON_GLOW if blood_moon else HORIZON_GLOW
-	var fence := fence_top(Backdrop.FENCE_SKY_ROWS)
-	for band in bands:
-		var top := horizon + (fence - horizon) * band / bands
-		layer.draw_rect(Rect2(0, top, bounds.size.x, (fence - horizon) / bands + 1), sky_bottom.lerp(glow, float(band) / (bands - 1)))
-	layer.draw_rect(Rect2(0, fence, bounds.size.x, bounds.size.y - fence), glow)
+	layer.draw_rect(Rect2(0, horizon, bounds.size.x, bounds.size.y - horizon), sky_bottom)
 	for star in stars:
 		var twinkle := 0.35 + 0.65 * absf(sin(time * star.rate + star.phase))
 		layer.draw_rect(Rect2(star.at, Vector2.ONE * star.size), Color(0.95, 0.93, 1.0, twinkle))
