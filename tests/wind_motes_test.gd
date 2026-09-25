@@ -15,7 +15,24 @@ func run() -> void:
 	motes._process(1.0/60.0)
 	assert(motes.trails[1].at.x < after.x and motes.trails[1].at.distance_to(after) < 5)
 	assert(motes.trails[1].points[0].at == old_points[0].at)
-	assert(motes.tail_alpha(0) > motes.tail_alpha(0.6) and motes.tail_alpha(1.2) == 0)
+	assert(motes.tail_alpha(0) > motes.tail_alpha(Motes.TAIL_SECONDS * 0.5) and motes.tail_alpha(Motes.TAIL_SECONDS) == 0)
+	assert(Motes.TAIL_SECONDS >= 4.0, "Tail is substantially longer than the former 1.2 seconds")
+	assert(motes.tail_width(0, 5) == 5 and motes.tail_width(Motes.TAIL_SECONDS, 5) == 0)
+	assert(motes.tail_width(1, 5) > motes.tail_width(2, 5))
+	motes.strength = 1.0
+	assert(motes.opacity() <= 0.12, "Even strong wind remains faint")
+	var arrays: Array = motes.ribbon_arrays(motes.trails[1])
+	var vertices: PackedVector3Array = arrays[Mesh.ARRAY_VERTEX]
+	var colors: PackedColorArray = arrays[Mesh.ARRAY_COLOR]
+	var count := vertices.size()
+	assert(is_equal_approx(vertices[count-2].y - vertices[count-3].y, motes.trails[1].head_width), "Front and tail share one width")
+	assert(vertices[count-2].x == vertices[count-3].x, "Leading edge is vertical")
+	for color in colors: assert(color.a <= Motes.MAX_OPACITY)
+	for index in arrays[Mesh.ARRAY_INDEX]: assert(index >= 0 and index < count)
+	var exiting: Dictionary = motes.trails[1].duplicate()
+	exiting.at = Vector2(1201, exiting.at.y)
+	for color in motes.ribbon_arrays(exiting)[Mesh.ARRAY_COLOR]:
+		assert(color.a == 0.0, "Long tails fade before an offscreen wrap resets history")
 	motes.direction = 0
 	before = motes.trails[1].at
 	motes._process(0.2)

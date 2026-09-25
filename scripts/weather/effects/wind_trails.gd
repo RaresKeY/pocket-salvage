@@ -1,9 +1,12 @@
 extends Node2D
-## Moving wind motes with short path-history tails. Cosmetic RNG never changes weather rolls.
+## Faint tapered wind ribbons with flat vertical fronts and long path-history tails. Cosmetic RNG never changes weather rolls.
 const TRAIL_COUNT := 3
-const TAIL_SECONDS := 1.2
+const TAIL_SECONDS := 4.5
 const SAMPLE_SECONDS := 1.0 / 30.0
-const MAX_POINTS := 40
+const MAX_POINTS := 144
+const MIN_OPACITY := 0.055
+const MAX_OPACITY := 0.12
+const FEATHER := 0.7
 const COLOR := Color(0.72, 0.82, 0.83)
 var bounds := Rect2(0, 0, 1200, 440)
 var direction := 1.0
@@ -23,7 +26,7 @@ func _make_trail(x: float) -> Dictionary:
 		"height": _rng.randf_range(65, minf(280, bounds.size.y * 0.65)),
 		"bend": _rng.randf_range(10, 28), "frequency": _rng.randf_range(0.009, 0.018),
 		"phase": _rng.randf() * TAU, "phase2": _rng.randf() * TAU,
-		"speed": _rng.randf_range(0.8, 1.2), "radius": _rng.randf_range(1.5, 2.1), "points": []}
+		"speed": _rng.randf_range(0.8, 1.2), "head_width": _rng.randf_range(4.0, 5.5), "points": [], "mesh": ArrayMesh.new()}
 	trail.at = point_at(trail, x)
 	trail.points.append({"at": trail.at, "time": 0.0})
 	return trail
@@ -55,15 +58,47 @@ func edge_alpha(x: float) -> float:
 func tail_alpha(age: float) -> float:
 	return pow(clampf(1.0 - age / TAIL_SECONDS, 0, 1), 2)
 
+func tail_width(age: float, head_width: float) -> float:
+	return head_width * pow(clampf(1.0 - age / TAIL_SECONDS, 0, 1), 0.8)
+
+func opacity() -> float:
+	return lerpf(MIN_OPACITY, MAX_OPACITY, clampf(strength, 0, 1))
+
+func ribbon_arrays(trail: Dictionary) -> Array:
+	# Vertical cross-sections give the head and attached trail exactly the same width.
+	# Indexed triangles also remain valid when Blood Moon reverses over old history.
+	var vertices := PackedVector3Array()
+	var colors := PackedColorArray()
+	var indices := PackedInt32Array()
+	var samples: Array = trail.points.duplicate()
+	samples.append({"at": trail.at, "time": trail.age})
+	for sample in samples:
+		var age: float = trail.age - sample.time
+		var half_width := tail_width(age, trail.head_width) * 0.5
+		var alpha := tail_alpha(age) * edge_alpha(sample.at.x) * edge_alpha(trail.at.x) * opacity()
+		for offset in [-half_width - FEATHER, -half_width, half_width, half_width + FEATHER]:
+			vertices.append(Vector3(sample.at.x, sample.at.y + offset, 0))
+		colors.append(Color(COLOR, 0))
+		colors.append(Color(COLOR, alpha))
+		colors.append(Color(COLOR, alpha))
+		colors.append(Color(COLOR, 0))
+	for i in range(samples.size() - 1):
+		for band in 3:
+			var start := i * 4 + band
+			indices.append_array(PackedInt32Array([start, start + 1, start + 4, start + 1, start + 5, start + 4]))
+	var arrays := []
+	arrays.resize(Mesh.ARRAY_MAX)
+	arrays[Mesh.ARRAY_VERTEX] = vertices
+	arrays[Mesh.ARRAY_COLOR] = colors
+	arrays[Mesh.ARRAY_INDEX] = indices
+	return arrays
+
 func _draw() -> void:
 	for trail in trails:
-		var points := PackedVector2Array()
-		var colors := PackedColorArray()
-		var opacity := lerpf(0.24, 0.42, clampf(strength, 0, 1))
-		for sample in trail.points:
-			points.append(sample.at)
-			colors.append(Color(COLOR, tail_alpha(trail.age - sample.time) * edge_alpha(sample.at.x) * opacity))
-		points.append(trail.at)
-		colors.append(Color(COLOR, edge_alpha(trail.at.x) * opacity))
-		if points.size() > 1: draw_polyline_colors(points, colors, 1.3, true)
-		draw_circle(trail.at, trail.radius, Color(COLOR, edge_alpha(trail.at.x) * 0.7), true, -1, true)
+		var mesh: ArrayMesh = trail.mesh
+		mesh.clear_surfaces()
+		mesh.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, ribbon_arrays(trail))
+		draw_mesh(mesh, null)
+		# The old bright dot is now the ribbon's thin vertical leading edge.
+		var half_head := Vector2(0, trail.head_width * 0.5)
+		draw_line(trail.at - half_head, trail.at + half_head, Color(COLOR, edge_alpha(trail.at.x) * opacity() * 0.5), 0.8, true)

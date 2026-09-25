@@ -103,10 +103,18 @@ Keep physics and rain intact. Use three bounded 32-segment antialiased ribbons w
 
 User design: RaresKeY replaces lines with a dynamic dot following a randomized curve downwind, with a fading tail ([exact request](../prompts/source/wind-motes-launcher.md)).
 
-AI-inferred design: three motes, each with two spatial sine curves, random phase/bend/frequency/speed per crossing. Keep actual path history for 1.2s, sampled around 30Hz and capped at 40 points per mote. Tail alpha fades quadratically with age; a 1.5–2.1 unit dot leads it. Motion uses the continuous signed wind direction, preserving positions through reversals. Edge fades and Blood Moon palette remain. Physics, rain and dust stay unchanged.
+AI-inferred design: three motes, each with two spatial sine curves, random phase/bend/frequency/speed per crossing. The original 1.2s dot-tail presentation is superseded by the faint tapered-ribbon refinement below. Motion uses the continuous signed wind direction, preserving positions through reversals. Edge fades and Blood Moon palette remain. Physics, rain and dust stay unchanged.
 
 ### Level 3 flicker and soft rain, 2026-09-25
 
 User design (RaresKeY): [exact request and confirmation](../prompts/source/lightning-rain.md). Violent lightning briefly inverts the magnet then restores its prior state; switching off drops held scrap. Rain should primarily be non-harsh, with slight, normal and violent strengths.
 
 AI-inferred design: 0.45s inversion on Level 3 only. Overlapping strikes extend the same flicker, pause freezes it, manual toggling cancels restoration, and head changes/restart/results discard stale restoration. Other levels retain their power-cut rules, including Blood Moon’s reversed powered head. Rain particle rates select slight below 100, normal below 200, violent at 200 or above; the existing weather profiles remain unchanged apart from Violent’s flicker duration/tip.
+
+### Faint tapered wind, 2026-09-25
+
+User design (RaresKeY): [exact request](../prompts/source/wind-ribbons.md) replaces the conceptual dot with a faint vertical head, a wider front and a much longer progressively narrowing tail.
+
+AI-inferred design: keep the existing randomized curves and continuous directional movement. Use a 4–5.5 unit vertical front flush with the ribbon, taper its width to zero over 4.5s of history (30Hz, at most 144 points), and reduce opacity to 0.055–0.12. Retain quadratic age and boundary fades. One indexed mesh per ribbon with transparent edge strips gives smooth variable width without a draw call per segment; the leading edge is a faint 0.8-unit stroke, not a bright round marker. This changes visual wind only; forces, weather audio and dust retain their current behavior.
+
+AI-inferred edge handling: fade the whole long ribbon as its head reaches the yard edge, preserving the existing per-point boundary fade; this hides the history reset on wrap.
