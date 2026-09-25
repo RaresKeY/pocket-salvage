@@ -9,6 +9,7 @@ const Backdrop = preload("res://scripts/level/yard_backdrop.gd")
 const Round = preload("res://scripts/round/round_controller.gd")
 const Bin = preload("res://scripts/round/sorting_bin.gd")
 const HUD = preload("res://scripts/ui/round_hud.gd")
+const Burst = preload("res://scripts/fx/burst_2d.gd")
 var viewport: SubViewport
 var stage: SubViewportContainer
 var world: Node2D
@@ -17,11 +18,16 @@ var round_state: Node
 var suspension: Node2D
 var tip: CableBody
 var trolley: Sprite2D
-var magnet_sprite: Sprite2D
+var magnet_sprite: AnimatedSprite2D
+var art_scale := 1.0
+var reject_landing := Vector2.ZERO
 var payloads: Array[RigidBody2D] = []
 var bins: Array[Node2D] = []
 var held_body: RigidBody2D
-var magnet_on := false
+var magnet_on := false:
+	set(value):
+		if value != magnet_on and is_instance_valid(magnet_sprite): magnet_sprite.play(&"on" if value else &"off")
+		magnet_on = value
 var feedback := "Sort copper, rubber and steel into matching bins."
 var feedback_left := 0.0
 var level_variant := 0
@@ -77,6 +83,8 @@ func _build_world() -> void:
 	world = Node2D.new()
 	viewport.add_child(world)
 	var layout: Dictionary = Layout.create_layout(level_variant)
+	art_scale = layout.art_scale
+	reject_landing = Vector2(layout.bins[0].position.x - layout.bins[0].size.x * 0.5 - 60, layout.ground_top - 25)
 	var backdrop := Backdrop.new()
 	backdrop.z_index = -10
 	world.add_child(backdrop)
@@ -88,6 +96,7 @@ func _build_world() -> void:
 		var body := Payload.new()
 		body.configure(entry)
 		world.add_child(body)
+		body.landed.connect(burst.bind("fx_dust"))
 		payloads.append(body)
 	for entry in layout.bins:
 		var bin := Bin.new()
@@ -115,14 +124,11 @@ func _build_world() -> void:
 	tip_shape.size = Vector2(52,20)
 	Parts.add_solid(tip,tip_shape)
 	world.add_child(tip)
-	magnet_sprite = Sprite2D.new()
-	magnet_sprite.texture = preload("res://assets/bitwright_8x/crane_magnet_01.png")
-	magnet_sprite.scale = Vector2.ONE * 0.2
-	magnet_sprite.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
+	magnet_sprite = _magnet_sprite()
 	tip.add_child(magnet_sprite)
 	trolley = Sprite2D.new()
 	trolley.texture = preload("res://assets/bitwright_8x/crane_trolley.png")
-	trolley.scale = Vector2.ONE * 0.2
+	trolley.scale = Vector2.ONE * art_scale / 8.0
 	trolley.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
 	trolley.z_index = 2
 	world.add_child(trolley)
@@ -135,6 +141,25 @@ func _build_world() -> void:
 	round_state.configure(120.0,payloads.size())
 	rebuilding = false
 	_state_changed()
+
+func _magnet_sprite() -> AnimatedSprite2D:
+	var frames := SpriteFrames.new()
+	frames.remove_animation(&"default")
+	Burst.add_frames(frames, &"off", "crane_magnet", [1], 1.0, false)
+	Burst.add_frames(frames, &"on", "crane_magnet", range(2, 7), 14.0, false)
+	Burst.add_frames(frames, &"hum", "crane_magnet", [5, 6], 6.0, true)
+	var result := AnimatedSprite2D.new()
+	result.sprite_frames = frames
+	result.animation = &"off"
+	result.scale = Vector2.ONE * art_scale / 8.0
+	result.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
+	result.animation_finished.connect(func(): if result.animation == &"on": result.play(&"hum"))
+	return result
+
+func burst(at: Vector2, prefix: String) -> void:
+	var fx := Burst.new(prefix, at, art_scale)
+	fx.z_index = 3
+	world.add_child(fx)
 
 func add_wall(position: Vector2, dimensions: Vector2) -> void:
 	var wall := StaticBody2D.new()
@@ -194,7 +219,6 @@ func move_crane(horizontal: float, reel: float, delta: float) -> void:
 func toggle_magnet() -> void:
 	if round_state.state != &"running": return
 	magnet_on = not magnet_on
-	magnet_sprite.modulate = Color("b8ffdc") if magnet_on else Color.WHITE
 	if not magnet_on: release_load()
 	else: try_pickup()
 	refresh_hud()
@@ -215,6 +239,7 @@ func try_pickup() -> void:
 	if candidate != null and suspension.attach(candidate,Vector2(0,-candidate.dimensions.y*0.5)):
 		held_body = candidate
 		candidate.held = true
+		burst(candidate.to_global(Vector2(0,-candidate.dimensions.y*0.5)),"fx_sparks")
 		feedback = "Carrying %s. Lift it over the bin rim, then release." % candidate.material_id
 		feedback_left = 5.0
 
@@ -227,10 +252,11 @@ func _delivered(body: RigidBody2D, material: StringName, bin: Node2D) -> void:
 	match round_state.accept_delivery(body.item_id,body.material_id,material):
 		Round.Delivery.CORRECT:
 			feedback = "Correct sort! +%d" % Round.CORRECT_POINTS
+			burst(body.global_position,"fx_sparks")
 			body.call_deferred("queue_free")
 		Round.Delivery.WRONG:
 			feedback = "That %s bin won't take %s. −%d" % [material,body.material_id,Round.WRONG_PENALTY]
-			bin.eject(body)
+			bin.eject(body,reject_landing)
 		_: return
 	feedback_left = 4.0
 	refresh_hud()

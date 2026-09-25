@@ -1,12 +1,15 @@
 extends RigidBody2D
 ## Prototype adapter; reusable collision components do not select scrap geometry.
 const Parts = preload("res://scripts/physics/collision_parts_2d.gd")
+const LANDING_SPEED := 160.0
+signal landed(at: Vector2)
 var item_id := 0
 var material_id: StringName = &"steel"
 var held := false
 var delivered := false
 var dimensions := Vector2(40, 40)
 var sprite: Sprite2D
+var _fall_speed := 0.0
 
 func configure(entry: Dictionary) -> void:
 	item_id = entry.id
@@ -17,6 +20,9 @@ func configure(entry: Dictionary) -> void:
 	collision_layer = 2
 	collision_mask = 3
 	continuous_cd = RigidBody2D.CCD_MODE_CAST_SHAPE
+	contact_monitor = true
+	max_contacts_reported = 2
+	body_entered.connect(_on_body_entered)
 	linear_damp = 1.8
 	angular_damp = 3.0
 	physics_material_override = PhysicsMaterial.new()
@@ -34,3 +40,10 @@ func configure(entry: Dictionary) -> void:
 
 func _ready() -> void:
 	add_to_group("salvage_scrap")
+
+func _physics_process(_delta: float) -> void:
+	_fall_speed = linear_velocity.y
+
+func _on_body_entered(_other: Node) -> void:
+	if _fall_speed > LANDING_SPEED and not held:
+		landed.emit(global_position + Vector2(0, dimensions.y * 0.5))

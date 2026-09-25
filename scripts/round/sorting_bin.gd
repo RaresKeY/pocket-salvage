@@ -7,7 +7,7 @@ var material_id: StringName = &"steel"
 var enabled: bool = true
 var bin_size := Vector2(150, 100)
 var sensor: Area2D
-var eject_velocity := Vector2(160, -640)
+var eject_apex := 240.0
 var eject_timeout := 1.5
 var _ejecting: Dictionary = {}
 
@@ -53,12 +53,19 @@ func _shape(owner_node: Node2D, size: Vector2, at: Vector2) -> void:
 	collision.position = at
 	owner_node.add_child(collision)
 
-## Throws a refused body back over the nearer wall; it stays `delivered` until it leaves.
-func eject(body: RigidBody2D) -> void:
-	var side := 1.0 if body.global_position.x >= global_position.x else -1.0
+## Lobs a refused body to `landing` (undamped, so the arc is exact). It stays `delivered` until it leaves.
+func eject(body: RigidBody2D, landing: Vector2) -> void:
+	var gravity := body.get_gravity().y
+	if gravity <= 0.0: gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
+	var start := body.global_position
+	var apex := minf(start.y, landing.y) - eject_apex
+	var rise := sqrt(2.0 * gravity * (start.y - apex))
+	var flight := (rise + sqrt(2.0 * gravity * (landing.y - apex))) / gravity
 	body.sleeping = false
-	body.linear_velocity = Vector2(eject_velocity.x * side, eject_velocity.y)
-	_ejecting[body] = eject_timeout
+	body.linear_velocity = Vector2((landing.x - start.x) / flight, -rise)
+	_ejecting[body] = {"claim": eject_timeout, "flight": flight, "damp": body.linear_damp, "mode": body.linear_damp_mode}
+	body.linear_damp_mode = RigidBody2D.DAMP_MODE_REPLACE
+	body.linear_damp = 0.0
 
 func _release_ejected(delta: float) -> void:
 	var inside := sensor.get_overlapping_bodies()
@@ -66,10 +73,16 @@ func _release_ejected(delta: float) -> void:
 		if not is_instance_valid(body):
 			_ejecting.erase(body)
 			continue
-		_ejecting[body] -= delta
-		if not inside.has(body) or _ejecting[body] <= 0.0:
+		var entry: Dictionary = _ejecting[body]
+		entry.claim -= delta
+		entry.flight -= delta
+		if entry.claim > -INF and (not inside.has(body) or entry.claim <= 0.0):
 			body.set("delivered", false)
-			_ejecting.erase(body)
+			entry.claim = -INF
+		if entry.flight <= 0.0:
+			body.linear_damp = entry.damp
+			body.linear_damp_mode = entry.mode
+			if entry.claim == -INF: _ejecting.erase(body)
 
 func _physics_process(delta: float) -> void:
 	if not enabled or not is_instance_valid(sensor):

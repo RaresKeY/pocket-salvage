@@ -89,7 +89,11 @@ func run() -> void:
 			assert(is_instance_valid(item) and not item.delivered,"Wrong bin throws the item back into play")
 			for bin in lab.bins: assert(not bin.sensor.get_overlapping_bodies().has(item))
 			assert(lab.round_state.delivered_count == 0 and lab.round_state.wrong_count == 1)
-			await step(0,0,60)
+			for frame in 240:
+				await step()
+				if item.linear_velocity.length() < 5 and item.position.y > 380: break
+			var first_bin: Node2D = lab.bins[0]
+			assert(item.position.x > 80 and item.position.x < first_bin.position.x - first_bin.bin_size.x * 0.5,"Thrown item lands in front of the bins, within crane reach")
 			item = await lift(item)
 		var target_bin: Node2D
 		for bin in lab.bins:

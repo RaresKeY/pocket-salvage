@@ -41,9 +41,9 @@ func _ready() -> void:
 	var row := HBoxContainer.new()
 	row.add_theme_constant_override("separation", 24)
 	column.add_child(row)
-	score_label = _label(row, "Score  0")
+	score_label = _stat(row, preload("res://assets/bitwright_8x/hud_coin.png"), "Score  0")
 	score_label.custom_minimum_size.x = 130
-	time_label = _label(row, "Time  0:00")
+	time_label = _stat(row, preload("res://assets/bitwright_8x/hud_timer.png"), "Time  0:00")
 	time_label.custom_minimum_size.x = 110
 	progress_label = _label(row, "Sorted  0 / 0")
 	progress_label.size_flags_horizontal = SIZE_EXPAND_FILL
@@ -112,6 +112,19 @@ func _label(parent: Node, text: String) -> Label:
 	result.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	parent.add_child(result)
 	return result
+
+func _stat(parent: Node, texture: Texture2D, text: String) -> Label:
+	var pair := HBoxContainer.new()
+	pair.add_theme_constant_override("separation", 8)
+	parent.add_child(pair)
+	var icon := TextureRect.new()
+	icon.texture = texture
+	icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	icon.custom_minimum_size = Vector2(24, 24)
+	icon.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
+	pair.add_child(icon)
+	return _label(pair, text)
 
 func _ignore_decoration(node: Node) -> void:
 	if node is Control and not node is BaseButton:

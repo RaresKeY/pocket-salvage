@@ -68,7 +68,7 @@ func _on_delivery(body: Node2D, material: StringName, bin_node: Node2D) -> void:
 			body.set_deferred("collision_layer", 0)
 			body.set_deferred("collision_mask", 0)
 		Round.Delivery.WRONG:
-			bin_node.eject(body)
+			bin_node.eject(body, bin_node.position + Vector2(-130, 0))
 
 func _process(delta: float) -> void:
 	round_state.tick(delta)

@@ -23,6 +23,6 @@ static func create_layout(variant: int = 0) -> Dictionary:
 		var material: StringName = materials[(index + posmod(variant, 2)) % materials.size()]
 		bins.append({"material": material, "position": Vector2(650 + index * 200, 390),
 			"size": Vector2(150, 100), "texture": ART + "bin_" + String(material) + ".png"})
-	return {"bounds": Rect2(0, 0, 1200, 480), "ground_top": 440.0,
+	return {"bounds": Rect2(0, 0, 1200, 480), "ground_top": 440.0, "art_scale": 1.6,
 		"crane_anchor": Vector2(200, 45), "scrap": scrap, "bins": bins,
 		"variant": posmod(variant, 2), "pickup_bounds": Rect2(85, 350, 350, 90)}

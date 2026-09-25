@@ -63,21 +63,38 @@ func _run() -> void:
 	check(signals_seen == 1 and body.delivered, "release already inside accepted once")
 	await frames(4)
 	check(signals_seen == 1, "overlap not redelivered")
-	bin_node.eject(body)
+	bin_node.eject(body, bin_node.position + Vector2(-300, 0))
 	await frames(2)
 	check(body.delivered and body.linear_velocity.y < 0, "ejected body launched and still claimed")
 	await frames(30)
 	check(not bin_node.sensor.get_overlapping_bodies().has(body) and not body.delivered and signals_seen == 1, "ejected body released once clear of the bin")
-	bin_node.eject_velocity = Vector2.ZERO
 	var stuck := fixture_at(bin_node.position)
+	stuck.freeze_mode = RigidBody2D.FREEZE_MODE_KINEMATIC
+	stuck.freeze = true
 	await frames(4)
 	check(signals_seen == 2 and stuck.delivered, "second body delivered")
-	bin_node.eject(stuck)
+	bin_node.eject(stuck, bin_node.position)
 	await frames(30)
 	check(stuck.delivered and signals_seen == 2, "stuck ejected body held until timeout")
 	await frames(90)
 	check(signals_seen == 3, "stuck ejected body released after timeout")
 	stuck.queue_free()
+	var thrown := fixture_at(bin_node.position)
+	thrown.gravity_scale = 1
+	thrown.linear_damp = 1.8
+	await frames(4)
+	var landing := bin_node.position + Vector2(-420, 60)
+	bin_node.eject(thrown, landing)
+	var landed_x := INF
+	for frame in 240:
+		await physics_frame
+		if thrown.linear_velocity.y > 0 and thrown.global_position.y >= landing.y:
+			landed_x = thrown.global_position.x
+			break
+	check(absf(landed_x - landing.x) < 12, "ejected arc lands on the caller's point (x=%s)" % landed_x)
+	await frames(10)
+	check(is_equal_approx(thrown.linear_damp, 1.8) and thrown.linear_damp_mode == RigidBody2D.DAMP_MODE_COMBINE, "damping restored after the arc")
+	thrown.queue_free()
 	body.queue_free()
 	bin_node.queue_free()
 	round_node.queue_free()
