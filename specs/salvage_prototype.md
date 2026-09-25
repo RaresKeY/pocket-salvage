@@ -1,10 +1,10 @@
 # Playable subsystem integration
 
-Reviewed: 2026-09-25. Implementation: level-flow change based on `575407c`.
+Reviewed: 2026-09-25. Implementation: preview-shortcut removal based on `0734d3d`.
 
 ## Composition
 
-`labs/salvage/lab.tscn` composes crane suspension, round/bin, HUD, level layout, ambience and audio modules without replacing the static yard preview. The project opens this playable scene at the ready level grid. `scripts/scene/yard_preview.gd` retains Play prototype; F2 opens the preview (hidden in `standalone` exports, which start this scene directly). Each subsystem keeps its own lab and verification. The world renders into a native-resolution SubViewport between the HUD bands (measured panel bounds with 6px clearance), fitting 1200×480 world units with preserved aspect ratio. Placements come from [the layout module](level_layout.md), variant 0.
+`labs/salvage/lab.tscn` composes crane suspension, round/bin, HUD, level layout, ambience and audio modules without replacing the static yard preview. The project opens this playable scene at the ready level grid. The independent preview retains its Play prototype button, but gameplay has no preview shortcut in source or exported builds. Each subsystem keeps its own lab and verification. The world renders into a native-resolution SubViewport between the HUD bands (measured panel bounds with 6px clearance), fitting 1200×480 world units with preserved aspect ratio. Placements come from [the layout module](level_layout.md), variant 0.
 
 Level-dependent 4/6/10/12 caller-configured RigidBody2D payloads (`payload.gd`, layer 2) start as a heap; three bins share walls (layer 1); the magnet body is layer 4. Payloads use rectangle shapes and 8× art scaled to their rectangle. Bin art stays axis-aligned; masks are not integrated. `payload.grip_offset()` is the middle of whichever edge currently faces up, so tumbled scrap stays reachable; `grip_point()` is its world position. Payloads emit `landed(at)` on contact while falling faster than 160 units/s.
 
@@ -38,7 +38,7 @@ Effects, motor loops and music come from [`scripts/audio/sfx.gd`](audio.md). The
 
 ## Verification
 
-`tests/salvage_test.gd` drives a full round through physics without teleporting payloads: grip on the upward face of rotated pieces, the magnet never lifting copper or rubber, E refused away from a stand, a deliberate wrong-bin drop thrown back in front of the bins and later sorted, all steel with the magnet, a park-and-fetch swap to the claw, the armed claw waiting open and shutting on a catch, the rest sorted, score equal to 100 per correct minus 25 per wrong plus the time bonus, the results text, pause while carrying, restart restoring heads and stands, motor levels for travel, reel, idle, end stop and pause, music mute, timeout release and disabled end-state sensors. `salvage_navigation_test.gd` checks mouse launch/start, Space grip, P pause, mouse resume, R restart and F2 return. Tests establish deterministic playability; human playtesting decides whether it is fun.
+`tests/salvage_test.gd` drives a full round through physics without teleporting payloads: grip on the upward face of rotated pieces, the magnet never lifting copper or rubber, E refused away from a stand, a deliberate wrong-bin drop thrown back in front of the bins and later sorted, all steel with the magnet, a park-and-fetch swap to the claw, the armed claw waiting open and shutting on a catch, the rest sorted, score equal to 100 per correct minus 25 per wrong plus the time bonus, the results text, pause while carrying, restart restoring heads and stands, motor levels for travel, reel, idle, end stop and pause, music mute, timeout release and disabled end-state sensors. `salvage_navigation_test.gd` checks mouse launch/start, Space grip, P pause, mouse resume, R restart and F2 remaining inert in every round state. Tests establish deterministic playability; human playtesting decides whether it is fun.
 
 2026-09-25 validation: full `tests/run_checks.py` passes on Windows Godot 4.7 (17 marked checks). The ten-piece round with one head swap completes in 170.05 simulated seconds of 240. Windowed screenshots checked; Gamescope/GPU captures not rerun.
 

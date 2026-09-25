@@ -350,12 +350,11 @@ func present(data: Dictionary) -> void:
 	# button state and theme overrides until a visible value actually changes.
 	if _displayed == _pending: return
 	_displayed = _pending.duplicate()
-	var navigation := str(data.get("navigation_hint", ""))
 	var scheme := str(data.get("control_scheme", "keyboard"))
 	var hints := CONTROL_HINTS
 	if scheme == "gamepad": hints = "Stick/D-pad move/lift · A grip · X swap · Start pause · Y restart · LB music · RB SFX"
 	elif touch_enabled: hints = "Hold arrows to move/lift. Tap Grip or Swap."
-	hints_label.text = hints + ("   ·   " + navigation if not navigation.is_empty() else "")
+	hints_label.text = hints
 	var previous := state
 	state = str(data.get("state", "ready"))
 	selected_level = int(data.get("selected_level", 0))

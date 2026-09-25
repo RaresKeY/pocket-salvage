@@ -15,7 +15,7 @@ const PAD_COMMANDS := {
 }
 const KEY_COMMANDS := {
 	KEY_SPACE: &"grip", KEY_E: &"swap", KEY_R: &"restart", KEY_M: &"music",
-	KEY_P: &"pause", KEY_ESCAPE: &"pause", KEY_ENTER: &"primary", KEY_F2: &"preview",
+	KEY_P: &"pause", KEY_ESCAPE: &"pause", KEY_ENTER: &"primary",
 }
 var scheme: StringName = &"keyboard"
 var mobile_touch := false

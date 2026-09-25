@@ -1,6 +1,6 @@
 # Player input
 
-Reviewed: 2026-09-25. Implementation revision: `53982f2` (source UI/wind pass; not in published v0.1.6).
+Reviewed: 2026-09-25. Implementation: preview-shortcut removal based on `0734d3d`.
 
 `scripts/input/salvage_input.gd` owns four `salvage_*` movement actions and device-neutral command signals. WASD/arrows, standard D-pad and left-stick axes share the action map with deadzone 0.2. Horizontal and reel axes remain independent, clamped to [-1, 1]; stick strength preserves proportional movement. Existing crane speeds, bounds and grip/stand rules are unchanged.
 
@@ -23,3 +23,7 @@ Local preflight: the full managed Godot test suite and eight offline release-con
 Direction buttons draw their arrows with canvas lines instead of font glyphs: exported Web fonts do not include Unicode arrows. The input regression test checks font-independent direction rendering; exported-browser screenshots verify the visible result.
 
 While paused, D-pad up/down selects Resume, volume sliders or local Developer controls; left/right changes a focused slider by 5 percentage points. A activates the focused button; B/Start still resumes directly. Running D-pad motion remains unchanged. These directions travel through explicit settings commands rather than implicit GUI navigation.
+
+F2 has no command mapping. The game has no preview scene-switch handler or preview hint; `play.sh` inherits this same source behavior. Navigation tests press F2 in ready, running, paused and finished states and verify the scene/state remains unchanged.
+
+Validation: full managed Godot 4.7 engine suite passed (`CHECKS_OK`), including real F2 key events in all four states. Silent hardware captures refreshed the README images without the old hint. Evidence: `.local/no-preview-review/`.

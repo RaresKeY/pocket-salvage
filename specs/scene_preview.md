@@ -1,12 +1,12 @@
 # Scrapyard Scene Preview
 
-Reviewed: 2026-09-25. Implementation revision: `cdd8a61` (art counts only; the scene itself is unchanged since `b296d7f`).
+Reviewed: 2026-09-25. Implementation: preview-shortcut removal based on `0734d3d`.
 
 ## Composition and ownership
 
-`scenes/main.tscn` is the optional source preview reached with F2; the project now starts in the playable level grid. It arranges 8× nearest-neighbor derivatives of Dale Mooney’s `assets/bitwright/` PNGs from `assets/bitwright_8x/` as a static side-on scrapyard. Named editable Node2D groups separate the tiled environment, gantry, conveyor and incoming scrap, suspended magnet/cog, three sorting bins, and foreground scrap. All thirteen scrap types appear. The supplied dust and spark art use representative still frames; conveyor and magnet use their first frames. Collision/catch/pull masks are not rendered or connected to physics.
+`scenes/main.tscn` is a separately openable source preview; the project now starts in the playable level grid. It arranges 8× nearest-neighbor derivatives of Dale Mooney’s `assets/bitwright/` PNGs from `assets/bitwright_8x/` as a static side-on scrapyard. Named editable Node2D groups separate the tiled environment, gantry, conveyor and incoming scrap, suspended magnet/cog, three sorting bins, and foreground scrap. All thirteen scrap types appear. The supplied dust and spark art use representative still frames; conveyor and magnet use their first frames. Collision/catch/pull masks are not rendered or connected to physics.
 
-`Presentation/HUD` is a CanvasLayer with native-resolution Controls and a shared scene Theme. The contributed coin and timer icons accompany static `000` and `--:--` placeholders. The footer credits Dale Mooney and shows camera controls. Mouse wheel zooms smoothly toward the pointer, left or middle drag pans, and F resets the view. The preview itself has no timer progression, scoring, crane movement, sorting, or rope integration. Its Play prototype button launches [the combined playable lab](salvage_prototype.md), whose F2 shortcut returns here.
+`Presentation/HUD` is a CanvasLayer with native-resolution Controls and a shared scene Theme. The contributed coin and timer icons accompany static `000` and `--:--` placeholders. The footer credits Dale Mooney and shows camera controls. Mouse wheel zooms smoothly toward the pointer, left or middle drag pans, and F resets the view. The preview itself has no timer progression, scoring, crane movement, sorting, or rope integration. Its Play prototype button launches [the combined playable lab](salvage_prototype.md). Gameplay has no shortcut back to the preview.
 
 ## Presentation contract
 

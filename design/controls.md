@@ -4,6 +4,8 @@
 
 RaresKeY, 2026-09-25: [exact words](../prompts/source/controller-mobile.md). Rename and fix the workspace folder; add explicit controller support; detect mobile players in the Web build and provide an on-screen controller at the bottom right.
 
+RaresKeY, 2026-09-25: [remove the legacy F2 preview switch](../prompts/source/remove-preview-shortcut.md) from the launcher/game.
+
 ## AI-inferred design
 
 Keep the existing game rules and dark/mint HUD. Share movement and command routing across devices instead of implementing a separate mobile game. Standard controller layout: left stick/D-pad moves and reels; A/south is primary or grip, X/west swaps heads, Y/north restarts, Start is contextual start/pause/resume/replay, B/east pauses/resumes, bumpers toggle music/SFX. Use a 0.2 stick deadzone and preserve proportional movement. Hints follow the last input family.
@@ -17,3 +19,5 @@ Cancel touch ownership on pause, focus loss, restart, rotation and results. Drag
 On touch landscape screens shorter than 540 logical pixels, the controller occupies a separate bottom-right panel and the yard/footer reserve a right-side column. The redundant touch hints are hidden there to give the yard more height. Portrait and taller layouts keep the controller in the footer. This follows the same theme and leaves game rules unchanged.
 
 Draw direction arrows with small theme-colored canvas lines so exported Web builds need no additional font or icon pack.
+
+Remove the F2 mapping, scene-switch command and HUD navigation hint entirely. `play.sh` already opens the configured game and inherits this removal. Preserve the independently openable scene-preview asset/lab and its camera tests; it is not reachable from gameplay.

@@ -1,10 +1,10 @@
 # Project Contract
 
-Reviewed: 2026-09-25. Implementation: local launcher, wind motes and Blood Moon lighting change based on `fb9ac83`.
+Reviewed: 2026-09-25. Implementation: preview-shortcut removal based on `0734d3d`.
 
 ## Status and scope
 
-Pocket Salvage is the official game name; its public GitHub repository is `RaresKeY/pocket-salvage`. The selected loop is a magnetic crane collecting and sorting scrap before time expires. Godot 4.7 opens the level grid in `labs/salvage/lab.tscn`. The static yard preview remains a separate source-only scene accessible with F2, with a Play prototype button back to the game. Technical labs remain separate runnable scenes. That lab implements a crane with swappable magnet and claw heads and two tool stands, a level-dependent physical scrap heap (4/6/10/12 pieces), three wall-sharing bins with throw-back on a wrong sort, scoring with a time bonus, a 240-second timer, pause/results/restart, animated night scenery and generated audio. Bin-front masking and final gameplay integration remain open. Final art direction remains open. Public delivery covers Windows, Linux and Web; native target-machine verification is recorded separately.
+Pocket Salvage is the official game name; its public GitHub repository is `RaresKeY/pocket-salvage`. The selected loop is a magnetic crane collecting and sorting scrap before time expires. Godot 4.7 opens the level grid in `labs/salvage/lab.tscn`. The static yard preview remains a separately openable source scene; gameplay has no preview navigation. Technical labs remain separate runnable scenes. That lab implements a crane with swappable magnet and claw heads and two tool stands, a level-dependent physical scrap heap (4/6/10/12 pieces), three wall-sharing bins with throw-back on a wrong sort, scoring with a time bonus, a 240-second timer, pause/results/restart, animated night scenery and generated audio. Bin-front masking and final gameplay integration remain open. Final art direction remains open. Public delivery covers Windows, Linux and Web; native target-machine verification is recorded separately.
 
 ## Source ownership
 

@@ -1,6 +1,6 @@
 # Round HUD
 
-Reviewed: 2026-09-25. Implementation: level-flow change based on `575407c`.
+Reviewed: 2026-09-25. Implementation: preview-shortcut removal based on `0734d3d`.
 
 ## Ownership and contract
 
@@ -12,7 +12,7 @@ Reviewed: 2026-09-25. Implementation: level-flow change based on `575407c`.
 - `score`, `time_left` (seconds, shown as a nonnegative ceiling in m:ss), `correct`, `wrong`, `total`, `delivered` (correctly sorted).
 - `grip_label`: the fitted head and its state, such as "Claw READY"; falls back to Magnet ON/OFF from `magnet_on`.
 - `music_on`, `effects_on`: independent text-labeled audio toggle states; `music_volume`, `effects_volume`: normalized session volume levels.
-- `held_material`, `feedback`, `finish_reason`, `time_bonus` (added to results when positive), `weather_label` (a one-line top-bar badge, hidden when absent), `weather_tip` (start card: one line "label: tip"; below 420 px tall only the label is prefixed to the card's first line so Start stays on screen), `weather_bonus` (a results line after the label when positive), `navigation_hint` (appended to the controls footer).
+- `held_material`, `feedback`, `finish_reason`, `time_bonus` (added to results when positive), `weather_label` (a one-line top-bar badge, hidden when absent), `weather_tip` (start card: one line "label: tip"; below 420 px tall only the label is prefixed to the card's first line so Start stays on screen), `weather_bonus` (a results line after the label when positive).
 
 Missing fields use empty/zero defaults and `ready`; a call before readiness is buffered. Score, time and sorted counts occupy separate aligned columns with thin dividers. While running at `HURRY_SECONDS` (10) or less the time turns `HURRY_COLOR` and pulses. The compact footer lists A/D move, W/S lift, Space grip, E swap, P pause and R restart. Music’s tooltip names the M shortcut. Long feedback wraps and grows the bottom inset.
 

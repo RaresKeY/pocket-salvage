@@ -522,7 +522,7 @@ func _delivered(body: RigidBody2D, material: StringName, bin: Node2D) -> void:
 
 func refresh_hud() -> void:
 	if hud == null or round_state == null: return
-	hud.present({"level_menu":true,"victory":victory,"selected_level":selected_level,"state":round_state.state,"score":round_state.score,"time_left":round_state.remaining_time,"correct":round_state.correct_count,"wrong":round_state.wrong_count,"total":payloads.size(),"delivered":round_state.delivered_count,"magnet_on":gripping,"grip_label":Heads.label(head,gripping,is_instance_valid(held_body)),"held_material":str(held_body.material_id) if is_instance_valid(held_body) else "","feedback":feedback if feedback_left > 0 else "Copper, rubber and steel each have a bin.","finish_reason":finish_reason,"time_bonus":round_state.time_bonus,"weather_label":weather_label(),"weather_tip":weather.profile.tip,"weather_bonus":round_state.weather_bonus,"music_on":music_on,"effects_on":sfx.effects_enabled,"music_volume":sfx.music_volume,"effects_volume":sfx.effects_volume,"control_scheme":controls.scheme,"navigation_hint":"" if OS.has_feature("standalone") else "F2 preview"})
+	hud.present({"level_menu":true,"victory":victory,"selected_level":selected_level,"state":round_state.state,"score":round_state.score,"time_left":round_state.remaining_time,"correct":round_state.correct_count,"wrong":round_state.wrong_count,"total":payloads.size(),"delivered":round_state.delivered_count,"magnet_on":gripping,"grip_label":Heads.label(head,gripping,is_instance_valid(held_body)),"held_material":str(held_body.material_id) if is_instance_valid(held_body) else "","feedback":feedback if feedback_left > 0 else "Copper, rubber and steel each have a bin.","finish_reason":finish_reason,"time_bonus":round_state.time_bonus,"weather_label":weather_label(),"weather_tip":weather.profile.tip,"weather_bonus":round_state.weather_bonus,"music_on":music_on,"effects_on":sfx.effects_enabled,"music_volume":sfx.music_volume,"effects_volume":sfx.effects_volume,"control_scheme":controls.scheme})
 
 func _command(command: StringName) -> void:
 	match command:
@@ -542,8 +542,6 @@ func _command(command: StringName) -> void:
 		&"effects": sfx.set_effects_enabled(not sfx.effects_enabled); refresh_hud()
 		&"pause": toggle_pause()
 		&"restart": restart_round()
-		&"preview":
-			if not OS.has_feature("standalone"): get_tree().change_scene_to_file("res://scenes/main.tscn")
 
 func _scale_mobile_ui() -> void:
 	# Keep touch targets in CSS pixels even on high-DPI phone canvases.
