@@ -49,6 +49,7 @@ def main():
             for name in ('linux_release.x86_64', 'windows_release_x86_64.exe', 'web_nothreads_release.zip', 'version.txt'):
                 with source.open('templates/' + name) as stream, (templates / name).open('wb') as output:
                     shutil.copyfileobj(stream, output)
+        (templates / 'linux_release.x86_64').chmod(0o755)
         archive.unlink()
     with Path(os.environ['GITHUB_PATH']).open('a') as output:
         output.write(str(binary) + '\n')

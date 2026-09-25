@@ -44,4 +44,6 @@ git push origin v0.1.2
 
 The Pages source must be configured once to `gh-pages` at `/`. Existing release v0.1.1 assets remain intact. Public visibility does not add a project license.
 
+CI extraction preserves executable permission on the Linux template. The offline release suite also verifies that corrupt toolchain downloads fail closed and are removed before extraction.
+
 2026-09-25 public-delivery preflight: six offline release-contract tests and the complete managed engine suite passed (`CHECKS_OK`). Reachable Git history (1,543 named objects) had no matches for the inspected credential patterns or sensitive filenames; this is a bounded scan, not a universal secrets guarantee. Repository rename/public visibility and Dale’s unchanged write grant were confirmed through the GitHub API. Hosted delivery and live-browser evidence are recorded after the first tag run.

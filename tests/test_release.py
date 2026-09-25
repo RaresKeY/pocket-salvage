@@ -1,5 +1,7 @@
 """Release safety checks without engine execution, network access or credentials."""
 import json
+import hashlib
+import io
 from pathlib import Path
 import subprocess
 import sys
@@ -10,6 +12,7 @@ from unittest.mock import patch
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'tools/build'))
 import build_all
 import publish_release as release
+import setup_ci
 
 
 class ReleaseTests(unittest.TestCase):
@@ -70,6 +73,15 @@ class ReleaseTests(unittest.TestCase):
         for tag in ('1.2.3', 'v01.2.3', 'v1.2', 'v1.2.3-rc1', 'v1.2.3\n', 'v1.2.3;echo bad'):
             with self.subTest(tag=tag), self.assertRaises(ValueError):
                 release.version_tuple(tag)
+
+    def test_toolchain_download_rejects_and_removes_corrupted_bytes(self):
+        expected = hashlib.sha256(b'official bytes').hexdigest()
+        with patch.object(setup_ci.urllib.request, 'urlopen', return_value=io.BytesIO(b'corrupt')):
+            with self.assertRaisesRegex(ValueError, 'checksum mismatch'):
+                setup_ci.download(self.root, ('fixture.zip', expected))
+        self.assertFalse((self.root / 'fixture.zip').exists())
+        with patch.object(setup_ci.urllib.request, 'urlopen', return_value=io.BytesIO(b'official bytes')):
+            self.assertEqual(setup_ci.download(self.root, ('fixture.zip', expected)).read_bytes(), b'official bytes')
 
     def test_tag_must_match_project_and_main_ancestry(self):
         def git(*args):
