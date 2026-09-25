@@ -22,7 +22,7 @@ Reviewed: 2026-09-25. Implementation revision: `07f1974` (v0.1.5).
 | [Playable integration](salvage_prototype.md) | `labs/salvage/` | Combined crane, heads, sorting, round, UI, level and audio prototype | Changing playable integration or controls |
 | [Audio](audio.md) | `scripts/audio/`, `tools/audio/`, `assets/audio/`, `labs/audio/`, `play.sh` | Effect pool, motor and music loops, generated placeholder sounds | Changing or replacing sounds |
 | [Player input](input.md) | `scripts/input/`, `scripts/ui/touch_controller.gd`, playable integration, `tests/input_test.gd` | Device mappings, multi-touch ownership, focus and mobile detection | Changing controls or mobile Web input |
-| [Standalone builds](builds.md) | `tools/build/`, `export_presets.cfg`, `.github/workflows/delivery.yml`, `tests/test_release.py` | Clean-source exports, tag releases, reproducibility and Pages | Building the versioned prototype |
+| [Standalone builds](builds.md) | `tools/build/`, `export_presets.cfg`, `.github/workflows/delivery.yml`, `tests/test_release.py`, `firebase.json`, `.firebaserc` | Clean-source exports, tag releases, reproducibility, Pages and manual Firebase hosting | Building the versioned prototype |
 
 ## Maintenance
 

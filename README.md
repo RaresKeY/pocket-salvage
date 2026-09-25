@@ -2,7 +2,9 @@
 
 A four-minute scrapyard shift. Drive a swinging crane, swap between a magnet and a claw, and sort ten pieces of scrap before time runs out.
 
-**[Play in your browser](https://rareskey.github.io/pocket-salvage/)** · **[Download for Windows or Linux](https://github.com/RaresKeY/pocket-salvage/releases/latest)**
+**[Play in your browser](https://pocket-salvage.web.app/)** · **[Download for Windows or Linux](https://github.com/RaresKeY/pocket-salvage/releases/latest)**
+
+Firebase hosts the v0.1.5 snapshot. [GitHub Pages](https://rareskey.github.io/pocket-salvage/) follows new tagged releases.
 
 ![Pocket Salvage: a crane above a moonlit scrapyard, with copper, rubber and steel sorting bins.](marketing/pocket-salvage.png)
 
@@ -34,4 +36,4 @@ Made with **Godot 4.7**. Open `project.godot` and choose **Play prototype** from
 - [Specs](specs/_readme.md) and [design](design/_readme.md) — current behavior, decisions, and human/AI attribution.
 - [Builds and releases](specs/builds.md) — local exports, checksums, tag automation, and platform validation.
 
-Main pushes run tests. Matching version tags test and build Windows, Linux and Web releases, then update the playable site. Windows exports are built and checked but still need a Windows-machine playtest.
+Main pushes run tests. Matching version tags test and build Windows, Linux and Web releases, then update GitHub Pages. Windows exports are built and checked but still need a Windows-machine playtest.

@@ -15,3 +15,5 @@ Keep exact user text separate from commentary, inference, and later decisions. T
 Records of Dale's directives correct typing errors in spelling and punctuation; the wording and meaning stay exactly as given.
 
 [Performance/audio](performance-audio.md) records the Web/native profiling and crackle-reduction request.
+
+[Firebase Hosting](firebase-hosting.md) records the one-time latest-release deployment and public link change.

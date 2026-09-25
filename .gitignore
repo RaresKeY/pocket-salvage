@@ -22,3 +22,7 @@ __pycache__/
 # Per-contributor instructions stay local.
 /AGENTS.md
 /CLAUDE.md
+
+# Firebase deployment cache and diagnostic logs.
+/.firebase/
+firebase-debug.log*
