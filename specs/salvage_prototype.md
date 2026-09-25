@@ -1,10 +1,10 @@
 # Playable subsystem integration
 
-Reviewed: 2026-09-25. Implementation revision: `cdd8a61`.
+Reviewed: 2026-09-25. Implementation revision: `9d21b8f` (v0.1.1 audio/UI).
 
 ## Composition
 
-`labs/salvage/lab.tscn` composes crane suspension, round/bin, HUD, level layout, ambience and audio modules without replacing the static yard preview. `scripts/scene/yard_preview.gd` adds Play prototype; F2 returns (hidden in `standalone` exports, which start this scene directly). Each subsystem keeps its own lab and verification. The world renders into a native-resolution SubViewport between the HUD bands (100px above, 121px below), fitting 1200×480 world units with preserved aspect ratio. Placements come from [the layout module](level_layout.md), variant 0.
+`labs/salvage/lab.tscn` composes crane suspension, round/bin, HUD, level layout, ambience and audio modules without replacing the static yard preview. `scripts/scene/yard_preview.gd` adds Play prototype; F2 returns (hidden in `standalone` exports, which start this scene directly). Each subsystem keeps its own lab and verification. The world renders into a native-resolution SubViewport between the HUD bands (measured panel bounds with 6px clearance), fitting 1200×480 world units with preserved aspect ratio. Placements come from [the layout module](level_layout.md), variant 0.
 
 Ten caller-configured RigidBody2D payloads (`payload.gd`, layer 2) start as a heap; three bins share walls (layer 1); the magnet body is layer 4. Payloads use rectangle shapes and 8× art scaled to their rectangle. Bin art stays axis-aligned; masks are not integrated. `payload.grip_offset()` is the middle of whichever edge currently faces up, so tumbled scrap stays reachable; `grip_point()` is its world position. Payloads emit `landed(at)` on contact while falling faster than 160 units/s.
 

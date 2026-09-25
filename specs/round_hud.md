@@ -1,6 +1,6 @@
 # Round HUD
 
-Reviewed: 2026-09-25. Implementation: v0.1.1 UI pass over `cdd8a61`.
+Reviewed: 2026-09-25. Implementation revision: `9d21b8f` (v0.1.1 compact HUD).
 
 ## Ownership and contract
 
