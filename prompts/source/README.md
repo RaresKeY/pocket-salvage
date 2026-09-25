@@ -9,3 +9,5 @@ Keep exact user text separate from commentary, inference, and later decisions. T
 [Audio/UI release](audio-ui-release.md) records the playback fix, compact UI and local GitHub-release request, including cancellation of new music generation.
 
 [Controller/mobile](controller-mobile.md) records the checkout rename and explicit gamepad/mobile Web controls request.
+
+[Weather](weather.md) records Dale's weather request and design approvals.

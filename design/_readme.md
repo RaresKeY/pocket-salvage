@@ -19,5 +19,6 @@ Design captures evolving intent. Every design document distinguishes explicit **
 | [Player controls](controls.md) | Keyboard, gamepad and mobile Web touch controls | Changing input, device hints or phone layout |
 | [Public delivery](releases.md) | Public repository, local agent files, tag releases and playable Pages site | Changing hosting or release automation |
 | [Audio](audio.md) | Sound effects, crane motor loops and music; current files are AI placeholders | Changing or replacing sound or music |
+| [Weather](weather.md) | Per-round weather (Clear, Fog, Wind, Rain, Storm) as data profiles plus reusable effects; approved, not yet built | Adding weathers or weather effects |
 
 Current behavior lives in [specs/](../specs/_readme.md); deferred work lives in [TODO.md](../TODO.md).
