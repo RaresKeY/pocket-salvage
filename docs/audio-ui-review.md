@@ -25,3 +25,5 @@ Ready, running, paused and results in the playable scene, plus the HUD and audio
 ## Unverified
 
 Subjective speaker listening, physical Windows execution, controller/touch support and localization expansion. Export checks and browser observations belong to the release record; source screenshots do not prove export behavior. Settings are session-only. New generated music was cancelled; the existing loop remains.
+
+Export follow-up: the locally built v0.1.1 Linux executable started on RTX 2080 Ti; Firefox exercised the packaged Web controls with no console errors and verified actual audio samples before a muted destination. Windows remains unexecuted. See [build validation](../specs/builds.md). The first Linux screenshot attempt used a host ImageMagick build without X11 support and failed; that capture is not evidence. The successful later check is native startup/exit and renderer output; the screenshots above are source-scene captures.
