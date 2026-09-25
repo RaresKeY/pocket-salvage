@@ -1,6 +1,6 @@
 # Pocket Salvage Specs Map
 
-Reviewed: 2026-09-25. Implementation revision: `07f1974` (v0.1.5).
+Reviewed: 2026-09-25. Implementation revision: `df5ad76` (weather, on v0.1.5 `07f1974`).
 
 `specs/` is committed project memory for current intent and implementation. Read the relevant spec before changing its owning behavior, contract, boundary, source area, or verification flow, and update it with the implementation.
 
@@ -20,6 +20,7 @@ Reviewed: 2026-09-25. Implementation revision: `07f1974` (v0.1.5).
 | [Round HUD](round_hud.md) | `scripts/ui/`, `labs/hud/` | State-driven counters, feedback and modal actions | Changing round presentation |
 | [Level layouts](level_layout.md) | `scripts/level/`, `labs/level/` | Prototype placements, backdrop, animated ambience and gulls | Changing layout fixtures or scenery |
 | [Playable integration](salvage_prototype.md) | `labs/salvage/` | Combined crane, heads, sorting, round, UI, level and audio prototype | Changing playable integration or controls |
+| [Weather](weather.md) | `scripts/weather/`, `data/weather/` | Per-round weather profiles, clock, and grip, wind, rain, fog and lightning effects | Changing or adding weather |
 | [Audio](audio.md) | `scripts/audio/`, `tools/audio/`, `assets/audio/`, `labs/audio/`, `play.sh` | Effect pool, motor and music loops, generated placeholder sounds | Changing or replacing sounds |
 | [Player input](input.md) | `scripts/input/`, `scripts/ui/touch_controller.gd`, playable integration, `tests/input_test.gd` | Device mappings, multi-touch ownership, focus and mobile detection | Changing controls or mobile Web input |
 | [Standalone builds](builds.md) | `tools/build/`, `export_presets.cfg`, `.github/workflows/delivery.yml`, `tests/test_release.py`, `firebase.json`, `.firebaserc` | Clean-source exports, tag releases, reproducibility, Pages and manual Firebase hosting | Building the versioned prototype |

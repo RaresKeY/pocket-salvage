@@ -1,6 +1,6 @@
 # Playable subsystem integration
 
-Reviewed: 2026-09-25. Implementation revision: `07f1974` (v0.1.5).
+Reviewed: 2026-09-25. Implementation revision: `df5ad76` (weather, on v0.1.5 `07f1974`).
 
 ## Composition
 
@@ -27,6 +27,10 @@ The [input module](input.md) additionally supports a standard gamepad and automa
 ## Presentation
 
 Heads animate from their own frames. `scripts/fx/burst_2d.gd` plays sparks at the grip point on pickup, at a correct sort and at a stand swap, and dust on `landed`. Floating +100 / −25 numbers rise from sorted or refused pieces; scrap of mass 1.5 or more shakes the stage by up to 5 units on landing; the HUD timer pulses red for the last 10 seconds. The night scenery is [`yard_ambience.gd`](level_layout.md) and keeps animating on the start, pause and results screens.
+
+## Weather
+
+Each round rolls one weather (or uses `forced_weather`), adds a `Weather` node to the world, passes its multiplier to the round and provides the effects' context: `scrap_bodies()`, `blown_bodies()`, `bin_labels`, `layout` and `power_cut(seconds)`, which drops a fitted magnet's load and blocks pickup for the cut. Contract and verification: [weather](weather.md).
 
 ## Audio
 

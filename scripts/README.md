@@ -5,3 +5,5 @@ Godot runtime scripts belong here, organized by the concepts or subsystems they 
 `art/pixel_scaling.gd` owns bounded nearest-neighbor image enlargement, shared by the creation tool and lab. [rope/](rope/README.md) is the reusable crane-rope subsystem; `scene/yard_preview.gd` owns the main scene’s smooth inspection camera and native HUD. `round/` holds the timed sorting round and bins, `fx/burst_2d.gd` plays numbered-frame effects once, `level/yard_ambience.gd` animates the night scenery, `audio/sfx.gd` plays the generated sound effects, motor loops and music, `crane/crane_heads.gd` defines the swappable heads, and `art/yard_art.gd` holds the one rule for drawing the 8× art at the yard's scale.
 
 [physics/](physics/README.md) supplies independent visual occlusion and caller-authored solid/sensor parts; it defines no concrete object or box dimensions.
+
+[weather/](../specs/weather.md) holds the per-round weather: profiles as data in `data/weather/`, one clock node, and one small file per effect.

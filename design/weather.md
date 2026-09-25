@@ -1,6 +1,6 @@
 # Weather
 
-Status: design approved by Dale on 2026-09-25, not yet implemented. The implementation contract will live in `specs/weather.md` once built.
+Status: approved by Dale and implemented on 2026-09-25 (`df5ad76`). Implementation contract: [specs/weather.md](../specs/weather.md).
 
 ## User design
 
@@ -81,3 +81,10 @@ The existing ten-piece salvage test forces Clear, so it stays deterministic.
 - Is Storm fun or just punishing?
 - Should fog also hide the pile?
 - Should weather ever change mid-round later? (Not in this version.)
+
+### Implementation notes (Claude, 2026-09-25)
+
+- Wind and gust strengths are the starting numbers above, not yet tuned by play. Tuning is a playtest item in [TODO](../TODO.md).
+- The drawn rope does not lean with the wind: the rope solver takes no external force, and changing RaresKeY's rope module was out of scope. Deferred in TODO.
+- Wind skips scrap being thrown back out of a wrong bin, so the aimed landing stays inside crane reach.
+- The screenshots caught a weather badge that wrapped one letter per line and rain spilling past the yard edges; both were fixed, and the badge has a layout test.

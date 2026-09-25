@@ -1,6 +1,6 @@
 # Audio
 
-Reviewed: 2026-09-25. Implementation revision: `07f1974` (v0.1.5).
+Reviewed: 2026-09-25. Implementation revision: `df5ad76` (weather, on v0.1.5 `07f1974`).
 
 ## Ownership
 
@@ -12,7 +12,7 @@ Reviewed: 2026-09-25. Implementation revision: `07f1974` (v0.1.5).
 
 ## Sounds
 
-Effects: `ui_click` (pause/resume), `start`, `magnet_on`, `magnet_off`, `claw_shut`, `claw_open`, `clank`, `pickup`, `land`, `correct`, `wrong`, `eject`, `tick`, `finish`. Loops: `trolley_loop` and `winch_loop` (one second, whole-hertz tones plus a short endpoint correction for the noise layer) and `music_yard`, a 32-second ambient loop in A minor (Am F C G pads, soft bass, sparse plucked arpeggio, note tails wrapped so it loops without a seam). `make_music.py` imports the tone and WAV helpers from `make_sfx.py`.
+Effects: `ui_click` (pause/resume), `start`, `magnet_on`, `magnet_off`, `claw_shut`, `claw_open`, `clank`, `pickup`, `land`, `correct`, `wrong`, `eject`, `tick`, `finish`, `thunder` (weather rumble and strike). Loops: `wind_loop` and `rain_loop` (weather, same seam correction), `trolley_loop` and `winch_loop` (one second, whole-hertz tones plus a short endpoint correction for the noise layer) and `music_yard`, a 32-second ambient loop in A minor (Am F C G pads, soft bass, sparse plucked arpeggio, note tails wrapped so it loops without a seam). `make_music.py` imports the tone and WAV helpers from `make_sfx.py`.
 
 ## Use in the salvage round
 
