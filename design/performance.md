@@ -11,3 +11,5 @@ Use the shared Godot Performance Lab helpers in an isolated profiling checkout. 
 Use Web Audio Sample playback for the current non-positional WAV sounds; retain native Stream mixing. Let the platform schedule audio rather than adding GDScript audio threads or attempting browser/OS priority overrides. Avoid redundant stable loop-parameter updates. Keep single-threaded Web exports compatible with existing Pages hosting.
 
 Optimize measured work: reuse cable ray-query resources and vector lengths; eliminate the second HUD refresh in every physics tick; skip presentation rebuilding when displayed data is unchanged while retaining the hurry pulse. Preserve the rope’s eight constraint passes and collision semantics, gameplay rules and visual content. Validate v0.1.5 locally before publishing through the existing release flow.
+
+AI-inferred pacing choice: cap Web presentation at 60 FPS after the 165 Hz experiment showed missed high-refresh budgets and steadier intervals at 60. Keep native refresh uncapped. Callback wall times with this cap include engine pacing time and must not be reported as CPU execution cost.

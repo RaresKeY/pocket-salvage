@@ -33,3 +33,5 @@ Physics runs at 60 Hz with native 2D physics interpolation enabled. Physical bod
 Documentation changes require checking map links, source references, and the Git diff. Future gameplay needs behavior-specific checks as it is implemented.
 
 Player input is shared through `scripts/input/salvage_input.gd`; [input](input.md) owns keyboard/gamepad mappings and mobile touch controls. Minimum window dimensions are 320×320; phone layout is validated separately from desktop. Gamepad events are ignored while the application is unfocused.
+
+Web exports cap presentation at 60 FPS through `application/run/max_fps.web`; native builds retain the platform/VSync rate. Physics remains 60 Hz with interpolation. The cap avoids chasing a 165 Hz desktop refresh when the Web frame budget cannot reliably sustain it.
