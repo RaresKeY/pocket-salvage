@@ -1,12 +1,11 @@
 extends Node2D
 ## Pure presentation; the integrating caller supplies every collision object.
 const Layout = preload("res://scripts/level/yard_layout.gd")
+const YardArt = preload("res://scripts/art/yard_art.gd")
 const FLOOR = preload("res://assets/bitwright_8x/ground_dirt_tile.png")
 const RAIL = preload("res://assets/bitwright_8x/crane_rail_tile.png")
 const FENCE = preload("res://assets/bitwright_8x/backdrop_scrapyard_tile.png")
 const TOWER = preload("res://assets/bitwright_8x/crane_tower.png")
-const SKYLINE_PATH := "res://assets/bitwright_8x/backdrop_skyline_tile.png"
-const HEAP_PATH := "res://assets/bitwright_8x/backdrop_junk_heap.png"
 const HEAP_SPOTS := [0.9]
 const HEAP_TINT := Color(0.55, 0.52, 0.66)
 ## The fence tile's top rows are opaque sky; the skyline stands on them.
@@ -19,8 +18,8 @@ var layout: Dictionary = Layout.create_layout()
 ## Off when a caller layers its own animated sky behind this node.
 var draw_sky := true
 ## Held here, not loaded inside _draw: a texture freed after _draw returns renders white.
-var skyline: Texture2D = load(SKYLINE_PATH) if ResourceLoader.exists(SKYLINE_PATH) else null
-var heap: Texture2D = load(HEAP_PATH) if ResourceLoader.exists(HEAP_PATH) else null
+var skyline: Texture2D = YardArt.texture("backdrop_skyline_tile") if YardArt.exists("backdrop_skyline_tile") else null
+var heap: Texture2D = YardArt.texture("backdrop_junk_heap") if YardArt.exists("backdrop_junk_heap") else null
 
 func _ready() -> void:
 	texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
@@ -34,17 +33,17 @@ func _draw() -> void:
 	var floor_y: float = layout.ground_top
 	var art_scale: float = layout.art_scale
 	if draw_sky: draw_rect(bounds, SKY)
-	var fence_height := FENCE.get_height() / 8.0 * art_scale
+	var fence_height := YardArt.world_size(FENCE, art_scale).y
 	_tile_row(FENCE, Rect2(bounds.position.x, floor_y - fence_height, bounds.size.x, fence_height))
 	if skyline:
-		var skyline_height := skyline.get_height() / 8.0 * art_scale
+		var skyline_height := YardArt.world_size(skyline, art_scale).y
 		var horizon := floor_y - fence_height + FENCE_SKY_ROWS * art_scale
 		_tile_row(skyline, Rect2(bounds.position.x, horizon - skyline_height, bounds.size.x, skyline_height))
 	if heap:
-		var heap_size := heap.get_size() / 8.0 * art_scale
+		var heap_size := YardArt.world_size(heap, art_scale)
 		for spot in HEAP_SPOTS:
 			draw_texture_rect(heap, Rect2(Vector2(bounds.size.x * spot - heap_size.x * 0.5, floor_y - heap_size.y), heap_size), false, HEAP_TINT)
-	var tower_width := TOWER.get_width() / 8.0 * art_scale
+	var tower_width := YardArt.world_size(TOWER, art_scale).x
 	for x in [bounds.position.x, bounds.end.x - tower_width]:
 		_tower(Rect2(x, 40, tower_width, floor_y - 40), art_scale)
 	for x in range(0, int(bounds.size.x), 40):

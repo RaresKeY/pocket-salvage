@@ -16,6 +16,17 @@ const Round = preload("res://scripts/round/round_controller.gd")
 const Bin = preload("res://scripts/round/sorting_bin.gd")
 const HUD = preload("res://scripts/ui/round_hud.gd")
 const Burst = preload("res://scripts/fx/burst_2d.gd")
+const Heads = preload("res://scripts/crane/crane_heads.gd")
+const YardArt = preload("res://scripts/art/yard_art.gd")
+const PICKUP_RANGE := 62.0
+const MUSIC := &"music_yard"
+const MUSIC_DB := -17.0
+var music_on := true
+const ROUND_SECONDS := 240.0
+const STAND_REACH := Vector2(34, 26)
+const STAND_GAP := 80.0
+## Thrown-back scrap lands this far in front of the first bin, clear of its wall so the head can reach it.
+const REJECT_CLEARANCE := 120.0
 var viewport: SubViewport
 var stage: SubViewportContainer
 var world: Node2D
@@ -24,7 +35,10 @@ var round_state: Node
 var suspension: Node2D
 var tip: CableBody
 var trolley: Sprite2D
-var magnet_sprite: AnimatedSprite2D
+var head_sprite: AnimatedSprite2D
+var head: Heads.Kind = Heads.Kind.MAGNET
+## Each stand: {body, top (world point), holds (Heads.Kind), sprite (spare head or null)}.
+var stands: Array[Dictionary] = []
 var art_scale := 1.0
 var reject_landing := Vector2.ZERO
 var stage_transform := Transform2D.IDENTITY
@@ -34,11 +48,10 @@ const SHAKE_DECAY := 30.0
 var payloads: Array[RigidBody2D] = []
 var bins: Array[Node2D] = []
 var held_body: RigidBody2D
-var magnet_on := false:
+var gripping := false:
 	set(value):
-		if value != magnet_on and is_instance_valid(magnet_sprite): magnet_sprite.play(&"on" if value else &"off")
-		if value != magnet_on and sfx != null and round_state.state == &"running": sfx.play(&"magnet_on" if value else &"magnet_off",-6.0)
-		magnet_on = value
+		if value != gripping and not (value and Heads.closes_on_catch(head)): _engage(value)
+		gripping = value
 var feedback := "Sort copper, rubber and steel into matching bins."
 var feedback_left := 0.0
 var level_variant := 0
@@ -60,6 +73,7 @@ func _ready() -> void:
 	stage.add_child(viewport)
 	sfx = Sfx.new()
 	add_child(sfx)
+	set_music(music_on)
 	round_state = Round.new()
 	add_child(round_state)
 	round_state.changed.connect(_state_changed)
@@ -93,12 +107,14 @@ func _build_world() -> void:
 	payloads.clear()
 	bins.clear()
 	held_body = null
-	magnet_on = false
+	gripping = false
+	head = Heads.Kind.MAGNET
+	stands.clear()
 	world = Node2D.new()
 	viewport.add_child(world)
 	var layout: Dictionary = Layout.create_layout(level_variant)
 	art_scale = layout.art_scale
-	reject_landing = Vector2(layout.bins[0].position.x - layout.bins[0].size.x * 0.5 - 60, layout.ground_top - 25)
+	reject_landing = Vector2(layout.bins[0].position.x - layout.bins[0].size.x * 0.5 - REJECT_CLEARANCE, layout.ground_top - 25)
 	ambience = Ambience.new()
 	world.add_child(ambience)
 	ambience.configure(layout)
@@ -142,12 +158,10 @@ func _build_world() -> void:
 	tip_shape.size = Vector2(52,20)
 	Parts.add_solid(tip,tip_shape)
 	world.add_child(tip)
-	magnet_sprite = _magnet_sprite()
-	tip.add_child(magnet_sprite)
-	trolley = Sprite2D.new()
-	trolley.texture = preload("res://assets/bitwright_8x/crane_trolley.png")
-	trolley.scale = Vector2.ONE * art_scale / 8.0
-	trolley.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
+	for index in 2:
+		_add_stand(layout.tool_stand + Vector2(index * STAND_GAP,0),Heads.Kind.CLAW if index == 0 else Heads.Kind.NONE)
+	_fit_head(head)
+	trolley = YardArt.sprite("crane_trolley",art_scale)
 	trolley.z_index = 2
 	world.add_child(trolley)
 	suspension = Suspension.new()
@@ -157,23 +171,87 @@ func _build_world() -> void:
 	ambience.crane_points = func() -> Array: return [trolley.position, tip.global_position]
 	world.reset_physics_interpolation()
 	finish_reason = ""
-	round_state.configure(120.0,payloads.size())
+	round_state.configure(ROUND_SECONDS,payloads.size())
 	rebuilding = false
 	_state_changed()
 
-func _magnet_sprite() -> AnimatedSprite2D:
-	var frames := SpriteFrames.new()
-	frames.remove_animation(&"default")
-	Burst.add_frames(frames, &"off", "crane_magnet", [1], 1.0, false)
-	Burst.add_frames(frames, &"on", "crane_magnet", range(2, 7), 14.0, false)
-	Burst.add_frames(frames, &"hum", "crane_magnet", [5, 6], 6.0, true)
-	var result := AnimatedSprite2D.new()
-	result.sprite_frames = frames
-	result.animation = &"off"
-	result.scale = Vector2.ONE * art_scale / 8.0
-	result.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
-	result.animation_finished.connect(func(): if result.animation == &"on": result.play(&"hum"))
-	return result
+func _fit_head(kind: Heads.Kind) -> void:
+	if is_instance_valid(head_sprite): head_sprite.queue_free()
+	head = kind
+	head_sprite = Heads.sprite(kind,art_scale)
+	tip.add_child(head_sprite)
+
+func _add_stand(at: Vector2, holds: Heads.Kind) -> void:
+	var art := YardArt.sprite("tool_stand",art_scale)
+	var size := YardArt.world_size(art.texture,art_scale)
+	var body := StaticBody2D.new()
+	body.position = at
+	var shape := RectangleShape2D.new()
+	shape.size = size
+	Parts.add_solid(body,shape)
+	body.add_child(art)
+	world.add_child(body)
+	var stand := {"body": body, "top": at - Vector2(0,size.y * 0.5), "holds": Heads.Kind.NONE, "sprite": null}
+	stands.append(stand)
+	_set_stand(stand,holds)
+
+func _set_stand(stand: Dictionary, holds: Heads.Kind) -> void:
+	if stand.sprite != null: stand.sprite.queue_free()
+	stand.holds = holds
+	stand.sprite = null
+	if holds == Heads.Kind.NONE: return
+	var spare := Heads.sprite(holds,art_scale)
+	var height: float = YardArt.world_size(spare.sprite_frames.get_frame_texture(&"open",0),art_scale).y
+	spare.position = stand.top - Vector2(0,height * 0.5) - stand.body.position
+	stand.body.add_child(spare)
+	stand.sprite = spare
+
+## The stand under the lowered head, if the head is close enough to sit on it.
+func stand_under_head() -> Dictionary:
+	var mount := head_mount()
+	for stand in stands:
+		var offset: Vector2 = mount - stand.top
+		if absf(offset.x) <= STAND_REACH.x and absf(offset.y) <= STAND_REACH.y: return stand
+	return {}
+
+## E at a stand: park the fitted head on an empty stand, or fit the head waiting on it.
+func use_stand() -> bool:
+	if round_state.state != &"running" or is_instance_valid(held_body): return false
+	var stand := stand_under_head()
+	if stand.is_empty():
+		_say("Lower the %s onto a tool stand, then press E." % ("hook" if head == Heads.Kind.NONE else Heads.SPECS[head].name.to_lower()),4.0)
+		return false
+	if head != Heads.Kind.NONE and stand.holds == Heads.Kind.NONE:
+		gripping = false
+		_set_stand(stand,head)
+		_fit_head(Heads.Kind.NONE)
+		_say("Parked. Fetch the other head from its stand.",4.0)
+	elif head == Heads.Kind.NONE and stand.holds != Heads.Kind.NONE:
+		var fitted: Heads.Kind = stand.holds
+		_set_stand(stand,Heads.Kind.NONE)
+		_fit_head(fitted)
+		_say("%s fitted. It grips %s." % [Heads.SPECS[fitted].name," and ".join(Heads.SPECS[fitted].grips)],4.0)
+	else:
+		_say("That stand is taken. Park on the empty one." if head != Heads.Kind.NONE else "That stand is empty.",3.0)
+		return false
+	sfx.play(&"clank")
+	burst(stand.top,"fx_sparks")
+	refresh_hud()
+	return true
+
+## Plays the head closing or opening, with its sound.
+func _engage(closed: bool) -> void:
+	if is_instance_valid(head_sprite): head_sprite.play(&"closing" if closed else &"open")
+	if sfx != null and round_state.state == &"running" and Heads.SPECS.has(head):
+		sfx.play(Heads.SPECS[head].grip_sound if closed else Heads.SPECS[head].release_sound,-6.0)
+
+func set_music(on: bool) -> void:
+	music_on = on
+	sfx.set_loop(MUSIC,1.0 if on else 0.0,1.0,MUSIC_DB)
+
+func _say(text: String, seconds: float) -> void:
+	feedback = text
+	feedback_left = seconds
 
 func _landed(at: Vector2, body: RigidBody2D) -> void:
 	burst(at,"fx_dust")
@@ -220,8 +298,7 @@ func start_round() -> void:
 	if round_state.state != &"ready": return
 	round_state.start()
 	sfx.play(&"start")
-	feedback = "Lower the magnet over scrap, press Space, then lift."
-	feedback_left = 6.0
+	_say("Magnet lifts steel. Swap to the claw at the tool stands (E) for copper and rubber.",7.0)
 	refresh_hud()
 
 func restart_round() -> void:
@@ -253,7 +330,7 @@ func _finished(reason: StringName) -> void:
 	finish_reason = "All scrap sorted" if reason == &"all_sorted" else "Time is up"
 	sfx.play(&"finish" if reason == &"all_sorted" else &"wrong")
 	release_load()
-	magnet_on = false
+	gripping = false
 	refresh_hud()
 
 func _physics_process(delta: float) -> void:
@@ -261,7 +338,7 @@ func _physics_process(delta: float) -> void:
 	var horizontal := float(Input.is_physical_key_pressed(KEY_D) or Input.is_physical_key_pressed(KEY_RIGHT)) - float(Input.is_physical_key_pressed(KEY_A) or Input.is_physical_key_pressed(KEY_LEFT))
 	var reel := float(Input.is_physical_key_pressed(KEY_S) or Input.is_physical_key_pressed(KEY_DOWN)) - float(Input.is_physical_key_pressed(KEY_W) or Input.is_physical_key_pressed(KEY_UP))
 	move_crane(horizontal,reel,delta)
-	if magnet_on and not is_instance_valid(held_body): try_pickup()
+	if gripping and not is_instance_valid(held_body): try_pickup()
 	round_state.tick(delta)
 	feedback_left = maxf(0,feedback_left-delta)
 	refresh_hud()
@@ -277,33 +354,48 @@ func move_crane(horizontal: float, reel: float, delta: float) -> void:
 	sfx.set_loop(&"trolley_loop",travel,1.0,-8.0)
 	sfx.set_loop(&"winch_loop",absf(reeled),1.12 if reeled < 0.0 else 0.92,-10.0)
 
-func toggle_magnet() -> void:
+func toggle_grip() -> void:
 	if round_state.state != &"running": return
-	magnet_on = not magnet_on
-	if not magnet_on: release_load()
+	if head == Heads.Kind.NONE:
+		_say("No head fitted. Pick one up from a tool stand with E.",4.0)
+		refresh_hud()
+		return
+	gripping = not gripping
+	if not gripping: release_load()
 	else: try_pickup()
 	refresh_hud()
 
 func try_pickup() -> void:
-	if not magnet_on or is_instance_valid(held_body): return
+	if not gripping or is_instance_valid(held_body): return
 	var candidate: RigidBody2D
-	var nearest := 62.0
+	var refused: RigidBody2D
+	var nearest := PICKUP_RANGE
 	for body in payloads:
 		if not is_instance_valid(body) or body.delivered or body.held: continue
-		var grip: Vector2 = body.to_global(Vector2(0,-body.dimensions.y*0.5))
-		var distance := tip.to_global(suspension.load_mount_local).distance_to(grip)
+		if not Heads.grips(head,body.material_id):
+			if head_mount().distance_to(body.grip_point()) < PICKUP_RANGE: refused = body
+			continue
+		var grip: Vector2 = body.grip_point()
+		var distance := head_mount().distance_to(grip)
 		if distance >= nearest: continue
-		var ray := PhysicsRayQueryParameters2D.create(tip.to_global(suspension.load_mount_local),grip,1)
+		var ray := PhysicsRayQueryParameters2D.create(head_mount(),grip,1)
 		if not world.get_world_2d().direct_space_state.intersect_ray(ray).is_empty(): continue
 		candidate = body
 		nearest = distance
-	if candidate != null and suspension.attach(candidate,Vector2(0,-candidate.dimensions.y*0.5)):
+	if candidate != null and suspension.attach(candidate,candidate.grip_offset()):
 		held_body = candidate
 		candidate.held = true
+		if Heads.closes_on_catch(head): _engage(true)
 		sfx.play(&"pickup",-3.0,0.1)
-		burst(candidate.to_global(Vector2(0,-candidate.dimensions.y*0.5)),"fx_sparks")
-		feedback = "Carrying %s. Lift it over the bin rim, then release." % candidate.material_id
-		feedback_left = 5.0
+		burst(candidate.grip_point(),"fx_sparks")
+		_say("Carrying %s. Lift it over the bin rim, then release." % candidate.material_id,5.0)
+	elif candidate == null and refused != null and head != Heads.Kind.NONE:
+		var needed := Heads.for_material(refused.material_id)
+		_say("The %s won't hold %s. Swap to the %s at the tool stands (E)." % [Heads.SPECS[head].name.to_lower(),refused.material_id,Heads.SPECS[needed].name.to_lower()],3.0)
+
+## The underside of the fitted head, where it meets scrap or a stand.
+func head_mount() -> Vector2:
+	return tip.to_global(suspension.load_mount_local)
 
 func release_load() -> void:
 	if is_instance_valid(held_body): held_body.held = false
@@ -314,28 +406,29 @@ func _delivered(body: RigidBody2D, material: StringName, bin: Node2D) -> void:
 	match round_state.accept_delivery(body.item_id,body.material_id,material):
 		Round.Delivery.CORRECT:
 			sfx.play(&"correct")
-			feedback = "Correct sort! +%d" % Round.CORRECT_POINTS
+			_say("Correct sort! +%d" % Round.CORRECT_POINTS,4.0)
 			burst(body.global_position,"fx_sparks")
 			popup(body.global_position,"+%d" % Round.CORRECT_POINTS,Color("f6d44a"))
 			body.call_deferred("queue_free")
 		Round.Delivery.WRONG:
 			sfx.play(&"wrong")
 			sfx.play(&"eject",-6.0)
-			feedback = "That %s bin won't take %s. −%d" % [material,body.material_id,Round.WRONG_PENALTY]
+			_say("That %s bin won't take %s. −%d" % [material,body.material_id,Round.WRONG_PENALTY],4.0)
 			popup(body.global_position,"−%d" % Round.WRONG_PENALTY,Color("ff6b5b"))
 			bin.eject(body,reject_landing)
 		_: return
-	feedback_left = 4.0
 	refresh_hud()
 
 func refresh_hud() -> void:
 	if hud == null or round_state == null: return
-	hud.present({"state":round_state.state,"score":round_state.score,"time_left":round_state.remaining_time,"correct":round_state.correct_count,"wrong":round_state.wrong_count,"total":payloads.size(),"delivered":round_state.delivered_count,"magnet_on":magnet_on,"held_material":str(held_body.material_id) if is_instance_valid(held_body) else "","feedback":feedback if feedback_left > 0 else "Copper, rubber and steel each have a bin.","finish_reason":finish_reason,"time_bonus":round_state.time_bonus,"navigation_hint":"" if OS.has_feature("standalone") else "F2 preview"})
+	hud.present({"state":round_state.state,"score":round_state.score,"time_left":round_state.remaining_time,"correct":round_state.correct_count,"wrong":round_state.wrong_count,"total":payloads.size(),"delivered":round_state.delivered_count,"magnet_on":gripping,"grip_label":Heads.label(head,gripping,is_instance_valid(held_body)),"held_material":str(held_body.material_id) if is_instance_valid(held_body) else "","feedback":feedback if feedback_left > 0 else "Copper, rubber and steel each have a bin.","finish_reason":finish_reason,"time_bonus":round_state.time_bonus,"navigation_hint":"" if OS.has_feature("standalone") else "F2 preview"})
 
 func _unhandled_key_input(event: InputEvent) -> void:
 	if not event is InputEventKey or not event.pressed or event.echo: return
 	match event.physical_keycode:
-		KEY_SPACE: toggle_magnet()
+		KEY_SPACE: toggle_grip()
+		KEY_E: use_stand()
+		KEY_M: set_music(not music_on)
 		KEY_P, KEY_ESCAPE: toggle_pause()
 		KEY_R: restart_round()
 		KEY_ENTER:

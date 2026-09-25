@@ -7,7 +7,7 @@ signal pause_requested
 const ArtLab = preload("res://labs/pixel_scaling/lab.gd")
 const HURRY_SECONDS := 10
 const HURRY_COLOR := Color("ff6b5b")
-const CONTROL_HINTS := "A / D move   ·   W / S raise / lower   ·   Space magnet   ·   P pause   ·   R restart"
+const CONTROL_HINTS := "A / D move   ·   W / S raise / lower   ·   Space grip   ·   E swap head at a stand   ·   P pause   ·   R restart   ·   M music"
 var hints_label: Label
 var score_label: Label
 var time_label: Label
@@ -149,7 +149,8 @@ func present(data: Dictionary) -> void:
 	time_label.modulate.a = 0.55 + 0.45 * absf(cos(Time.get_ticks_msec() * 0.006)) if hurry else 1.0
 	progress_label.text = "Sorted  %d / %d" % [int(data.get("delivered", 0)), int(data.get("total", 0))]
 	var held := str(data.get("held_material", ""))
-	magnet_label.text = "Magnet %s  ·  Holding: %s" % ["ON" if data.get("magnet_on", false) else "OFF", held if not held.is_empty() else "nothing"]
+	var grip := str(data.get("grip_label", "Magnet " + ("ON" if data.get("magnet_on", false) else "OFF")))
+	magnet_label.text = "%s  ·  Holding: %s" % [grip, held if not held.is_empty() else "nothing"]
 	feedback_label.text = str(data.get("feedback", ""))
 	feedback_label.visible = not feedback_label.text.is_empty()
 	modal.visible = state != "running"

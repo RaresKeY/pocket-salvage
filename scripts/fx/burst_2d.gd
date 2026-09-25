@@ -1,6 +1,6 @@
 extends AnimatedSprite2D
 ## One-shot effect built from numbered 8× frames (`<prefix>_01.png`…); frees itself when done.
-const ART := "res://assets/bitwright_8x/"
+const YardArt = preload("res://scripts/art/yard_art.gd")
 static var _cache: Dictionary = {}
 
 static func frames_for(prefix: String) -> SpriteFrames:
@@ -15,19 +15,18 @@ static func add_frames(frames: SpriteFrames, animation: StringName, prefix: Stri
 	frames.set_animation_speed(animation, fps)
 	frames.set_animation_loop(animation, loop)
 	for number in numbers:
-		frames.add_frame(animation, load(ART + "%s_%02d.png" % [prefix, number]))
+		frames.add_frame(animation, YardArt.texture("%s_%02d" % [prefix, number]))
 
 static func frame_numbers(prefix: String) -> Array:
 	var numbers := []
-	while ResourceLoader.exists(ART + "%s_%02d.png" % [prefix, numbers.size() + 1]):
+	while YardArt.exists("%s_%02d" % [prefix, numbers.size() + 1]):
 		numbers.append(numbers.size() + 1)
 	return numbers
 
 func _init(prefix: String = "fx_sparks", at: Vector2 = Vector2.ZERO, world_per_pixel: float = 1.0) -> void:
 	sprite_frames = frames_for(prefix)
 	position = at
-	scale = Vector2.ONE * world_per_pixel / 8.0
-	texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
+	YardArt.fit(self, world_per_pixel)
 	animation_finished.connect(queue_free)
 
 func _ready() -> void:

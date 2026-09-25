@@ -41,6 +41,17 @@ func configure(entry: Dictionary) -> void:
 func _ready() -> void:
 	add_to_group("salvage_scrap")
 
+## Where a crane head takes hold: the middle of whichever edge faces up right now, so tumbled scrap is still reachable.
+func grip_offset() -> Vector2:
+	var half := dimensions * 0.5
+	var best := Vector2(0, -half.y)
+	for edge in [Vector2(0, half.y), Vector2(-half.x, 0), Vector2(half.x, 0)]:
+		if to_global(edge).y < to_global(best).y: best = edge
+	return best
+
+func grip_point() -> Vector2:
+	return to_global(grip_offset())
+
 func _physics_process(_delta: float) -> void:
 	_fall_speed = linear_velocity.y
 

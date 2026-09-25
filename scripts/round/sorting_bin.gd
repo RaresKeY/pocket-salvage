@@ -3,6 +3,7 @@ extends Node2D
 ## Prototype authored geometry. Sensor accepts released salvage_scrap bodies.
 signal delivered(body: Node2D, bin_material: StringName)
 const WALL := 8.0
+const YardArt = preload("res://scripts/art/yard_art.gd")
 const RIM_PEAK := 10.0
 const RIM_NUDGE := Vector2(90, -30)
 const RIM_SETTLED_SPEED := 20.0
@@ -32,9 +33,8 @@ func _build() -> void:
 		child.queue_free()
 	rims.clear()
 	var sprite := Sprite2D.new()
-	var path := "res://assets/bitwright_8x/bin_%s.png" % material_id
-	if ResourceLoader.exists(path):
-		sprite.texture = load(path)
+	if YardArt.exists("bin_%s" % material_id):
+		sprite.texture = YardArt.texture("bin_%s" % material_id)
 		sprite.scale = bin_size / Vector2(sprite.texture.get_size())
 		sprite.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
 		add_child(sprite)

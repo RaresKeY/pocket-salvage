@@ -38,10 +38,10 @@ func _check_lab() -> void:
 	var lab = load("res://labs/level/main.tscn").instantiate()
 	root.add_child(lab)
 	await process_frame
-	assert(lab.stage.get_child_count() == 21)
+	assert(lab.stage.get_child_count() == 29)
 	lab._switch_layout()
 	await process_frame
-	assert(lab.variant == 1 and lab.stage.get_child_count() == 21)
+	assert(lab.variant == 1 and lab.stage.get_child_count() == 29)
 	lab.queue_free()
 	await process_frame
 	print("LEVEL_TEST_OK deterministic layouts, clear spawn bounds, assets, independent data and lab switching")

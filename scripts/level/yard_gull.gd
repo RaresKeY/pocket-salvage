@@ -2,6 +2,7 @@ extends Node2D
 ## One seagull: crosses the yard with uneven flight, or glides down to a perch, idles, and leaves when the crane comes near.
 enum State { CROSSING, LANDING, PERCHED, LEAVING }
 const Burst = preload("res://scripts/fx/burst_2d.gd")
+const YardArt = preload("res://scripts/art/yard_art.gd")
 const LAND_RANGE := 180.0
 const SCARE_DISTANCE := 90.0
 const HEIGHT_PX := 12
@@ -46,7 +47,7 @@ func setup(generator: RandomNumberGenerator, art_scale: float, yard_width: float
 		Burst.add_frames(frames, &"perch", "critter_gull_perched", perched, 3.0, true)
 	sprite = AnimatedSprite2D.new()
 	sprite.sprite_frames = frames
-	sprite.scale = Vector2.ONE * art_scale / 8.0
+	YardArt.fit(sprite, art_scale)
 	add_child(sprite)
 	sprite.play(&"fly")
 	sprite.frame = rng.randi_range(0, frames.get_frame_count(&"fly") - 1)

@@ -1,6 +1,6 @@
 # Bitwright art at 8×
 
-These 110 accepted PNG derivatives replicate each original pixel as an 8×8 block with nearest-neighbor scaling. Originals remain in `../bitwright/`. Masks receive the same multiplier to preserve alignment. Adjacent `.png.json` records contain source/output hashes, dimensions, factor and engine provenance.
+These 117 accepted PNG derivatives replicate each original pixel as an 8×8 block with nearest-neighbor scaling. Originals remain in `../bitwright/`. Masks receive the same multiplier to preserve alignment. Adjacent `.png.json` records contain source/output hashes, dimensions, factor and engine provenance.
 
 These are project art assets requested for runtime use, not release outputs. Regenerate into an empty destination using `tools/superscale --input assets/bitwright/NAME.png --factor 8 --output assets/bitwright_8x/NAME.png`; the tool refuses overwrites. No generated detail or smoothing is baked into the files.
 

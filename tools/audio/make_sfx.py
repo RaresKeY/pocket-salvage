@@ -51,6 +51,9 @@ RECIPES = {
     "eject": (0.35, lambda t, p, n: 0.3 * envelope(p, 0.01, 1.2) * tone(sweep(180, 720, p), t, "triangle")),
     "tick": (0.07, lambda t, p, n: 0.3 * envelope(p, 0.005, 2.0) * tone(1500, t, "square")),
     "finish": (0.9, lambda t, p, n: 0.28 * envelope(p, 0.01, 1.0) * tone([523, 659, 784, 1047][min(3, int(p * 4.5))], t, "square")),
+    "claw_shut": (0.16, lambda t, p, n: 0.45 * envelope(p, 0.003, 3.0) * (tone(sweep(900, 500, p), t, "square") * 0.5 + n * 0.5)),
+    "claw_open": (0.18, lambda t, p, n: 0.3 * envelope(p, 0.01, 2.0) * (tone(sweep(400, 700, p), t, "triangle") * 0.6 + n * 0.3)),
+    "clank": (0.4, lambda t, p, n: 0.4 * envelope(p, 0.002, 2.5) * (n * 0.35 + tone(610, t, "square") * 0.3 + tone(1340, t, "sine") * 0.35)),
     "start": (0.3, lambda t, p, n: 0.28 * envelope(p, 0.01, 1.0) * tone(440 if p < 0.45 else 880, t, "square")),
 }
 

@@ -1,0 +1,18 @@
+{
+	"algorithm": "integer-nearest-neighbor",
+	"factor": 8,
+	"format": "RGBA8",
+	"godot": "4.7-stable (official)",
+	"output": "assets/bitwright_8x/crane_claw_04.png",
+	"output_sha256": "f5211e3cd6207a3f11580dabd916622153ba280d8364b7cba5d16f86bb86ae9e",
+	"output_size": [
+		320,
+		224
+	],
+	"source": "assets/bitwright/crane_claw_04.png",
+	"source_sha256": "83868d873ca5c43e14b37a1cc692df751c2f402c25a3ece36ab01f58dca4fd75",
+	"source_size": [
+		40,
+		28
+	]
+}

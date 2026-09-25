@@ -2,7 +2,7 @@ extends Node2D
 ## Animated night scenery around the yard: pure presentation, no collision, keeps moving while paused.
 ## `far` sits behind the backdrop (sky, stars, moon, clouds); `near` in front of it (lights, gulls, crow, rat, smoke).
 const Burst = preload("res://scripts/fx/burst_2d.gd")
-const ART := "res://assets/bitwright_8x/"
+const YardArt = preload("res://scripts/art/yard_art.gd")
 const SKY_TOP := Color("0c0a18")
 ## The skyline tile's own top row, so the gradient meets it without a seam.
 const SKY_BOTTOM := Color("181222")
@@ -72,7 +72,7 @@ func configure(value: Dictionary) -> void:
 	crow = _animated(near, "critter_crow", Vector2(510, fence_top(10) - 0.5 * CROW_HEIGHT * art_scale), 5.0)
 
 func fence_top(extra_rows: float = 0.0) -> float:
-	return layout.ground_top - (Backdrop.FENCE.get_height() / 8.0 - extra_rows) * art_scale
+	return layout.ground_top - YardArt.world_size(Backdrop.FENCE, art_scale).y + extra_rows * art_scale
 
 func _layer(z: int, drawer: Callable) -> Node2D:
 	var layer := Node2D.new()
@@ -83,11 +83,8 @@ func _layer(z: int, drawer: Callable) -> Node2D:
 	return layer
 
 func _sprite(parent: Node2D, name: String, at: Vector2) -> Sprite2D:
-	if not ResourceLoader.exists(ART + name + ".png"): return null
-	var sprite := Sprite2D.new()
-	sprite.texture = load(ART + name + ".png")
-	sprite.scale = Vector2.ONE * art_scale / 8.0
-	sprite.position = at
+	if not YardArt.exists(name): return null
+	var sprite := YardArt.sprite(name, art_scale, at)
 	parent.add_child(sprite)
 	return sprite
 
@@ -98,7 +95,7 @@ func _animated(parent: Node2D, prefix: String, at: Vector2, fps: float) -> Anima
 	Burst.add_frames(frames, &"default", prefix, numbers, fps, true)
 	var sprite := AnimatedSprite2D.new()
 	sprite.sprite_frames = frames
-	sprite.scale = Vector2.ONE * art_scale / 8.0
+	YardArt.fit(sprite, art_scale)
 	sprite.position = at
 	sprite.frame = rng.randi_range(0, numbers.size() - 1)
 	parent.add_child(sprite)
@@ -121,7 +118,7 @@ func _process(delta: float) -> void:
 		rat_wait = rng.randf_range(18, 30)
 		_visit(near, "critter_rat", layout.ground_top - 7, RAT_SPEED, 12.0)
 	smoke_wait -= delta
-	if smoke_wait <= 0.0 and ResourceLoader.exists(ART + "fx_smoke_01.png"):
+	if smoke_wait <= 0.0 and YardArt.exists("fx_smoke_01"):
 		smoke_wait = rng.randf_range(0.8, 1.6)
 		var puff := Burst.new("fx_smoke", Vector2(width * 0.9 + rng.randf_range(-12, 12), layout.ground_top - 40), art_scale)
 		near.add_child(puff)

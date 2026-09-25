@@ -25,6 +25,8 @@ NAMES = {
     "crow": "critter_crow",
     "rat": "critter_rat",
     "gull_perched": "critter_gull_perched",
+    "claw": "crane_claw",
+    "stand": "tool_stand",
 }
 
 
