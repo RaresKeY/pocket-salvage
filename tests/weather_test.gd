@@ -227,5 +227,24 @@ func run() -> void:
 	assert(gale.round_state.wrong_count == 1, "no extra wrong-bin penalties from wind")
 	gale.queue_free()
 	await process_frame
+	var noisy = Lab.instantiate()
+	noisy.forced_weather = &"storm"
+	root.add_child(noisy)
+	await process_frame
+	noisy.start_round()
+	await frames(10)
+	assert(noisy.sfx.loop_level(&"rain_loop") == 1.0 and noisy.sfx.loop_level(&"wind_loop") > 0.0)
+	noisy.toggle_pause()
+	await frames(2)
+	assert(noisy.sfx.loop_level(&"wind_loop") == 0.0 and noisy.sfx.loop_level(&"rain_loop") == 0.0, "weather sounds stop while paused")
+	noisy.toggle_pause()
+	await frames(2)
+	assert(noisy.sfx.loop_level(&"rain_loop") == 1.0, "rain comes back on resume")
+	noisy.forced_weather = &"clear"
+	noisy.restart_round()
+	await frames(2)
+	assert(noisy.sfx.loop_level(&"rain_loop") == 0.0 and noisy.sfx.loop_level(&"wind_loop") == 0.0, "a clear round after a storm is quiet")
+	noisy.queue_free()
+	await process_frame
 	print("WEATHER_TEST_OK profiles, weighted pick, calm, wind and gusts, lightning sequence, pause, forced weather, grip, multiplier, wind, rain, fog, lightning and power cuts, sounds, full rounds")
 	quit()

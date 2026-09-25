@@ -29,7 +29,7 @@ func _start() -> void:
 	sheen.z_index = 1
 	sheen.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	context.world.add_child(sheen)
-	context.sfx.set_loop(&"rain_loop", 1.0, 1.0, -14.0)
+	_loop(&"rain_loop", 1.0, -14.0)
 
 func _particles(amount: int, at: Vector2, extents: Vector2, color: Color, life: float) -> CPUParticles2D:
 	var particles := CPUParticles2D.new()

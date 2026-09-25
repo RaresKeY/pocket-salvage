@@ -44,7 +44,7 @@ func _physics_process(delta: float) -> void:
 	var wind: float = weather.wind_now()
 	var level := strength()
 	context.ambience.wind = wind
-	context.sfx.set_loop(&"wind_loop", level, 1.0, -12.0)
+	_loop(&"wind_loop", level, -12.0)
 	for particles in [streaks, dust]:
 		particles.direction = Vector2(signf(wind) if wind != 0.0 else 1.0, 0)
 		particles.initial_velocity_min = absf(wind) * 3.0
