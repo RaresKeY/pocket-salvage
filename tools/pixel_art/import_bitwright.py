@@ -27,6 +27,8 @@ NAMES = {
     "gull_perched": "critter_gull_perched",
     "claw": "crane_claw",
     "stand": "tool_stand",
+    "blood_moon": "backdrop_blood_moon",
+    "blood_skyline": "backdrop_blood_skyline_tile",
 }
 
 

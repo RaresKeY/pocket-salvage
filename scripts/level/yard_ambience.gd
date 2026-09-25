@@ -61,10 +61,8 @@ func configure(value: Dictionary, cursed: bool = false) -> void:
 	for index in STAR_COUNT:
 		stars.append({"at": Vector2(rng.randf_range(0, bounds.size.x), rng.randf_range(44, layout.ground_top - 140)),
 			"size": rng.randf_range(1.0, 2.6), "phase": rng.randf() * TAU, "rate": rng.randf_range(0.8, 2.6)})
-	var moon := _sprite(far, "backdrop_moon", Vector2(bounds.size.x * 0.8, 100))
-	if moon:
-		moon.scale *= 1.5
-		if blood_moon: moon.modulate = BLOOD_TINT
+	var moon := _sprite(far, "backdrop_blood_moon" if blood_moon else "backdrop_moon", Vector2(bounds.size.x * 0.8, 100))
+	if moon: moon.scale *= 1.5
 	for index in CLOUD_COUNT:
 		var cloud := _sprite(far, "backdrop_cloud", Vector2(rng.randf_range(0, bounds.size.x), rng.randf_range(70, 220)))
 		if cloud:

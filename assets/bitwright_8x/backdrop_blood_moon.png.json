@@ -1,0 +1,18 @@
+{
+	"algorithm": "integer-nearest-neighbor",
+	"factor": 8,
+	"format": "RGBA8",
+	"godot": "4.7-stable (official)",
+	"output": "assets/bitwright_8x/backdrop_blood_moon.png",
+	"output_sha256": "c5065e1c7a5bd67e9c62b8a1ee23a35ef1fba423d09285457337c13f42bf65ad",
+	"output_size": [
+		256,
+		256
+	],
+	"source": "assets/bitwright/backdrop_blood_moon.png",
+	"source_sha256": "da6428c57462517d4d8ef256528dedb35962f7d2656cca9cf29aea4a84901a26",
+	"source_size": [
+		32,
+		32
+	]
+}

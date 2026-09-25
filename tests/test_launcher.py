@@ -11,6 +11,7 @@ import unittest
 ROOT = Path(__file__).resolve().parents[1]
 
 
+@unittest.skipUnless(hasattr(socket, "AF_UNIX"), "play.sh and its desktop audio socket are Linux-only")
 class LauncherTest(unittest.TestCase):
     def test_local_edits_symlink_and_failed_import(self):
         with tempfile.TemporaryDirectory() as temporary:

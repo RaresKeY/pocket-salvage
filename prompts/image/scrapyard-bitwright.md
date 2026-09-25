@@ -385,3 +385,49 @@ a low steel tool stand on the scrapyard floor for parking a spare crane head: a 
 
 Settings: size: [48, 20].
 Outputs: `assets/bitwright/tool_stand.png` (8x copies under `assets/bitwright_8x/`).
+
+## Blood Moon additions, 2026-09-25
+
+Drawn for a tint-versus-generated comparison requested by RaresKeY. He chose the generated moon, rejected the first skyline because its sky repeated moons, and asked for a redraw without them. Cloud and fence were not used; the tint covers them.
+
+### blood_moon
+
+```
+the same big full moon but a blood moon: deep crimson red with darker red craters and a faint orange rim glow, drawn tight to the canvas with no ground and no shadow, for a game background
+```
+
+Settings: size: [32, 32], like: moon. Status: selected.
+Output: `assets/bitwright/backdrop_blood_moon.png` (8x copy under `assets/bitwright_8x/`).
+
+### blood_cloud
+
+```
+the same long thin wispy night cloud under a blood moon: dark maroon with a crimson lit top edge, soft ragged ends, drawn tight to the canvas with no ground and no shadow, for a game background
+```
+
+Settings: size: [48, 12], like: cloud. Status: rejected.
+
+### blood_skyline (first draw)
+
+```
+the same distant scrapyard skyline silhouette but under a blood moon: near black maroon silhouettes of scrap heaps, a derelict crane jib and a crushed car stack against a deep crimson sky, a few red lit edges, filling the canvas edge to edge, made to repeat sideways
+```
+
+Settings: size: [64, 32], tile: x, like: skyline. Status: rejected.
+
+### blood_fence
+
+```
+the same scrapyard chain link fence backdrop under a blood moon: grey steel fence posts and rails lit dull red, dark maroon piles of crushed cars and scrap behind the fence, a crimson sky strip along the top, filling the whole width and made to repeat sideways
+```
+
+Settings: size: [160, 64], tile: x, like: backdrop. Status: rejected.
+
+### blood_skyline
+
+```
+the same distant scrapyard skyline silhouette under a blood moon: near black maroon silhouettes of scrap heaps, a derelict crane jib and a crushed car stack against a deep crimson sky with a few red lit edges; the sky is plain, with no moon, no circles, no discs, no lamps and no bright spots anywhere, filling the canvas edge to edge, made to repeat sideways
+```
+
+Settings: size: [64, 32], tile: x, like: skyline (redraw-key). Status: selected.
+Output: `assets/bitwright/backdrop_blood_skyline_tile.png` (8x copy under `assets/bitwright_8x/`).

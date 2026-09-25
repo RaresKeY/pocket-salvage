@@ -2,6 +2,16 @@ extends SceneTree
 const Heads = preload("res://scripts/crane/crane_heads.gd")
 const Levels = preload("res://scripts/level/level_catalog.gd")
 func _initialize() -> void: call_deferred("run")
+func backdrop_of(game) -> Node:
+	for child in game.world.get_children():
+		if child.get_script() == preload("res://scripts/level/yard_backdrop.gd"): return child
+	return null
+
+func moon_of(game) -> Sprite2D:
+	for child in game.ambience.far.get_children():
+		if child is Sprite2D and child.texture.resource_path.contains("moon"): return child
+	return null
+
 func run() -> void:
 	var rng := RandomNumberGenerator.new()
 	rng.seed = 52
@@ -23,6 +33,8 @@ func run() -> void:
 	root.add_child(game)
 	await process_frame
 	assert(game.ambience.blood_moon and game.blood_cycle != null)
+	assert(moon_of(game).texture.resource_path.contains("backdrop_blood_moon"), "Blood Moon shows the generated blood moon")
+	assert(backdrop_of(game).skyline.resource_path.contains("backdrop_blood_skyline"), "Blood Moon uses the crimson skyline")
 	game.ambience._spawn_gulls()
 	game.ambience.rat_wait = 0
 	game.ambience._process(1.0)
@@ -73,6 +85,7 @@ func run() -> void:
 	game.select_level(0)
 	assert(not game.ambience.blood_moon and game.blood_cycle == null)
 	assert(game.weather.profile.tint == Color.WHITE)
+	assert(not backdrop_of(game).skyline.resource_path.contains("blood") and not moon_of(game).texture.resource_path.contains("blood"), "Clear restores the normal skyline and moon")
 	assert(Heads.grips(Heads.Kind.MAGNET, &"steel"))
 	print("BLOOD_MOON_TEST_OK")
 	quit()

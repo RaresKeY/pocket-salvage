@@ -9,3 +9,15 @@
 ## Lighting refinement
 
 > for blood moon scene/level: mask only bulbs of light post to red not the pole same with lights on top corners, also add a screenspace red tint ovelay and a slight edge/indirect light tint on assets, maybe 5%
+
+## Tint or generated art (relayed by Dale)
+
+> for blood moon I think we can taint color, maybe we don't need to gen, but we can try both, the color taint looks okay, we have to mask some assets so they don't fully taint though
+
+After the comparison screenshots:
+
+> the moon in C, not the city scape it duplicates moons
+> screen space taint + light taint (I also pushed something related, modify as needed)
+> I think instead of backgrop tint, we do stronger sky tint, on masked and light, 5% on other assets, and slight tint on screenspace
+
+> and maybe a new city scape from c but without the moon duplicates actually

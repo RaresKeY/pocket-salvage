@@ -88,3 +88,8 @@
 {"prompt_path": "prompts/image/scrapyard-bitwright.md#claw", "input_paths": [], "output_path": "assets/bitwright/crane_claw_05.png", "purpose": "scrapyard sprite `claw`", "status": "selected"}
 {"prompt_path": "prompts/image/scrapyard-bitwright.md#claw", "input_paths": [], "output_path": "assets/bitwright/crane_claw_06.png", "purpose": "scrapyard sprite `claw`", "status": "selected"}
 {"prompt_path": "prompts/image/scrapyard-bitwright.md#stand", "input_paths": [], "output_path": "assets/bitwright/tool_stand.png", "purpose": "scrapyard sprite `stand`", "status": "selected"}
+{"prompt_path": "prompts/image/scrapyard-bitwright.md#blood_moon", "input_paths": [], "output_path": "assets/bitwright/backdrop_blood_moon.png", "purpose": "Blood Moon comparison `blood_moon`", "status": "selected"}
+{"prompt_path": "prompts/image/scrapyard-bitwright.md#blood_cloud", "input_paths": [], "output_path": "", "purpose": "Blood Moon comparison `blood_cloud`", "status": "rejected"}
+{"prompt_path": "prompts/image/scrapyard-bitwright.md#blood_skyline", "input_paths": [], "output_path": "", "purpose": "Blood Moon comparison `blood_skyline (first draw)`", "status": "rejected"}
+{"prompt_path": "prompts/image/scrapyard-bitwright.md#blood_fence", "input_paths": [], "output_path": "", "purpose": "Blood Moon comparison `blood_fence`", "status": "rejected"}
+{"prompt_path": "prompts/image/scrapyard-bitwright.md#blood_skyline", "input_paths": [], "output_path": "assets/bitwright/backdrop_blood_skyline_tile.png", "purpose": "Blood Moon comparison `blood_skyline`", "status": "selected"}

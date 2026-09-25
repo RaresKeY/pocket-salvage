@@ -19,12 +19,12 @@ func run() -> void:
 		assert(record.factor == 8 and record.source_sha256 == FileAccess.get_sha256(source_path))
 		assert(record.output_sha256 == FileAccess.get_sha256(output_path))
 		count += 1
-	assert(count == 117)
+	assert(count == 119)
 	var lab = load("res://labs/sprite_playground/lab.tscn").instantiate()
 	root.add_child(lab)
 	await process_frame
 	await process_frame
-	assert(lab.gallery.size() == 41)
+	assert(lab.gallery.size() == 43)
 	var initial_y: float = lab.prop.position.y
 	for frame in 120: await physics_frame
 	assert(lab.prop.position.y > initial_y + 100)
@@ -59,7 +59,7 @@ func run() -> void:
 	assert(not lab.prop.grabbed)
 	lab.reset_prop()
 	assert(lab.prop.position.is_equal_approx(Vector2(1000,160)))
-	print("SPRITE_PLAYGROUND_TEST_OK 117 exact 8x assets, gallery, gravity, floor, size, filtering, mouse grab/release, reset")
+	print("SPRITE_PLAYGROUND_TEST_OK 119 exact 8x assets, gallery, gravity, floor, size, filtering, mouse grab/release, reset")
 	lab.queue_free()
 	await process_frame
 	quit()

@@ -18,6 +18,7 @@ var layout: Dictionary = Layout.create_layout()
 ## Off when a caller layers its own animated sky behind this node.
 var draw_sky := true
 ## Held here, not loaded inside _draw: a texture freed after _draw returns renders white.
+## Levels may swap in their own skyline art.
 var skyline: Texture2D = YardArt.texture("backdrop_skyline_tile") if YardArt.exists("backdrop_skyline_tile") else null
 var heap: Texture2D = YardArt.texture("backdrop_junk_heap") if YardArt.exists("backdrop_junk_heap") else null
 

@@ -14,7 +14,7 @@ Validation: full managed Godot 4.7 suite passed after the final layout fix (`CHE
 
 ## Blood Moon
 
-`scripts/level/blood_moon.gd` owns generator timing and pauses with the round. After 18–32s the right lamp stutters for 1.6s; a 2–4s outage stops new generator smoke, turns off floodlight cones and cuts the electrically powered head, then recovers. `yard_ambience.gd` receives a Blood Moon flag before constructing scenery: crimson moon/clouds/beacon lenses/light cones, red sky and crows only (no gull or rat spawns). Weather nodes use the profile tint, including rain/splashes/sheen, fog, trails/dust and lightning.
+`scripts/level/blood_moon.gd` owns generator timing and pauses with the round. After 18–32s the right lamp stutters for 1.6s; a 2–4s outage stops new generator smoke, turns off floodlight cones and cuts the electrically powered head, then recovers. `yard_ambience.gd` receives a Blood Moon flag before constructing scenery: the generated `backdrop_blood_moon` in place of the moon, crimson clouds/beacon lenses/light cones, red sky and crows only (no gull or rat spawns). Weather nodes use the profile tint, including rain/splashes/sheen, fog, trails/dust and lightning.
 
 `Heads.function_kind/materials/grips/for_material` accept a reversal flag. In Blood Moon the magnet lifts copper/rubber and the claw lifts steel; power cuts affect the claw. Existing physical head art/animations and sounds retain their identities. Pickup stays blocked throughout an outage even after a head swap. Hints and start feedback use the reversed mapping. Leaving/rebuilding destroys all special state.
 
@@ -35,3 +35,5 @@ Level-flow validation: full managed Godot 4.7 suite passed, including the origin
 Blood Moon lighting uses `shaders/blood_moon_bulbs.gdshader`: bounded lens regions and lens colors restrict strong red emission/dimming to bulbs, preserving metal RGB and source alpha. `blood_moon_grade.gdshader` on the yard viewport container applies a 5% red screen wash plus up to 5% edge tint; HUD and menus stay ungraded. Rebuild clears the material outside level 4. `tests/blood_lighting_render_test.gd` needs real rendering and verifies pole/housing pixel preservation, red bulbs and power-off dimming on floodlight and bright/dim beacon frames.
 
 Lighting refinement validation: full managed Godot 4.7 suite passed; silent RTX 2080 Ti/Gamescope rendering passed `BULB_MASK_GPU_OK` for floodlight and bright/dim beacon frames, plus Blood Moon material-reset checks. Captures include running wind motes and generator outage. Local evidence: `.local/motes-light-review/`.
+
+Blood Moon also swaps the backdrop's `skyline` to `backdrop_blood_skyline_tile` (a generated crimson skyline); `yard_backdrop.gd` exposes `skyline` for that. `tests/blood_moon_test.gd` checks the Blood Moon moon and skyline and that Clear restores both.
