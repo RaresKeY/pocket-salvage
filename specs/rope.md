@@ -1,6 +1,6 @@
 # Rope subsystem
 
-Reviewed: 2026-09-24. Implementation revision: `a4a329e`; upstream revisions and hashes are in [provenance](../vendored/rope_sources/provenance.json).
+Reviewed: 2026-09-25. Implementation: performance/audio update based on `cb0993d`; final measured validation recorded after release.
 
 `scripts/rope/` is an in-repository reusable 2D subsystem, not an external Git dependency. `rope_solver.gd` owns Verlet particles, eight alternating tension-only constraint passes plus endpoint reach limits, slack initialization, fixed endpoints and swept contacts. `rope_path.gd` owns static polygon visibility and persistent convex-corner guides. `rope_render.gd` owns Plug & Prosper's adaptive midpoint curves (0.30 authored pixel target, at most six subdivisions) and rounded folds. `rope_2d.gd` binds world-space ray queries and drawing. Endpoints and pinned contacts remain exact; render geometry never feeds back into physics.
 
@@ -13,3 +13,5 @@ Caller contract: fixed 60 Hz stepping; world-space endpoints and closed static c
 Verification: `tests/rope_test.gd` checks sag, exact endpoints, finite geometry, no render mutation, continuous tightening, subpixel payout threshold continuity, moving/reeling taut history, transverse motion on payout, tangential momentum, wrapped routes, contact persistence and unwrapping. `tests/run_checks.py` imports the module and starts the lab. `labs/capture rope` produces background hardware-rendered evidence separately. These are subsystem checks, not full-game or performance acceptance.
 
 2026-09-24 validation: the complete check suite passes, including `rope_lab_test.gd` viewport fitting, keyboard reeling, pause/resume and reset. Background Gamescope captures were inspected at 1920×1080, 1280×720, 960×540 and 854×480 using Godot 4.7 / NVIDIA GeForce RTX 2080 Ti. No physical-device, gamepad, touch or full-game performance claim is made.
+
+The runtime reuses one ray-query resource and caches the direct space state for each step, refreshing collision masks and exclusions before simulation. Constraint passes reuse each segment distance instead of recomputing it for normalization; particle counts, eight passes, swept collision checks and physical rules are retained.

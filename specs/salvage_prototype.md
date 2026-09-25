@@ -1,6 +1,6 @@
 # Playable subsystem integration
 
-Reviewed: 2026-09-25. Implementation revision: `6488a44` (v0.1.4).
+Reviewed: 2026-09-25. Implementation: performance/audio update based on `cb0993d`; final measured validation recorded after release.
 
 ## Composition
 
@@ -43,3 +43,5 @@ History: on 2026-09-24 the six-piece prototype passed `./tests/check`, six corre
 ## v0.1.1 audio and UI revision
 
 The yard now fits between the actual HUD panel bounds with 6px clearance. Independent Music/SFX buttons work in every state and preserve their choices across round restarts in the same scene. Pause/resume plays a quiet click. The existing generated music remains; no new music was requested after the final correction. The full suite passed on Linux, still completing in 170.05 simulated seconds; focused HUD/audio checks and five-size RTX 2080 Ti captures are recorded in [the review](../docs/audio-ui-review.md).
+
+The physics tick expires feedback before advancing the round; the round change signal presents the single current HUD snapshot for that tick. Input and delivery events still refresh immediately.

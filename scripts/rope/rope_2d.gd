@@ -9,6 +9,8 @@ var solver := Solver.new()
 @export var debug_points := false
 var exclude: Array[RID] = []
 var _last_step_tick := -1
+var _query := PhysicsRayQueryParameters2D.new()
+var _space: PhysicsDirectSpaceState2D
 
 func _ready() -> void:
 	# Particle positions are already in world space; interpolate them exactly once.
@@ -23,6 +25,9 @@ func reset(anchor: Vector2, tip: Vector2, length: float) -> void:
 	finish_interpolation()
 
 func step(anchor: Vector2, tip: Vector2, length: float, delta: float) -> void:
+	_space = get_world_2d().direct_space_state
+	_query.collision_mask = collision_mask
+	_query.exclude = exclude
 	solver.simulate(anchor, tip, length, delta)
 	_last_step_tick = Engine.get_physics_frames()
 	queue_redraw()
@@ -54,8 +59,9 @@ func constrain_tip(anchor: Vector2, tip: Vector2, velocity: Vector2, length: flo
 	return solver.constrain_tip(anchor, tip, velocity, length)
 
 func _sweep(from: Vector2, to: Vector2) -> Dictionary:
-	var query := PhysicsRayQueryParameters2D.create(from, to, collision_mask, exclude)
-	return get_world_2d().direct_space_state.intersect_ray(query)
+	_query.from = from
+	_query.to = to
+	return _space.intersect_ray(_query)
 
 func _draw() -> void:
 	var displayed := rendered_points()

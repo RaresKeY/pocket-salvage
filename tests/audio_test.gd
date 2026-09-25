@@ -5,6 +5,8 @@ const CUES := [&"ui_click", &"start", &"pickup", &"clank", &"claw_open", &"claw_
 func _initialize() -> void: call_deferred("run")
 
 func run() -> void:
+	assert(Sfx.playback_mode(true) == AudioServer.PLAYBACK_TYPE_SAMPLE, "Web audio must not depend on main-thread streamed mixing")
+	assert(Sfx.playback_mode(false) == AudioServer.PLAYBACK_TYPE_STREAM)
 	AudioServer.set_bus_mute(0, true) # Mixer evidence without desktop noise.
 	AudioServer.add_bus(1)
 	AudioServer.set_bus_name(1, "Verification")
@@ -14,6 +16,8 @@ func run() -> void:
 	var sound := Sfx.new()
 	sound.output_bus = &"Verification"
 	root.add_child(sound)
+	for voice in sound._voices:
+		assert(voice.playback_type == Sfx.playback_mode(), "Players use the platform audio policy")
 	var real := "--require-pulse" in OS.get_cmdline_user_args()
 	if real: assert(AudioServer.get_driver_name() == "PulseAudio", "Real driver required")
 	for cue in CUES + [&"trolley_loop", &"winch_loop", &"music_yard"]:

@@ -19,3 +19,5 @@ Exact scoring language, feedback wording, final styling and final control bindin
 ## Compact follow-up, 2026-09-25
 
 User design (RaresKeY): [exact request](../prompts/source/audio-ui-release.md) to compactly simplify using Supper Guard and Plug Charge. AI-inferred choices: single-row status, shorter footer, measured yard clearances, clear primary action and separate Music/SFX toggles above modals. Retain this game’s dark/mint theme, art and gameplay.
+
+AI-inferred performance follow-up to [RaresKeY’s profiling request](../prompts/source/performance-audio.md): present one current HUD snapshot per physics tick and rebuild presentation only when displayed data changes; preserve the hurry pulse and immediate interaction feedback.

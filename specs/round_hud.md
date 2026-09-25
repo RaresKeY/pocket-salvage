@@ -1,6 +1,6 @@
 # Round HUD
 
-Reviewed: 2026-09-25. Implementation revision: `6488a44` (v0.1.4).
+Reviewed: 2026-09-25. Implementation: performance/audio update based on `cb0993d`; final measured validation recorded after release.
 
 ## Ownership and contract
 
@@ -33,3 +33,5 @@ The HUD tests cover audio buttons above the ready modal, focus return, on/off la
 On touch landscape screens shorter than 540 logical pixels, the controller occupies a separate bottom-right panel and the yard/footer reserve a right-side column. The redundant touch hints are hidden there to give the yard more height. Portrait and taller layouts keep the controller in the footer. This follows the same theme and leaves game rules unchanged.
 
 Direction buttons draw their arrows with canvas lines instead of font glyphs: exported Web fonts do not include Unicode arrows. The input regression test checks font-independent direction rendering; exported-browser screenshots verify the visible result.
+
+HUD presentation compares snapshots after rounding the remaining time to its displayed second. Unchanged values skip label/button/theme rebuilding; the hurry alpha is still updated on every presentation. Ready buffering and state transitions remain immediate. The playable physics loop advances feedback before ticking the round and uses its changed signal for one HUD refresh per tick.

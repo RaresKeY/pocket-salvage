@@ -1,6 +1,6 @@
 # Audio
 
-Reviewed: 2026-09-25. Implementation revision: `9d21b8f` (v0.1.1 playback repair).
+Reviewed: 2026-09-25. Implementation: performance/audio update based on `cb0993d`; final measured validation recorded after release.
 
 ## Ownership
 
@@ -24,8 +24,12 @@ The lab starts `music_yard` at −17 dB from its first frame; M or the Music but
 
 ## Playback controls and desktop launch
 
-All voices and loops explicitly select Stream playback. `effects_enabled` gates one-shots; disabling effects stops active voices and motors without changing music. Motor targets remain current while muted, so re-enabling follows real movement. `output_bus` may be set before readiness for isolated verification. Settings are scene-session-only, survive round restarts and are not saved across application launches. Web audio needs a browser gesture, supplied by Start.
+Voices and loops explicitly select browser-managed Sample playback on Web and Stream playback on native platforms. `effects_enabled` gates one-shots; disabling effects stops active voices and motors without changing music. Motor targets remain current while muted, so re-enabling follows real movement. `output_bus` may be set before readiness for isolated verification. Settings are scene-session-only, survive round restarts and are not saved across application launches. Web audio needs a browser gesture, supplied by Start.
 
 `play.sh` prepares `localhost/pocket-salvage-audio:4.7` from the shared Godot image plus libpulse0, forwards only the exact desktop PulseAudio/PipeWire-Pulse socket, and explicitly selects PulseAudio. Missing sockets fail visibly. Import uses Dummy audio; import and play share the managed project lock with hardware GPU access. The runner/base image are unchanged. [Tooling provenance](../vendored/audio_launch.md). Exports use their normal platform driver and do not depend on this image.
 
 The independent [audio lab](../labs/audio/lab.tscn) exposes every effect and loop. The standard suite decodes compressed imports and checks non-silent, unclipped samples and independent music/effects state. `tests/audio_test.gd -- --require-pulse` captures each effect and loop independently on a bus upstream of muted Master, keeping automation quiet. This proves real mixer output, not subjective speaker quality. See [review and commands](../docs/audio-ui-review.md).
+
+Web voices and loops use browser-managed Sample playback, so already-started sounds are mixed by Web Audio independently of game-frame stalls. Native builds keep Stream playback and native driver mixing. The game uses no bus effects or procedural audio streams that require the Web streaming mixer. Browser priority is managed by the browser; no OS priority or custom audio thread is introduced.
+
+Stable loop volume/pitch values do not resend unchanged parameters to the browser audio graph. Fades and pitch changes retain their existing easing.

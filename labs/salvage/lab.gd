@@ -360,9 +360,8 @@ func _physics_process(delta: float) -> void:
 	var axes: Vector2 = controls.movement()
 	move_crane(axes.x, axes.y, delta)
 	if gripping and not is_instance_valid(held_body): try_pickup()
-	round_state.tick(delta)
 	feedback_left = maxf(0,feedback_left-delta)
-	refresh_hud()
+	round_state.tick(delta) # changed emits the single current HUD snapshot for this tick.
 
 func move_crane(horizontal: float, reel: float, delta: float) -> void:
 	var before := Vector2(suspension.anchor.x,suspension.cable_length)

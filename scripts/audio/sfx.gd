@@ -15,11 +15,16 @@ const LOOP_FLOOR_DB := -40.0
 const LOOP_FADE := 6.0
 const LOOP_DEAD_ZONE := 0.02
 
+## Browser-managed buffers keep playing when the single-threaded game frame stalls.
+## Native drivers retain their threaded stream mixer and bus-effect support.
+static func playback_mode(web: bool = OS.has_feature("web")) -> AudioServer.PlaybackType:
+	return AudioServer.PLAYBACK_TYPE_SAMPLE if web else AudioServer.PLAYBACK_TYPE_STREAM
+
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	for index in VOICES:
 		var voice := AudioStreamPlayer.new()
-		voice.playback_type = AudioServer.PLAYBACK_TYPE_STREAM
+		voice.playback_type = playback_mode()
 		voice.bus = output_bus
 		add_child(voice)
 		_voices.append(voice)
@@ -45,7 +50,7 @@ func play(sound: StringName, volume_db: float = 0.0, pitch_jitter: float = 0.0) 
 func set_loop(sound: StringName, level: float, pitch: float = 1.0, volume_db: float = -6.0) -> void:
 	if not loops.has(sound):
 		var player := AudioStreamPlayer.new()
-		player.playback_type = AudioServer.PLAYBACK_TYPE_STREAM
+		player.playback_type = playback_mode()
 		player.bus = output_bus
 		add_child(player)
 		var path := DIR + String(sound) + ".wav"
@@ -82,8 +87,12 @@ func _process(delta: float) -> void:
 		if entry.current <= 0.01:
 			if player.playing: player.stop()
 			continue
-		player.volume_db = lerpf(LOOP_FLOOR_DB, entry.volume, sqrt(entry.current))
-		player.pitch_scale = lerpf(player.pitch_scale, entry.pitch * (0.85 + 0.15 * entry.current), minf(1.0, delta * 8.0))
+		var volume := lerpf(LOOP_FLOOR_DB, entry.volume, sqrt(entry.current))
+		var pitch := lerpf(player.pitch_scale, entry.pitch * (0.85 + 0.15 * entry.current), minf(1.0, delta * 8.0))
+		# Web Sample setters cross into the browser audio graph. Stable loops need
+		# no new automation events; preserve fades/pitch changes while they settle.
+		if not is_equal_approx(player.volume_db, volume): player.volume_db = volume
+		if not is_equal_approx(player.pitch_scale, pitch): player.pitch_scale = pitch
 		if not player.playing: player.play()
 
 func _exit_tree() -> void:

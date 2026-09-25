@@ -4,6 +4,8 @@
 
 2026-09-25 ([jam polish](../prompts/source/jam-polish.md)): Dale approved the AI's proposal to add sound effects as part of "yes do it all"; asked for noise when the crane moves ("when the machine moves down it doesnt make a noise or when moving"); and asked for "some bacjkgriound music also soemethign sublee". RaresKeY subsequently asked to repair existing music/SFX and cancelled new music generation; [exact correction](../prompts/source/audio-ui-release.md).
 
+Performance follow-up (RaresKeY, 2026-09-25): [exact request](../prompts/source/performance-audio.md) asks to profile Web/native lag and prevent audio crackling during stalls, using priorities or threads as needed. This is explicit user direction.
+
 ## AI-inferred design
 
 Everything currently in `assets/audio/` is an **AI-generated placeholder** (Claude), synthesised by seeded standard-library Python scripts in `tools/audio/`, so any sound can be edited and regenerated identically. Keep existing music for this release; future replacements remain a separate decision.
@@ -16,3 +18,6 @@ Everything currently in `assets/audio/` is an **AI-generated placeholder** (Clau
 Open: final music, final effects, mix levels and whether to add persistent volume sliders beyond the session-only Music/SFX toggles. See [the salvage integration spec](../specs/salvage_prototype.md).
 
 AI-inferred v0.1.1 repair: explicit streamed playback, exact desktop audio socket forwarding, separate on/off controls, a quiet synthesized pause/resume click, and an independent audio lab/mixer test. No new music prompt or track is produced.
+
+
+AI-inferred implementation: use browser-managed Sample playback for Web and retain the native Stream mixer. Current sounds need none of the unsupported Sample bus effects. This separates already-playing sound from game-frame progress without adding cross-origin isolation requirements to Pages. Priorities remain owned by the platform.

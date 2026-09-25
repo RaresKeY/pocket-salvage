@@ -69,6 +69,14 @@ func run() -> void:
 	assert(hud.time_label.modulate.a >= 0.55 and hud.time_label.modulate.a <= 1.0)
 	assert(hud.music_button.text == "Music off" and hud.effects_button.text == "SFX off")
 	assert(hud.magnet_label.text.begins_with("Claw READY") and hud.score_label.text == "Score  -25")
+	# Time normalization must not freeze the warning animation or suppress other updates.
+	hud.present({"state":"running", "time_left":8.9, "score":-25})
+	var pulse_before: float = hud.time_label.modulate.a
+	await create_timer(0.1).timeout
+	hud.present({"state":"running", "time_left":8.8, "score":-25})
+	assert(hud.time_label.text == "Time  0:09" and hud.time_label.modulate.a != pulse_before)
+	hud.present({"state":"running", "time_left":8.7, "score":75})
+	assert(hud.score_label.text == "Score  75", "A score change within the same displayed second appears immediately")
 	hud.present({"state":"paused", "time_left":9})
 	assert(hud.time_label.modulate.a == 1.0, "Pulse stops outside running")
 	hud.queue_free()

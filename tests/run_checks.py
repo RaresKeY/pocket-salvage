@@ -22,6 +22,7 @@ checks = [
     (BASE + ["--script", "tests/pixel_scaling_test.gd"], "PIXEL_SCALING_TEST_OK"),
     (BASE + ["--script", "tests/rope_test.gd"], "ROPE_TEST_OK"),
     (BASE + ["--script", "tests/rope_interpolation_test.gd", "--max-fps", "240", "--quit-after", "300"], "ROPE_INTERPOLATION_TEST_OK"),
+    (BASE + ["--script", "tests/rope_sweep_test.gd"], "ROPE_SWEEP_TEST_OK"),
     (BASE + ["--script", "tests/rope_lab_test.gd"], "ROPE_LAB_TEST_OK"),
     (BASE + ["--script", "tests/physics_parts_test.gd"], "PHYSICS_PARTS_TEST_OK"),
     (BASE + ["--scene", "res://labs/physics/lab.tscn", "--quit-after", "120"], None),

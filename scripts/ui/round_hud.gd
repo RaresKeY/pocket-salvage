@@ -38,6 +38,7 @@ var action: Button
 var pause_button: Button
 var state := ""
 var _pending: Dictionary = {}
+var _displayed: Dictionary = {}
 
 func _ready() -> void:
 	set_anchors_and_offsets_preset(PRESET_FULL_RECT)
@@ -203,6 +204,14 @@ func _ignore_decoration(node: Node) -> void:
 func present(data: Dictionary) -> void:
 	_pending = data.duplicate()
 	if not is_node_ready(): return
+	var seconds := maxi(0, ceili(float(data.get("time_left", 0.0))))
+	_pending["time_left"] = seconds
+	var hurry := str(data.get("state", "ready")) == "running" and seconds <= HURRY_SECONDS
+	time_label.modulate.a = 0.55 + 0.45 * absf(cos(Time.get_ticks_msec() * 0.006)) if hurry else 1.0
+	# Most physics ticks change no displayed value. Avoid rebuilding hidden modal text,
+	# button state and theme overrides until a visible value actually changes.
+	if _displayed == _pending: return
+	_displayed = _pending.duplicate()
 	var navigation := str(data.get("navigation_hint", ""))
 	var scheme := str(data.get("control_scheme", "keyboard"))
 	var hints := CONTROL_HINTS
@@ -216,13 +225,10 @@ func present(data: Dictionary) -> void:
 	music_button.text = "Music on" if music_button.button_pressed else "Music off"
 	effects_button.set_pressed_no_signal(data.get("effects_on", true))
 	effects_button.text = "SFX on" if effects_button.button_pressed else "SFX off"
-	var seconds := maxi(0, ceili(float(data.get("time_left", 0.0))))
 	score_label.text = "Score  %d" % int(data.get("score", 0))
 	time_label.text = "Time  %d:%02d" % [seconds / 60, seconds % 60]
-	var hurry := state == "running" and seconds <= HURRY_SECONDS
 	if hurry: time_label.add_theme_color_override("font_color", HURRY_COLOR)
 	else: time_label.remove_theme_color_override("font_color")
-	time_label.modulate.a = 0.55 + 0.45 * absf(cos(Time.get_ticks_msec() * 0.006)) if hurry else 1.0
 	progress_label.text = "Sorted  %d / %d" % [int(data.get("delivered", 0)), int(data.get("total", 0))]
 	var held := str(data.get("held_material", ""))
 	var grip := str(data.get("grip_label", "Magnet " + ("ON" if data.get("magnet_on", false) else "OFF")))

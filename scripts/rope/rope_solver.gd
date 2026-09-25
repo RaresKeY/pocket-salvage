@@ -100,8 +100,9 @@ func simulate(from: Vector2, to: Vector2, length: float, dt: float) -> void:
 				var delta := points[i+1]-points[i]
 				# Cable carries tension, never compression. Extra paid-out length
 				# settles under gravity instead of pushing zigzags into the ground.
-				if delta.length()<=segment: continue
-				var correction := delta.normalized()*(delta.length()-segment)
+				var distance := delta.length()
+				if distance<=segment: continue
+				var correction := delta * ((distance-segment)/distance)
 				var weight_a := 0.0 if i==first else 1.0
 				var weight_b := 0.0 if i+1==last else 1.0
 				var weight := weight_a+weight_b
