@@ -360,7 +360,7 @@ func present(data: Dictionary) -> void:
 	state = str(data.get("state", "ready"))
 	selected_level = int(data.get("selected_level", 0))
 	level_grid.visible = state == "ready" and bool(data.get("level_menu", false))
-	levels_button.visible = state in ["paused", "finished"] and bool(data.get("level_menu", false))
+	levels_button.visible = (state == "paused" or (state == "finished" and not bool(data.get("victory", false)))) and bool(data.get("level_menu", false))
 	for index in level_buttons.size(): level_buttons[index].set_pressed_no_signal(index == selected_level)
 	touch_controls.enabled = state == "running"
 	music_button.set_pressed_no_signal(data.get("music_on", true))
@@ -399,14 +399,14 @@ func present(data: Dictionary) -> void:
 			details.visible = false
 			action.text = "Resume"
 		"finished":
-			heading.text = "Round complete"
+			heading.text = "Victory!" if bool(data.get("victory", false)) else "Round complete"
 			var reason := str(data.get("finish_reason", ""))
 			details.text = "%s\nScore  %d\nCorrect  %d  ·  Wrong  %d" % [reason, int(data.get("score", 0)), int(data.get("correct", 0)), int(data.get("wrong", 0))]
 			var bonus := int(data.get("time_bonus", 0))
 			if bonus > 0: details.text += "\nTime bonus  +%d" % bonus
 			var weather_bonus := int(data.get("weather_bonus", 0))
 			if weather_bonus > 0: details.text += "\n%s  +%d" % [weather, weather_bonus]
-			action.text = "Play again"
+			action.text = "Continue" if bool(data.get("victory", false)) else ("Retry" if bool(data.get("level_menu", false)) else "Play again")
 		_:
 			heading.text = "Pocket Salvage"
 			details.text = "10 pieces · 4 minutes\nMagnet lifts steel. Claw lifts copper and rubber.\nPark and swap heads at the left stands.\nSort into matching bins. Wrong bin: −25."
@@ -416,7 +416,7 @@ func present(data: Dictionary) -> void:
 			action.text = "Start round"
 			if level_grid.visible:
 				heading.text = "Choose a level"
-				details.text = "%02d  %s" % [selected_level + 1, Levels.title(selected_level)]
+				details.text = "%02d  %s · %d pieces" % [selected_level + 1, Levels.title(selected_level), Levels.scrap_count(selected_level)]
 				if get_viewport_rect().size.y >= 500: details.text += "\n" + str(data.get("weather_tip", ""))
 	if previous != state:
 		if modal.visible: action.grab_focus()

@@ -1,6 +1,7 @@
 extends RefCounted
 ## The first four playable shifts; remaining slots are placeholders, not progression rewards.
 const SLOT_COUNT := 12
+const SCRAP_COUNTS := [4, 6, 10, 12]
 const TITLES := ["Clear", "Breezy", "Violent", "Blood Moon"]
 const PROFILES := [
 	preload("res://data/weather/clear.tres"),
@@ -28,3 +29,7 @@ static func roll_weather(index: int, rng: RandomNumberGenerator) -> Resource:
 	result.fog = rng.randf_range(0.1, 0.28)
 	result.grip = rng.randf_range(0.55, 0.85)
 	return result
+
+static func scrap_count(index: int) -> int:
+	assert(unlocked(index), "Locked levels have no scrap")
+	return SCRAP_COUNTS[index]

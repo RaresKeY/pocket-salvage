@@ -1,12 +1,12 @@
 # Prototype yard layout subsystem
 
-Reviewed: 2026-09-25. Implementation: Blood Moon change based on `374729e`.
+Reviewed: 2026-09-25. Implementation: level-flow change based on `575407c`.
 
 ## Layout data
 
-`scripts/level/yard_layout.gd` is a RefCounted data factory. `create_layout(variant: int = 0) -> Dictionary` returns fresh caller-owned data; variants wrap modulo two. Keys: `bounds` `Rect2(0, 0, 1200, 480)`, `ground_top` 440, `art_scale` 1.6 (world units per source pixel), `crane_anchor` `(200, 45)`, `pickup_bounds` `Rect2(150, 240, 270, 200)`, `tool_stand` `(96, 424)`, `variant`, `scrap` and `bins`.
+`scripts/level/yard_layout.gd` is a RefCounted data factory. `create_layout(variant: int = 0, scrap_count: int = 10) -> Dictionary` returns fresh caller-owned data; variants wrap modulo two. Keys: `bounds` `Rect2(0, 0, 1200, 480)`, `ground_top` 440, `art_scale` 1.6 (world units per source pixel), `crane_anchor` `(200, 45)`, `pickup_bounds` `Rect2(150, 240, 270, 200)`, `tool_stand` `(96, 424)`, `variant`, `scrap` and `bins`.
 
-`scrap` holds ten dictionaries (five steel, three copper, two rubber) with unique integer `id`, StringName `material`, 8× `texture` path, centre `position`, rectangle `size` and positive `mass`. They are stacked in rows of 4, 3, 2 and 1 around x285 with 8-unit gaps and a fixed jitter under half the gap, so none start overlapping and physics tumbles them into a heap. Variant 1 rotates the order by five. `bins` holds three dictionaries with material, centre, size 150×100 and texture, centred at x650/792/934, y390, spaced `150 - SortingBin.WALL` so neighbours share a wall. No random generator or shared mutable state is involved.
+`scrap` holds ten dictionaries (five steel, three copper, two rubber) with unique integer `id`, StringName `material`, 8× `texture` path, centre `position`, rectangle `size` and positive `mass`. Rows are `[3,1]`, `[3,2,1]`, `[4,3,2,1]` or `[4,4,4]` respectively; pieces are stacked around x285 with 8-unit gaps and a fixed jitter under half the gap, so none start overlapping and physics tumbles them into a heap. Variant 1 rotates the order by five. `bins` holds three dictionaries with material, centre, size 150×100 and texture, centred at x650/792/934, y390, spaced `150 - SortingBin.WALL` so neighbours share a wall. No random generator or shared mutable state is involved.
 
 These dimensions, masses and materials are prototype fixtures, not approved objects or art-derived geometry. The caller builds any collision, sensor or gameplay object. No physics, scoring or timer is owned here.
 

@@ -252,6 +252,7 @@ func run() -> void:
 	noisy.queue_free()
 	await process_frame
 	var drift_lab = Lab.instantiate()
+	drift_lab.selected_level = 2 # Ten-piece fixture includes both the tin can and washing machine.
 	drift_lab.forced_weather = &"wind"
 	root.add_child(drift_lab)
 	await process_frame

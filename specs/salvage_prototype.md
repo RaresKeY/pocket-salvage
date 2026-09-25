@@ -1,12 +1,12 @@
 # Playable subsystem integration
 
-Reviewed: 2026-09-25. Implementation: Blood Moon change based on `374729e`.
+Reviewed: 2026-09-25. Implementation: level-flow change based on `575407c`.
 
 ## Composition
 
-`labs/salvage/lab.tscn` composes crane suspension, round/bin, HUD, level layout, ambience and audio modules without replacing the static yard preview. `scripts/scene/yard_preview.gd` adds Play prototype; F2 returns (hidden in `standalone` exports, which start this scene directly). Each subsystem keeps its own lab and verification. The world renders into a native-resolution SubViewport between the HUD bands (measured panel bounds with 6px clearance), fitting 1200×480 world units with preserved aspect ratio. Placements come from [the layout module](level_layout.md), variant 0.
+`labs/salvage/lab.tscn` composes crane suspension, round/bin, HUD, level layout, ambience and audio modules without replacing the static yard preview. The project opens this playable scene at the ready level grid. `scripts/scene/yard_preview.gd` retains Play prototype; F2 opens the preview (hidden in `standalone` exports, which start this scene directly). Each subsystem keeps its own lab and verification. The world renders into a native-resolution SubViewport between the HUD bands (measured panel bounds with 6px clearance), fitting 1200×480 world units with preserved aspect ratio. Placements come from [the layout module](level_layout.md), variant 0.
 
-Ten caller-configured RigidBody2D payloads (`payload.gd`, layer 2) start as a heap; three bins share walls (layer 1); the magnet body is layer 4. Payloads use rectangle shapes and 8× art scaled to their rectangle. Bin art stays axis-aligned; masks are not integrated. `payload.grip_offset()` is the middle of whichever edge currently faces up, so tumbled scrap stays reachable; `grip_point()` is its world position. Payloads emit `landed(at)` on contact while falling faster than 160 units/s.
+Level-dependent 4/6/10/12 caller-configured RigidBody2D payloads (`payload.gd`, layer 2) start as a heap; three bins share walls (layer 1); the magnet body is layer 4. Payloads use rectangle shapes and 8× art scaled to their rectangle. Bin art stays axis-aligned; masks are not integrated. `payload.grip_offset()` is the middle of whichever edge currently faces up, so tumbled scrap stays reachable; `grip_point()` is its world position. Payloads emit `landed(at)` on contact while falling faster than 160 units/s.
 
 ## Heads and stands
 
@@ -22,7 +22,7 @@ The [input module](input.md) additionally supports a standard gamepad and automa
 
 ## Round rules
 
-`ROUND_SECONDS` is 240. A released piece in the matching bin scores +100 and is retired. A wrong bin scores −25 (the score may go negative) and lobs the piece to `REJECT_CLEARANCE` (120) units in front of the leftmost bin, clear of its wall and within reach, so it must still be sorted. Sorting all ten correctly ends the round with 5 points per displayed remaining second (ceiling, matching the timer); reaching zero ends it without. Either end releases the load, disables bins and shows results. The HUD receives snapshots and never owns state.
+`ROUND_SECONDS` is 240. A released piece in the matching bin scores +100 and is retired. A wrong bin scores −25 (the score may go negative) and lobs the piece to `REJECT_CLEARANCE` (120) units in front of the leftmost bin, clear of its wall and within reach, so it must still be sorted. Sorting every piece correctly ends the round with 5 points per displayed remaining second (ceiling, matching the timer); reaching zero ends it without. Either end releases the load, disables bins and shows results. The HUD receives snapshots and never owns state.
 
 ## Presentation
 

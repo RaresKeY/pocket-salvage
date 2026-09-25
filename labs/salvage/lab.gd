@@ -73,6 +73,7 @@ var feedback_left := 0.0
 var level_variant := 0
 var rebuilding := false
 var finish_reason := ""
+var victory := false
 
 func _ready() -> void:
 	controls = Controls.new()
@@ -111,7 +112,7 @@ func _ready() -> void:
 	hud.level_selected.connect(select_level)
 	hud.levels_requested.connect(show_levels)
 	hud.start_requested.connect(start_round)
-	hud.restart_requested.connect(restart_round)
+	hud.restart_requested.connect(finish_action)
 	hud.pause_requested.connect(toggle_pause)
 	hud.music_requested.connect(func(): set_music(not music_on))
 	hud.effects_requested.connect(func(): sfx.set_effects_enabled(not sfx.effects_enabled); refresh_hud())
@@ -150,7 +151,7 @@ func _build_world() -> void:
 	stands.clear()
 	world = Node2D.new()
 	viewport.add_child(world)
-	layout = Layout.create_layout(level_variant)
+	layout = Layout.create_layout(level_variant, Levels.scrap_count(selected_level))
 	bin_labels.clear()
 	art_scale = layout.art_scale
 	reject_landing = Vector2(layout.bins[0].position.x - layout.bins[0].size.x * 0.5 - REJECT_CLEARANCE, layout.ground_top - 25)
@@ -226,6 +227,9 @@ func _build_world() -> void:
 		debug_overlay.configure(world, hud.hitboxes_check.button_pressed, hud.masks_check.button_pressed)
 	world.reset_physics_interpolation()
 	finish_reason = ""
+	feedback = ""
+	feedback_left = 0.0
+	victory = false
 	round_state.configure(ROUND_SECONDS,payloads.size(),weather.profile.multiplier)
 	rebuilding = false
 	_state_changed()
@@ -410,6 +414,7 @@ func _state_changed() -> void:
 	refresh_hud()
 
 func _finished(reason: StringName) -> void:
+	victory = reason == &"all_sorted"
 	finish_reason = "All scrap sorted" if reason == &"all_sorted" else "Time is up"
 	sfx.play(&"finish" if reason == &"all_sorted" else &"wrong")
 	release_load()
@@ -511,7 +516,7 @@ func _delivered(body: RigidBody2D, material: StringName, bin: Node2D) -> void:
 
 func refresh_hud() -> void:
 	if hud == null or round_state == null: return
-	hud.present({"level_menu":true,"selected_level":selected_level,"state":round_state.state,"score":round_state.score,"time_left":round_state.remaining_time,"correct":round_state.correct_count,"wrong":round_state.wrong_count,"total":payloads.size(),"delivered":round_state.delivered_count,"magnet_on":gripping,"grip_label":Heads.label(head,gripping,is_instance_valid(held_body)),"held_material":str(held_body.material_id) if is_instance_valid(held_body) else "","feedback":feedback if feedback_left > 0 else "Copper, rubber and steel each have a bin.","finish_reason":finish_reason,"time_bonus":round_state.time_bonus,"weather_label":weather_label(),"weather_tip":weather.profile.tip,"weather_bonus":round_state.weather_bonus,"music_on":music_on,"effects_on":sfx.effects_enabled,"music_volume":sfx.music_volume,"effects_volume":sfx.effects_volume,"control_scheme":controls.scheme,"navigation_hint":"" if OS.has_feature("standalone") else "F2 preview"})
+	hud.present({"level_menu":true,"victory":victory,"selected_level":selected_level,"state":round_state.state,"score":round_state.score,"time_left":round_state.remaining_time,"correct":round_state.correct_count,"wrong":round_state.wrong_count,"total":payloads.size(),"delivered":round_state.delivered_count,"magnet_on":gripping,"grip_label":Heads.label(head,gripping,is_instance_valid(held_body)),"held_material":str(held_body.material_id) if is_instance_valid(held_body) else "","feedback":feedback if feedback_left > 0 else "Copper, rubber and steel each have a bin.","finish_reason":finish_reason,"time_bonus":round_state.time_bonus,"weather_label":weather_label(),"weather_tip":weather.profile.tip,"weather_bonus":round_state.weather_bonus,"music_on":music_on,"effects_on":sfx.effects_enabled,"music_volume":sfx.music_volume,"effects_volume":sfx.effects_volume,"control_scheme":controls.scheme,"navigation_hint":"" if OS.has_feature("standalone") else "F2 preview"})
 
 func _command(command: StringName) -> void:
 	match command:
@@ -520,7 +525,7 @@ func _command(command: StringName) -> void:
 			match round_state.state:
 				&"ready": start_round()
 				&"paused": hud.activate_paused_control()
-				&"finished": restart_round()
+				&"finished": finish_action()
 				&"running": toggle_grip()
 		&"menu":
 			if round_state.state in [&"running", &"paused"]: toggle_pause()
@@ -559,3 +564,11 @@ func show_levels() -> void:
 	if round_state.state not in [&"paused", &"finished"]: return
 	controls.release_controls()
 	_build_world()
+
+func finish_action() -> void:
+	if round_state.state != &"finished": return
+	if not victory:
+		restart_round()
+		return
+	if Levels.unlocked(selected_level + 1): selected_level += 1
+	show_levels()

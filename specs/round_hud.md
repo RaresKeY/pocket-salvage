@@ -1,6 +1,6 @@
 # Round HUD
 
-Reviewed: 2026-09-25. Implementation: level-grid change based on `eba13f6`.
+Reviewed: 2026-09-25. Implementation: level-flow change based on `575407c`.
 
 ## Ownership and contract
 
@@ -47,3 +47,5 @@ The top panel separates aligned score/time/sorted counters, audio/pause actions 
 The square theme, weather-visual refresh and volume-control verification are recorded in [the wind/UI review](../docs/wind-ui-review.md).
 
 The playable ready modal supports the [level grid](levels.md), with Levels navigation from pause/results. Standalone HUD fixtures omit `level_menu` and keep the simple Start modal.
+
+Level-flow presentation: `victory` selects the Victory heading and Continue action. The scene handles the finished primary request as Continue-to-grid on victory or Retry on timeout; the synthetic HUD lab retains Play again. Victory hides the redundant secondary Levels button. Ready grid details show the selected scrap count.

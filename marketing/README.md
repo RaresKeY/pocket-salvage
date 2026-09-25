@@ -5,6 +5,6 @@ Intentional public README captures, excluded from Godot imports/exports by `.gdi
 - `pocket-salvage.png`: current gameplay hero showing the pixel-font HUD and Clear level.
 - `levels.png`: ready screen showing four unlocked levels and eight locked placeholders.
 
-Both are unmodified 1280×720 native Godot 4.7 captures made on 2026-09-25. Gameplay uses source `3557892`; the level grid was refreshed with the Blood Moon implementation based on `374729e`, captured with the shared managed runner, headless Gamescope, NVIDIA RTX 2080 Ti hardware rendering and Dummy audio. Gameplay advances through crane movement before capture; no scene elements were composited or generated. Capture script/logs remain locally in `.local/marketing-refresh/` and `.local/blood-moon/`.
+Both are unmodified 1280×720 native Godot 4.7 captures made on 2026-09-25. Gameplay uses source `3557892`; the level grid was refreshed with the level-flow implementation based on `575407c`, captured with the shared managed runner, headless Gamescope, NVIDIA RTX 2080 Ti hardware rendering and Dummy audio. Gameplay advances through crane movement before capture; no scene elements were composited or generated. Capture script/logs remain locally in `.local/marketing-refresh/` and `.local/level-progression/`.
 
 RaresKeY requested this [refresh](../prompts/source/marketing-refresh.md). The root README identifies these as current-source captures: hosted v0.1.7 does not include level selection. Promotional files do not independently authorize a game release or deployment.

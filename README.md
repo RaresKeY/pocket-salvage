@@ -1,6 +1,6 @@
 # Pocket Salvage
 
-A four-minute scrapyard shift. Drive a swinging crane, swap between a magnet and a claw, and sort ten pieces of scrap before time runs out.
+A four-minute scrapyard shift. Drive a swinging crane, swap between a magnet and a claw, and sort scrap before time runs out.
 
 **[Play in your browser](https://pocket-salvage.web.app/)** · **[Download for Windows or Linux](https://github.com/RaresKeY/pocket-salvage/releases/latest)** · [GitHub Pages mirror](https://rareskey.github.io/pocket-salvage/)
 
@@ -32,16 +32,16 @@ Correct sorts earn **100 points**. A wrong bin throws the item back and costs **
 
 The source version adds a classic 12-slot grid, with four levels unlocked:
 
-| Level | Weather |
-|---|---|
-| 01 · Clear | No weather effects |
-| 02 · Breezy | Light wind, rain, fog and occasional lightning |
-| 03 · Violent | Strong gusts, heavy rain and frequent lightning |
-| 04 · Blood Moon | Crimson sky, reversed heads, generator failures and shifting mild-to-medium weather |
+| Level | Pieces | Weather |
+|---|---|---|
+| 01 · Clear | 4 | No weather effects |
+| 02 · Breezy | 6 | Light wind, rain, fog and occasional lightning |
+| 03 · Violent | 10 | Strong gusts, heavy rain and frequent lightning |
+| 04 · Blood Moon | 12 | Crimson sky, reversed heads, generator failures and shifting mild-to-medium weather |
 
 Blood Moon reverses the tools: the magnet lifts copper/rubber and the claw lifts steel. Wind changes sides smoothly; generator outages disable the claw briefly. Only crows inhabit the cursed yard.
 
-The other eight slots are locked placeholders. Replay keeps your selection; **Levels** on pause and results returns to the grid. Select a tile with mouse/touch, or choose with controller directions and press A to start.
+The other eight slots are locked placeholders. The game opens on this grid. Clear a level to see **Victory**, then **Continue** back to selection with the next playable level highlighted. Timeout offers **Retry** or **Levels**. Explicit restart keeps the same level. Select a tile with mouse/touch, or choose with controller directions and press A to start.
 
 ![The current source level grid: Clear, Breezy, Violent and Blood Moon unlocked, with eight locked slots.](marketing/levels.png)
 
@@ -49,7 +49,7 @@ The other eight slots are locked placeholders. Replay keeps your selection; **Le
 
 ## Development
 
-Made with **Godot 4.7**. Import `project.godot`, run the project, then choose **Play prototype** from the yard preview. Open `labs/salvage/lab.tscn` to run the game directly.
+Made with **Godot 4.7**. Import `project.godot` and run: level selection opens immediately. The playable scene is `labs/salvage/lab.tscn`; F2 opens the optional yard preview in source runs.
 
 On Linux, `./play.sh` launches with desktop audio and `./tests/check` runs the suite. Both require the shared `godot-podman` runner; the launcher also needs a PulseAudio-compatible desktop audio socket. See the setup and alternative commands below.
 

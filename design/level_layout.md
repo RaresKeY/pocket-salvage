@@ -19,3 +19,9 @@ Scenery (Claude, 2026-09-25, approved by Dale with "yes do it all"): a night yar
 Gulls (Claude, 2026-09-25, from Dale's feedback): each gull flies at its own speed and flap rate, rises and dips, and sometimes glides; one to three arrive every 10 to 24 seconds, at most three at once; about half land on a free perch (floodlight tops, four rail spots, the heap, two fence spots), look around for 7 to 18 seconds and leave, and a perched gull takes off when the trolley or head comes within 90 units.
 
 Open questions: whether layout variation adds enjoyment, and whether scenery ever competes with the scrap for attention. Current source contracts and validation live in [the implementation spec](../specs/level_layout.md).
+
+## Level progression, 2026-09-25
+
+User design: RaresKeY asks to follow Dale’s pile spawning with fewer pieces at the start and more in later levels ([exact request](../prompts/source/level-flow.md)).
+
+AI-inferred design: the shared layout accepts 4/6/10/12-piece pile recipes. Existing ten-piece lab fixtures remain the default; playable count comes from the level catalog. Pieces retain gaps, jitter, bounds, materials and physical settling.

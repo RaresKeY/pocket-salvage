@@ -3,12 +3,13 @@ extends RefCounted
 const YardArt = preload("res://scripts/art/yard_art.gd")
 const GROUND_TOP := 440.0
 const PILE_CENTRE_X := 285.0
-const PILE_ROWS := [4, 3, 2, 1]
+const PILE_ROWS := {4: [3, 1], 6: [3, 2, 1], 10: [4, 3, 2, 1], 12: [4, 4, 4]}
 const PILE_GAP := 8.0
 ## Under half the gap, so neighbours never start overlapping.
 const PILE_JITTER := [0.0, 3.0, -3.0, 2.0, -2.0, 1.0, 3.0, -1.0, 2.0, -3.0]
 
-static func create_layout(variant: int = 0) -> Dictionary:
+static func create_layout(variant: int = 0, scrap_count: int = 10) -> Dictionary:
+	assert(PILE_ROWS.has(scrap_count), "Add a bounded pile recipe for this count")
 	var types := [
 		[&"steel", "scrap_washing_machine", Vector2(44, 50), 1.8],
 		[&"rubber", "scrap_tire", Vector2(42, 42), 1.0],
@@ -24,8 +25,8 @@ static func create_layout(variant: int = 0) -> Dictionary:
 	var scrap: Array[Dictionary] = []
 	var row_top := GROUND_TOP
 	var placed := 0
-	## Rows of 4, 3, 2 and 1, stacked with small gaps and a fixed jitter, so physics tumbles them into a heap.
-	for row_size in PILE_ROWS:
+	## Non-overlapping rows with gaps and jitter tumble into Dale's initial pile.
+	for row_size in PILE_ROWS[scrap_count]:
 		var row: Array = []
 		for slot in row_size:
 			row.append(types[(placed + slot + posmod(variant, 2) * 5) % types.size()])

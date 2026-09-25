@@ -2,7 +2,7 @@
 
 Run `./tests/check` from the repository root on the shared workstation. The script only orchestrates the managed Godot Podman runner; engine execution happens inside one ephemeral managed container. It resolves a sibling `godot-podman` checkout or the `GODOT_PODMAN_RUNNER` override, preserves the hardware-access default, and opens no desktop window.
 
-`run_checks.py` imports the project, verifies exact pixel blocks and alpha, exercises the scaling CLI and provenance, tests lab controls, and runs a two-frame startup. It bounds child processes and rejects logged script errors or missing success markers. This is neither gameplay coverage nor visual/hardware-renderer proof. Other environments can use the equivalent suite in [README.md](../README.md), subject to their local execution rules.
+`run_checks.py` imports the project, verifies exact pixel blocks and alpha, exercises the scaling CLI and provenance, tests lab controls, and runs a two-frame startup. It bounds child processes and rejects logged script errors or missing success markers. Headless checks are not visual/hardware-renderer proof. Other environments can use the equivalent suite in [README.md](../README.md), subject to their local execution rules.
 
 Use [the background capture flow](../labs/pixel_scaling/README.md) for hardware-rendered comparisons. Its image metadata records when an on-screen native-integer/baked comparison was actually checked; offscreen pairs are not counted as proof.
 
@@ -23,3 +23,5 @@ Use [the background capture flow](../labs/pixel_scaling/README.md) for hardware-
 `audio_test.gd` decodes every cue, checks independent SFX/music control and the audio lab. Optional `--require-pulse` validates each cue against actual mixer frames with Master muted downstream. HUD checks cover audio buttons, focus return and hurry-timer state. See [audio](../specs/audio.md).
 
 `input_test.gd` exercises standard gamepad events through Godot’s real input path, analog deadzone and actual crane movement, discrete commands, disconnect/focus recovery, simultaneous touch direction/grip, drag/cancel/release, rotation and phone layouts down to 320×568. The suite uses `--touch-controls` only for this diagnostic; normal visibility is automatic on mobile Web. Physical controller/phone playtests are separate.
+
+`level_selection_test.gd` covers the grid and locked slots. `level_progression_test.gd` checks configured startup, all four pile recipes and material coverage, Victory → Continue → selection, final-level bounds and timeout Retry/Levels. `blood_moon_test.gd` checks reversed pickup, random bounded weather, smooth wind transitions, generator outages, pause and reset isolation. The ten-piece physics regression uses level 3 with explicit Clear weather.

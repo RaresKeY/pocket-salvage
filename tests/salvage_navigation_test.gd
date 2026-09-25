@@ -31,13 +31,11 @@ func key(code: Key) -> void:
 func run() -> void:
 	root.size = Vector2i(768,480)
 	root.notify_mouse_entered()
-	var preview = load("res://scenes/main.tscn").instantiate()
-	root.add_child(preview)
-	current_scene = preview
+	var lab = load(ProjectSettings.get_setting("application/run/main_scene")).instantiate()
+	root.add_child(lab)
+	current_scene = lab
 	for frame in 3: await process_frame
-	assert(root.get_visible_rect().encloses(preview.play_button.get_global_rect()))
-	await click(preview.play_button)
-	var lab = current_scene
+	assert(lab.hud.level_grid.visible and lab.payloads.size() == 4)
 	assert(lab.scene_file_path == "res://labs/salvage/lab.tscn")
 	await click(lab.hud.action)
 	assert(lab.round_state.state == &"running")
@@ -51,5 +49,8 @@ func run() -> void:
 	assert(not lab.gripping and lab.round_state.score == 0)
 	await key(KEY_F2)
 	assert(current_scene.scene_file_path == "res://scenes/main.tscn")
+	for frame in 3: await process_frame
+	await click(current_scene.play_button)
+	assert(current_scene.hud.level_grid.visible)
 	print("SALVAGE_NAVIGATION_TEST_OK main launch, mouse start, keyboard magnet/pause/restart, mouse resume, preview return")
 	quit()

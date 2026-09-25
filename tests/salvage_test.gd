@@ -90,6 +90,7 @@ func swap_to(kind: Heads.Kind) -> void:
 func run() -> void:
 	root.size = Vector2i(1280,720)
 	lab = load("res://labs/salvage/lab.tscn").instantiate()
+	lab.selected_level = 2 # Ten-piece regression fixture; weather fixed independently.
 	lab.forced_weather = &"clear"
 	root.add_child(lab)
 	await process_frame
@@ -191,7 +192,7 @@ func run() -> void:
 	assert(lab.round_state.score == 1000 - 25 * lab.round_state.wrong_count + lab.round_state.time_bonus)
 	assert(lab.hud.details.text.contains("Time bonus  +%d" % lab.round_state.time_bonus))
 	assert(lab.hud.modal.visible)
-	lab.hud.restart_requested.emit()
+	lab._command(&"restart") # Explicit replay; victory Continue is covered by progression tests.
 	assert(lab.round_state.state == &"running" and lab.round_state.score == 0)
 	assert(lab.payloads.size() == 10 and not lab.gripping and lab.held_body == null)
 	assert(lab.head == Heads.Kind.MAGNET and lab.stands[0].holds == Heads.Kind.CLAW and lab.stands[1].holds == Heads.Kind.NONE,"Restart puts the heads back")
