@@ -13,6 +13,7 @@ func applies(profile) -> bool:
 func _start() -> void:
 	layer = Node2D.new()
 	layer.z_index = 6
+	layer.modulate = weather.profile.tint
 	layer.draw.connect(_draw_fog)
 	context.world.add_child(layer)
 	for label in context.bin_labels: label.modulate.a = 1.0 - weather.profile.fog * LABEL_DIM

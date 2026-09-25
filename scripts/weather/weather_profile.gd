@@ -16,3 +16,9 @@ extends Resource
 @export var lightning_every := Vector2.ZERO
 @export var warning := 1.0
 @export var power_cut := 0.0
+
+## Optional directional cycling and palette; neutral defaults preserve other levels.
+@export var direction_every := Vector2.ZERO
+@export var direction_transition := 3.0
+@export var wind_cap := 0.0
+@export var tint := Color.WHITE

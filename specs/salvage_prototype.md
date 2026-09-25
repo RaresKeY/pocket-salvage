@@ -1,6 +1,6 @@
 # Playable subsystem integration
 
-Reviewed: 2026-09-25. Implementation: level-grid change based on `eba13f6`.
+Reviewed: 2026-09-25. Implementation: Blood Moon change based on `374729e`.
 
 ## Composition
 
@@ -49,3 +49,5 @@ History: on 2026-09-24 the six-piece prototype passed `./tests/check`, six corre
 The yard now fits between the actual HUD panel bounds with 6px clearance. Independent Music/SFX buttons work in every state and preserve their choices across round restarts in the same scene. Pause/resume plays a quiet click. The existing generated music remains; no new music was requested after the final correction. The full suite passed on Linux, still completing in 170.05 simulated seconds; focused HUD/audio checks and five-size RTX 2080 Ti captures are recorded in [the review](../docs/audio-ui-review.md).
 
 The physics tick expires feedback before advancing the round; the round change signal presents the single current HUD snapshot for that tick. Input and delivery events still refresh immediately.
+
+Level 4 integrates the [Blood Moon](levels.md) generator controller, reversed material/power rules, tainted ambience and random mild-to-medium weather. Only this level receives those rules; all worlds are rebuilt on selection/replay.

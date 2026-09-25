@@ -1,6 +1,6 @@
 # Weather
 
-Reviewed: 2026-09-25. Implementation: level-grid change based on `eba13f6`.
+Reviewed: 2026-09-25. Implementation: Blood Moon change based on `374729e`.
 
 Each salvage round uses its selected level’s weather that physically changes how the crane works and multiplies a positive final score. Intent and the split between Dale's direction and AI choices are in [design/weather.md](../design/weather.md).
 
@@ -31,7 +31,7 @@ Fields: `id`, `label`, `tip`, `chance`, `multiplier`, `wind`, `gust`, `gust_ever
 
 ## Clock
 
-`Weather` is a `Node` added to the round's world, so it pauses with the world. `configure(profile, seed)` seeds its generator and picks a wind side (`direction`, +1 or -1). Gusts wait a random interval, then `gust_level` rises linearly over `gust_rise`, holds 0.6 s and falls over `gust_rise`. `wind_now()` returns `direction x (wind + gust x gust_level)`. Lightning emits `lightning_warning` `warning` seconds before a strike, then `lightning(x)` and `power_cut(seconds)`, and schedules the next.
+`Weather` is a `Node` added to the round's world, so it pauses with the world. `configure(profile, seed)` seeds its generator and picks a wind side (`direction`, +1 or -1). Gusts wait a random interval, then `gust_level` rises linearly over `gust_rise`, holds 0.6 s and falls over `gust_rise`. `wind_now()` returns `direction x (wind + gust x gust_level)`, clamped to the optional symmetric `wind_cap`. Lightning emits `lightning_warning` `warning` seconds before a strike, then `lightning(x)` and `power_cut(seconds)`, and schedules the next.
 
 ## Effects
 
@@ -47,7 +47,7 @@ Fields: `id`, `label`, `tip`, `chance`, `multiplier`, `wind`, `gust`, `gust_ever
 
 The salvage round is the effects' context and provides: `layout`, `world`, `weather`, `trolley`, `ambience`, `sfx`, `round_state`, `bin_labels`, `drift_crane(dx)`, `scrap_bodies()` (valid scrap), `blown_bodies()` (the head plus scrap that is not held and not being thrown back), and `power_cut(seconds)`.
 
-The round picks the weather when it builds its world, from `forced_weather` when set (tests) or from the [level catalog](levels.md); its gust/lightning seed is randomized. It passes the profile's multiplier to `round_state.configure`. `power_cut` affects only a fitted magnet: it drops the load, shows the open frame and blocks pickup until `power_out_left` runs out in the round's physics step, which only runs while the round is running, so the cut freezes while paused. Fitting a head or rebuilding the world clears it. The claw is unaffected.
+The round picks the weather when it builds its world, from `forced_weather` when set (tests) or from the [level catalog](levels.md); its gust/lightning seed is randomized. It passes the profile's multiplier to `round_state.configure`. `power_cut` affects the electrically powered head (magnet normally, claw in Blood Moon): it drops the load, shows the open frame and blocks pickup until `power_out_left` runs out in the round's physics step, which only runs while the round is running, so the cut freezes while paused. Fitting a head or rebuilding the world clears it. The other head is unaffected.
 
 The HUD shows `weather_label()` ("Storm x1.6", or just "Clear") as a badge, the label and tip on the start card, and the weather bonus on the results card. See [round HUD](round_hud.md) and [sorting and rounds](round.md) for the multiplier.
 
@@ -62,3 +62,5 @@ The HUD shows `weather_label()` ("Storm x1.6", or just "Clear") as a badge, the 
 Wind acts on the head, not the cable itself (a massless constraint), and the drawn rope does not lean with it, because the rope solver takes no external force. Rain drops and splashes do not collide. Values are untuned starting points.
 
 The later visual-only wind/dust pass passed the full managed Linux suite and hardware UI captures. See [wind/UI review](../docs/wind-ui-review.md); no weather balance or rain-particle settings changed.
+
+Profiles additionally carry neutral-default `tint`, `direction_every`, `direction_transition` and `wind_cap`. Blood Moon uses these for [bounded direction cycles and tainted effects](levels.md); other weather retains its fixed side. The HUD displays Wind left/right or calm. Direction and generator timing pause with simulation.

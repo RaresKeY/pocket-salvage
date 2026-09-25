@@ -13,6 +13,12 @@ const CLOUD_SPEED := Vector2(-6, 0)
 ## Weather wind (world units/s², signed) also hurries the clouds along.
 const CLOUD_WIND := 0.15
 var wind := 0.0
+var blood_moon := false
+var generator_running := true
+var right_lamp_level := 1.0
+var lamp_sprites: Array[Sprite2D] = []
+const BLOOD_TINT := Color(1.0, 0.32, 0.27)
+
 const Gull = preload("res://scripts/level/yard_gull.gd")
 const MAX_GULLS := 3
 const RAIL_TOP := 24.0
@@ -42,7 +48,8 @@ var smoke_wait := 1.0
 var crow_wait := 5.0
 var time := 0.0
 
-func configure(value: Dictionary) -> void:
+func configure(value: Dictionary, cursed: bool = false) -> void:
+	blood_moon = cursed
 	layout = value
 	art_scale = layout.art_scale
 	process_mode = Node.PROCESS_MODE_ALWAYS
@@ -54,15 +61,18 @@ func configure(value: Dictionary) -> void:
 		stars.append({"at": Vector2(rng.randf_range(0, bounds.size.x), rng.randf_range(44, layout.ground_top - 140)),
 			"size": rng.randf_range(1.0, 2.6), "phase": rng.randf() * TAU, "rate": rng.randf_range(0.8, 2.6)})
 	var moon := _sprite(far, "backdrop_moon", Vector2(bounds.size.x * 0.8, 100))
-	if moon: moon.scale *= 1.5
+	if moon:
+		moon.scale *= 1.5
+		if blood_moon: moon.modulate = BLOOD_TINT
 	for index in CLOUD_COUNT:
 		var cloud := _sprite(far, "backdrop_cloud", Vector2(rng.randf_range(0, bounds.size.x), rng.randf_range(70, 220)))
 		if cloud:
-			cloud.modulate.a = rng.randf_range(0.5, 0.85)
+			cloud.modulate = Color(BLOOD_TINT if blood_moon else Color.WHITE, rng.randf_range(0.5, 0.85))
 			clouds.append(cloud)
 	for x in [62.0, bounds.end.x - 62.0]:
 		var pole := _sprite(near, "yard_floodlight", Vector2.ZERO)
 		if pole:
+			lamp_sprites.append(pole)
 			var height: float = pole.texture.get_height() * pole.scale.y
 			pole.position = Vector2(x, layout.ground_top - height * 0.5)
 			lamps.append(pole.position - Vector2(0, height * 0.42))
@@ -71,7 +81,8 @@ func configure(value: Dictionary) -> void:
 	perches.append(Vector2(bounds.size.x * Backdrop.HEAP_SPOTS[0], layout.ground_top - 40))
 	for x in [300.0, 1110.0]: perches.append(Vector2(x, fence_top(Backdrop.FENCE_SKY_ROWS)))
 	for x in [bounds.position.x + 19.0, bounds.end.x - 19.0]:
-		_animated(near, "yard_beacon", Vector2(x, 34), 4.0)
+		var beacon := _animated(near, "yard_beacon", Vector2(x, 34), 4.0)
+		if beacon and blood_moon: beacon.modulate = BLOOD_TINT
 	crow = _animated(near, "critter_crow", Vector2(510, fence_top(10) - 0.5 * CROW_HEIGHT * art_scale), 5.0)
 
 func fence_top(extra_rows: float = 0.0) -> float:
@@ -114,18 +125,19 @@ func _process(delta: float) -> void:
 		if cloud.position.x < -60: cloud.position.x = width + 60
 		elif cloud.position.x > width + 60: cloud.position.x = -60
 	gull_wait -= delta
-	if gull_wait <= 0.0:
+	if gull_wait <= 0.0 and not blood_moon:
 		gull_wait = rng.randf_range(10, 24)
 		_spawn_gulls()
 	rat_wait -= delta
-	if rat_wait <= 0.0:
+	if rat_wait <= 0.0 and not blood_moon:
 		rat_wait = rng.randf_range(18, 30)
 		_visit(near, "critter_rat", layout.ground_top - 7, RAT_SPEED, 12.0)
 	smoke_wait -= delta
-	if smoke_wait <= 0.0 and YardArt.exists("fx_smoke_01"):
+	if generator_running and smoke_wait <= 0.0 and YardArt.exists("fx_smoke_01"):
 		smoke_wait = rng.randf_range(0.8, 1.6)
 		var puff := Burst.new("fx_smoke", Vector2(width * 0.9 + rng.randf_range(-12, 12), layout.ground_top - 40), art_scale)
 		near.add_child(puff)
+		if blood_moon: puff.modulate = BLOOD_TINT
 		puff.create_tween().tween_property(puff, "position:y", puff.position.y - 50, 1.2)
 	for visitor in visitors.duplicate():
 		var sprite: AnimatedSprite2D = visitor.sprite
@@ -138,11 +150,15 @@ func _process(delta: float) -> void:
 		crow_wait = rng.randf_range(4, 9)
 		crow.flip_h = not crow.flip_h
 		crow.position.x = clampf(crow.position.x + rng.randf_range(-40, 40), 460, 560)
+	for index in lamp_sprites.size():
+		var level := (right_lamp_level if index == 1 else 1.0) if generator_running else 0.0
+		lamp_sprites[index].modulate = (BLOOD_TINT if blood_moon else Color.WHITE) * Color(0.2 + level * 0.8, 0.2 + level * 0.8, 0.2 + level * 0.8, 1)
 	far.queue_redraw()
 	near.queue_redraw()
 
 ## Sometimes one gull, sometimes a loose group of two or three; some of them look for a free perch.
 func _spawn_gulls() -> void:
+	if blood_moon: return
 	var count := 1 if rng.randf() < 0.65 else rng.randi_range(2, 3)
 	var from_left := rng.randf() < 0.5
 	var altitude := rng.randf_range(70, 210)
@@ -184,20 +200,25 @@ func _draw_far(layer: Node2D) -> void:
 	var bounds: Rect2 = layout.bounds
 	var horizon := fence_top(Backdrop.FENCE_SKY_ROWS) - SKYLINE_ROWS * art_scale
 	var bands := 16
+	var sky_top := Color("220912") if blood_moon else SKY_TOP
+	var sky_bottom := Color("391721") if blood_moon else SKY_BOTTOM
 	for band in bands:
 		var top := horizon * band / bands
-		layer.draw_rect(Rect2(0, top, bounds.size.x, horizon / bands + 1), SKY_TOP.lerp(SKY_BOTTOM, float(band) / (bands - 1)))
-	layer.draw_rect(Rect2(0, horizon, bounds.size.x, bounds.size.y - horizon), SKY_BOTTOM)
+		layer.draw_rect(Rect2(0, top, bounds.size.x, horizon / bands + 1), sky_top.lerp(sky_bottom, float(band) / (bands - 1)))
+	layer.draw_rect(Rect2(0, horizon, bounds.size.x, bounds.size.y - horizon), sky_bottom)
 	for star in stars:
 		var twinkle := 0.35 + 0.65 * absf(sin(time * star.rate + star.phase))
 		layer.draw_rect(Rect2(star.at, Vector2.ONE * star.size), Color(0.95, 0.93, 1.0, twinkle))
-	layer.draw_circle(Vector2(bounds.size.x * 0.8, 100), 60, Color(0.85, 0.85, 1.0, 0.05))
-	layer.draw_circle(Vector2(bounds.size.x * 0.8, 100), 40, Color(0.85, 0.85, 1.0, 0.06))
+	layer.draw_circle(Vector2(bounds.size.x * 0.8, 100), 60, Color(BLOOD_TINT if blood_moon else Color(0.85, 0.85, 1.0), 0.05))
+	layer.draw_circle(Vector2(bounds.size.x * 0.8, 100), 40, Color(BLOOD_TINT if blood_moon else Color(0.85, 0.85, 1.0), 0.06))
 
 func _draw_near(layer: Node2D) -> void:
 	var flicker := 0.9 + 0.1 * sin(time * 17.0) * sin(time * 3.1)
-	for lamp in lamps:
+	for index in lamps.size():
+		var lamp := lamps[index]
+		var level := (right_lamp_level if index == 1 else 1.0) if generator_running else 0.0
+		var glow := Color(BLOOD_TINT, LAMP_GLOW.a) if blood_moon else LAMP_GLOW
 		var floor_y: float = layout.ground_top
 		var spread := 120.0
 		layer.draw_colored_polygon(PackedVector2Array([lamp + Vector2(-8, 0), lamp + Vector2(8, 0), Vector2(lamp.x + spread, floor_y), Vector2(lamp.x - spread, floor_y)]),
-			Color(LAMP_GLOW, LAMP_GLOW.a * flicker))
+			Color(glow, glow.a * flicker * level))

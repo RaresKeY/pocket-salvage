@@ -19,6 +19,8 @@ var controls: Node
 const DebugOverlay = preload("res://scripts/debug/yard_debug_overlay.gd")
 const Levels = preload("res://scripts/level/level_catalog.gd")
 var selected_level := 0
+const BloodMoon = preload("res://scripts/level/blood_moon.gd")
+var blood_cycle: Node
 const HUD = preload("res://scripts/ui/round_hud.gd")
 const Burst = preload("res://scripts/fx/burst_2d.gd")
 const Heads = preload("res://scripts/crane/crane_heads.gd")
@@ -154,7 +156,7 @@ func _build_world() -> void:
 	reject_landing = Vector2(layout.bins[0].position.x - layout.bins[0].size.x * 0.5 - REJECT_CLEARANCE, layout.ground_top - 25)
 	ambience = Ambience.new()
 	world.add_child(ambience)
-	ambience.configure(layout)
+	ambience.configure(layout, selected_level == 3)
 	var backdrop := Backdrop.new()
 	backdrop.z_index = -10
 	backdrop.draw_sky = false
@@ -210,8 +212,13 @@ func _build_world() -> void:
 	ambience.crane_points = func() -> Array: return [trolley.position, tip.global_position]
 	weather = Weather.new()
 	world.add_child(weather)
-	weather.configure(Weather.find(forced_weather) if forced_weather != &"" else Levels.weather(selected_level),_weather_rng.randi())
+	weather.configure(Weather.find(forced_weather) if forced_weather != &"" else Levels.roll_weather(selected_level, _weather_rng),_weather_rng.randi())
 	weather.attach(self)
+	blood_cycle = null
+	if selected_level == 3:
+		blood_cycle = BloodMoon.new()
+		world.add_child(blood_cycle)
+		blood_cycle.configure(self, _weather_rng.randi())
 	if DebugOverlay.available():
 		if debug_overlay == null:
 			debug_overlay = DebugOverlay.new()
@@ -226,7 +233,9 @@ func _build_world() -> void:
 ## "Storm x1.6", or just "Clear" when the weather has no multiplier.
 func weather_label() -> String:
 	var profile = weather.profile
-	return profile.label if profile.multiplier <= 1.0 else "%s x%s" % [profile.label,String.num(profile.multiplier,1)]
+	var text: String = profile.label if profile.multiplier <= 1.0 else "%s x%s" % [profile.label,String.num(profile.multiplier,1)]
+	if profile.wind != 0 or profile.gust != 0: text += " / " + weather.direction_label()
+	return text
 
 func scrap_bodies() -> Array:
 	return payloads.filter(func(body): return is_instance_valid(body))
@@ -235,13 +244,13 @@ func scrap_bodies() -> Array:
 func blown_bodies() -> Array:
 	return [tip] + scrap_bodies().filter(func(body): return not body.held and not body.delivered and not bins.any(func(bin): return bin.is_thrown(body)))
 
-## Lightning: a magnet loses power and drops its load; the mechanical claw is unaffected.
+## The electrically powered role drops its load; Blood Moon assigns that role to the claw.
 func power_cut(seconds: float) -> void:
-	if head != Heads.Kind.MAGNET: return
+	if Heads.function_kind(head, selected_level == 3) != Heads.Kind.MAGNET: return
 	power_out_left = maxf(power_out_left,seconds)
 	release_load()
 	if is_instance_valid(head_sprite): head_sprite.play(&"open")
-	_say("Lightning! The magnet lost power.",2.5)
+	_say("Power cut! The %s lost power." % Heads.SPECS[head].name.to_lower(),2.5)
 
 func _fit_head(kind: Heads.Kind) -> void:
 	power_out_left = 0.0
@@ -299,7 +308,7 @@ func use_stand() -> bool:
 		var fitted: Heads.Kind = stand.holds
 		_set_stand(stand,Heads.Kind.NONE)
 		_fit_head(fitted)
-		_say("%s fitted. It grips %s." % [Heads.SPECS[fitted].name," and ".join(Heads.SPECS[fitted].grips)],4.0)
+		_say("%s fitted. It grips %s." % [Heads.SPECS[fitted].name," and ".join(Heads.materials(fitted, selected_level == 3))],4.0)
 	else:
 		_say("That stand is taken. Park on the empty one." if head != Heads.Kind.NONE else "That stand is empty.",3.0)
 		return false
@@ -369,7 +378,7 @@ func start_round() -> void:
 	if round_state.state != &"ready": return
 	round_state.start()
 	sfx.play(&"start")
-	_say("Magnet lifts steel. Swap to the claw at the tool stands for copper and rubber.",7.0)
+	_say("Blood Moon: magnet lifts copper/rubber; claw lifts steel. Watch the generator." if selected_level == 3 else "Magnet lifts steel. Swap to the claw at the tool stands for copper and rubber.",7.0)
 	refresh_hud()
 
 func restart_round() -> void:
@@ -447,12 +456,13 @@ func toggle_grip() -> void:
 
 func try_pickup() -> void:
 	if not gripping or is_instance_valid(held_body) or power_out_left > 0.0: return
+	if blood_cycle != null and not blood_cycle.generator_running and Heads.function_kind(head, true) == Heads.Kind.MAGNET: return
 	var candidate: RigidBody2D
 	var refused: RigidBody2D
 	var nearest := PICKUP_RANGE
 	for body in payloads:
 		if not is_instance_valid(body) or body.delivered or body.held: continue
-		if not Heads.grips(head,body.material_id):
+		if not Heads.grips(head,body.material_id, selected_level == 3):
 			if head_mount().distance_to(body.grip_point()) < PICKUP_RANGE: refused = body
 			continue
 		var grip: Vector2 = body.grip_point()
@@ -470,7 +480,7 @@ func try_pickup() -> void:
 		burst(candidate.grip_point(),"fx_sparks")
 		_say("Carrying %s. Lift it over the bin rim, then release." % candidate.material_id,5.0)
 	elif candidate == null and refused != null and head != Heads.Kind.NONE:
-		var needed := Heads.for_material(refused.material_id)
+		var needed := Heads.for_material(refused.material_id, selected_level == 3)
 		_say("The %s won't hold %s. Swap to the %s at the tool stands." % [Heads.SPECS[head].name.to_lower(),refused.material_id,Heads.SPECS[needed].name.to_lower()],3.0)
 
 ## The underside of the fitted head, where it meets scrap or a stand.

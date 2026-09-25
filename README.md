@@ -30,17 +30,20 @@ Correct sorts earn **100 points**. A wrong bin throws the item back and costs **
 
 ## Levels on main
 
-The source version adds a classic 12-slot grid, with three levels unlocked:
+The source version adds a classic 12-slot grid, with four levels unlocked:
 
 | Level | Weather |
 |---|---|
 | 01 · Clear | No weather effects |
 | 02 · Breezy | Light wind, rain, fog and occasional lightning |
 | 03 · Violent | Strong gusts, heavy rain and frequent lightning |
+| 04 · Blood Moon | Crimson sky, reversed heads, generator failures and shifting mild-to-medium weather |
 
-The other nine slots are locked placeholders. Replay keeps your selection; **Levels** on pause and results returns to the grid. Select a tile with mouse/touch, or choose with controller directions and press A to start.
+Blood Moon reverses the tools: the magnet lifts copper/rubber and the claw lifts steel. Wind changes sides smoothly; generator outages disable the claw briefly. Only crows inhabit the cursed yard.
 
-![The current source level grid: Clear, Breezy and Violent unlocked, with nine locked slots.](marketing/levels.png)
+The other eight slots are locked placeholders. Replay keeps your selection; **Levels** on pause and results returns to the grid. Select a tile with mouse/touch, or choose with controller directions and press A to start.
+
+![The current source level grid: Clear, Breezy, Violent and Blood Moon unlocked, with eight locked slots.](marketing/levels.png)
 
 **Published version: [v0.1.7](https://github.com/RaresKeY/pocket-salvage/releases/tag/v0.1.7).** Both hosted sites currently run v0.1.7, which rolls weather per round and does not yet include the level grid. The screenshots above show current source. Firebase is updated manually; GitHub Pages updates with tagged releases.
 

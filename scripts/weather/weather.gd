@@ -17,6 +17,10 @@ var profile: Profile
 var rng := RandomNumberGenerator.new()
 var time := 0.0
 var direction := 1.0
+var direction_target := 1.0
+var direction_wait := INF
+var _direction_from := 1.0
+var _direction_age := 0.0
 var gust_level := 0.0
 var _gust_in := 0.0
 var _gust_age := -1.0
@@ -48,6 +52,10 @@ func configure(chosen: Profile, seed: int) -> void:
 	profile = chosen
 	rng.seed = seed
 	direction = -1.0 if rng.randf() < 0.5 else 1.0
+	direction_target = direction
+	_direction_from = direction
+	_direction_age = profile.direction_transition
+	direction_wait = _between(profile.direction_every)
 	_gust_in = _between(profile.gust_every)
 	_strike_in = _between(profile.lightning_every) if profile.lightning_every != Vector2.ZERO else INF
 
@@ -65,11 +73,14 @@ func attach(owner_context: Node) -> void:
 		effect.bind(self, owner_context)
 
 func wind_now() -> float:
-	return direction * (profile.wind + profile.gust * gust_level) if profile else 0.0
+	if profile == null: return 0.0
+	var value := direction * (profile.wind + profile.gust * gust_level)
+	return clampf(value, -profile.wind_cap, profile.wind_cap) if profile.wind_cap > 0 else value
 
 func _physics_process(delta: float) -> void:
 	if profile == null: return
 	time += delta
+	_tick_direction(delta)
 	_tick_gust(delta)
 	_tick_lightning(delta)
 
@@ -100,3 +111,21 @@ func _tick_lightning(delta: float) -> void:
 		_strike_in = _between(profile.lightning_every)
 		lightning.emit(rng.randf_range(100, 1100))
 		power_cut.emit(profile.power_cut)
+
+func _tick_direction(delta: float) -> void:
+	if profile.direction_every == Vector2.ZERO: return
+	if _direction_age < profile.direction_transition:
+		_direction_age = minf(_direction_age + delta, profile.direction_transition)
+		var blend := smoothstep(0.0, profile.direction_transition, _direction_age)
+		direction = clampf(lerpf(_direction_from, direction_target, blend), -1.0, 1.0)
+		return
+	direction_wait -= delta
+	if direction_wait <= 0.0:
+		_direction_from = direction
+		direction_target = -direction_target
+		_direction_age = 0.0
+		direction_wait = _between(profile.direction_every)
+
+func direction_label() -> String:
+	if absf(wind_now()) < 1.0: return "Wind calm"
+	return "Wind left" if wind_now() < 0 else "Wind right"

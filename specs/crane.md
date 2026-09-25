@@ -1,6 +1,6 @@
 # Physical cable suspension and load attachment
 
-Reviewed: 2026-09-25. Implementation revision: `cdd8a61`.
+Reviewed: 2026-09-25. Implementation: Blood Moon change based on `374729e`.
 
 `scripts/crane/cable_body_2d.gd` is a caller-shaped `RigidBody2D` with a force-integration callback. `suspension_2d.gd` applies a massless, tension-only cable constraint at that body's local pivot. Godot owns gravity, inertia, collision response and ordinary translation; moving/reeling never teleports the body or resets the rope. Geometry, art, mass, damping, controls and pickup policy remain caller-owned.
 
@@ -21,3 +21,5 @@ History, 2026-09-24: full `./tests/check` passed. The pivot test reached 35° wi
 ## Swappable heads
 
 `scripts/crane/crane_heads.gd` defines the heads a caller fits to the endpoint. `Kind` is `NONE` (bare hook), `MAGNET` or `CLAW`. `SPECS` gives each real head its name, frame prefix, gripped materials (magnet: steel; claw: copper and rubber), frame lists for `open`, `closing` and `held`, state words, grip and release sound names, and `closes_on_catch` (false for the magnet, true for the claw, which reports READY while armed and empty). `grips(kind, material)`, `label(kind, gripping, holding)`, `closes_on_catch(kind)` and `for_material(material)` answer rule questions; `sprite(kind, art_scale)` builds an AnimatedSprite2D that plays `closing` once then `held`, with the chain link as the bare hook. Pickup, stands and input stay with the caller ([integration spec](salvage_prototype.md)).
+
+Optional reversed material mapping is centralized in `crane_heads.gd`; Blood Moon swaps the two heads’ material eligibility and electrically powered role while preserving physical art/animations. See [level rules](levels.md).

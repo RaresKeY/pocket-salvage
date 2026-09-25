@@ -23,8 +23,10 @@ func _start() -> void:
 	trails.z_index = 4
 	context.world.add_child(trails)
 	trails.configure(bounds)
+	trails.modulate = weather.profile.tint
 	dust = _particles(7, Vector2(bounds.size.x * 0.5, floor_y - 28), Vector2(55, 8), Color.WHITE, 2.6, Vector2(4, 3))
 	dust.emitting = false
+	dust.modulate = weather.profile.tint
 	dust.one_shot = true
 	dust.explosiveness = 0.65
 	dust.randomness = 0.5
@@ -70,6 +72,7 @@ func _physics_process(delta: float) -> void:
 	_loop(&"wind_loop", level, -12.0)
 	trails.direction = signf(wind) if wind != 0.0 else 1.0
 	trails.strength = level
+	trails.modulate.a = absf(weather.direction)
 	dust.direction = Vector2(trails.direction, -0.12)
 	dust.initial_velocity_min = 12.0 + level * 8.0
 	dust.initial_velocity_max = 24.0 + level * 12.0

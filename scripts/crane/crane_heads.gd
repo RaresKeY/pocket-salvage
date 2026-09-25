@@ -10,8 +10,16 @@ const SPECS := {
 		"on_word": "SHUT", "off_word": "OPEN", "armed_word": "READY", "grip_sound": &"claw_shut", "release_sound": &"claw_open", "closes_on_catch": true},
 }
 
-static func grips(kind: Kind, material: StringName) -> bool:
-	return SPECS.has(kind) and material in SPECS[kind].grips
+static func function_kind(kind: Kind, reversed: bool = false) -> Kind:
+	if not reversed or kind == Kind.NONE: return kind
+	return Kind.CLAW if kind == Kind.MAGNET else Kind.MAGNET
+
+static func materials(kind: Kind, reversed: bool = false) -> Array:
+	var effective := function_kind(kind, reversed)
+	return SPECS[effective].grips if SPECS.has(effective) else []
+
+static func grips(kind: Kind, material: StringName, reversed: bool = false) -> bool:
+	return material in materials(kind, reversed)
 
 static func label(kind: Kind, gripping: bool, holding: bool = false) -> String:
 	if not SPECS.has(kind): return "Bare hook"
@@ -24,9 +32,9 @@ static func closes_on_catch(kind: Kind) -> bool:
 	return SPECS.has(kind) and SPECS[kind].closes_on_catch
 
 ## The head that grips a material, for hints.
-static func for_material(material: StringName) -> Kind:
+static func for_material(material: StringName, reversed: bool = false) -> Kind:
 	for kind in SPECS:
-		if material in SPECS[kind].grips: return kind
+		if grips(kind, material, reversed): return kind
 	return Kind.NONE
 
 ## Animations: `open` at rest, `closing` once when gripping, then `held`. The bare hook is the chain link.

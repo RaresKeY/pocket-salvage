@@ -7,6 +7,7 @@ ROOT = Path(__file__).resolve().parents[1]
 BASE = ["godot", "--headless", "--path", str(ROOT)]
 checks = [
     (BASE + ["--editor", "--import", "--quit"], None),
+    (BASE + ["--script", "tests/blood_moon_test.gd", "--quit-after", "600", "--max-fps", "60"], "BLOOD_MOON_TEST_OK"),
     (BASE + ["--script", "tests/level_selection_test.gd", "--quit-after", "300", "--max-fps", "60"], "LEVEL_SELECTION_TEST_OK"),
     (BASE + ["--script", "tests/input_test.gd", "--max-fps", "60", "--quit-after", "1800", "--", "--touch-controls"], "INPUT_TEST_OK"),
     (BASE + ["--script", "tests/audio_test.gd", "--quit-after", "1200", "--max-fps", "60"], "AUDIO_TEST_OK"),

@@ -10,6 +10,7 @@ func applies(profile) -> bool:
 func _start() -> void:
 	flash = ColorRect.new()
 	flash.color = Color(1, 1, 1, 0)
+	flash.modulate = weather.profile.tint
 	flash.size = context.layout.bounds.size
 	flash.z_index = 20
 	flash.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -24,6 +25,7 @@ func strike(x: float) -> void:
 	flash.create_tween().tween_property(flash, "color:a", 0.0, 0.35)
 	var bolt := Line2D.new()
 	bolt.width = 3
+	bolt.modulate = weather.profile.tint
 	bolt.default_color = Color(0.9, 0.95, 1.0)
 	bolt.z_index = 19
 	var point := Vector2(x, 0)

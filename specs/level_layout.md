@@ -1,6 +1,6 @@
 # Prototype yard layout subsystem
 
-Reviewed: 2026-09-25. Implementation revision: `df5ad76`.
+Reviewed: 2026-09-25. Implementation: Blood Moon change based on `374729e`.
 
 ## Layout data
 
@@ -25,3 +25,5 @@ Gulls (`scripts/level/yard_gull.gd`) arrive every 10 to 24 s, alone or in a loos
 `labs/level/main.tscn` shows the data without physics and switches variants with a button or Tab. `tests/level_test.gd` checks deterministic independent data, spawn separation and bounds, masses, unique IDs, all materials present, bins sharing walls and floor alignment, resources, and 29 staged lab nodes per variant. `tests/ambience_test.gd` checks nine perches, landing on a perch, staying put, a crane scare, leaving and freeing itself, a crossing gull that rises and dips then leaves, and the spawn cap with perches released. None of this is a reachability or fun claim.
 
 `yard_ambience.gd` exposes `wind` (set by the weather wind effect); clouds drift at their base speed plus `wind x 0.15` and wrap at either edge.
+
+Blood Moon ambience is configured by an optional flag before construction. It changes sky/moon/cloud/light colors and suppresses gulls/rats. Round-owned generator state drives right-lamp stutter, light-cone intensity and smoke emission. See [level rules](levels.md).
