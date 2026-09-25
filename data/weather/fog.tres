@@ -6,7 +6,7 @@
 script = ExtResource("1")
 id = &"fog"
 label = "Fog"
-tip = "Fog: the far bins fade. Read them by colour and symbol."
+tip = "Far bins fade. Read them by colour."
 chance = 0.15
 multiplier = 1.2
 fog = 0.75

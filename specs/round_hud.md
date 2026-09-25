@@ -12,7 +12,7 @@ Reviewed: 2026-09-25. Implementation revision: `df5ad76` (weather, on v0.1.5 `07
 - `score`, `time_left` (seconds, shown as a nonnegative ceiling in m:ss), `correct`, `wrong`, `total`, `delivered` (correctly sorted).
 - `grip_label`: the fitted head and its state, such as "Claw READY"; falls back to Magnet ON/OFF from `magnet_on`.
 - `music_on`, `effects_on`: independent text-labeled audio toggle states.
-- `held_material`, `feedback`, `finish_reason`, `time_bonus` (added to results when positive), `weather_label` (a one-line top-bar badge and a start-card heading, hidden when absent), `weather_tip` (start card), `weather_bonus` (a results line after the label when positive), `navigation_hint` (appended to the controls footer).
+- `held_material`, `feedback`, `finish_reason`, `time_bonus` (added to results when positive), `weather_label` (a one-line top-bar badge, hidden when absent), `weather_tip` (start card: one line "label: tip"; below 420 px tall only the label is prefixed to the card's first line so Start stays on screen), `weather_bonus` (a results line after the label when positive), `navigation_hint` (appended to the controls footer).
 
 Missing fields use empty/zero defaults and `ready`; a call before readiness is buffered. Score and time carry the contributed coin and timer icons. While running at `HURRY_SECONDS` (10) or less the time turns `HURRY_COLOR` and pulses. The compact footer lists A/D move, W/S lift, Space grip, E swap, P pause and R restart. Music’s tooltip names the M shortcut. Long feedback wraps and grows the bottom inset.
 
@@ -35,3 +35,5 @@ On touch landscape screens shorter than 540 logical pixels, the controller occup
 Direction buttons draw their arrows with canvas lines instead of font glyphs: exported Web fonts do not include Unicode arrows. The input regression test checks font-independent direction rendering; exported-browser screenshots verify the visible result.
 
 HUD presentation compares snapshots after rounding the remaining time to its displayed second. Unchanged values skip label/button/theme rebuilding; the hurry alpha is still updated on every presentation. Ready buffering and state transitions remain immediate. The playable physics loop advances feedback before ticking the round and uses its changed signal for one HUD refresh per tick.
+
+Resizing clears the displayed-value cache and re-presents the last data, so text that depends on screen size (the weather line) is rebuilt even when the game sends nothing new, as on the start card.

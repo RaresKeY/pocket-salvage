@@ -6,7 +6,7 @@
 script = ExtResource("1")
 id = &"rain"
 label = "Rain"
-tip = "Rain: wet scrap skids when it lands."
+tip = "Wet scrap skids when it lands."
 chance = 0.2
 multiplier = 1.3
 wind = 12.0

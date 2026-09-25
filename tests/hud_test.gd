@@ -83,6 +83,14 @@ func run() -> void:
 	assert(hud.details.text.contains("Storm x1.6") and hud.details.text.contains("Gusts") and hud.weather_badge.text == "Storm x1.6" and hud.weather_badge.visible)
 	await process_frame
 	assert(hud.weather_badge.get_line_count() == 1 and hud.top_panel.size.y < 90, "weather badge stays on one line and the top bar stays compact")
+	for small in [Vector2i(320,568), Vector2i(640,360), Vector2i(844,390), Vector2i(768,480)]:
+		root.size = small
+		hud.present({"state": "ready", "weather_label": "Storm x1.6", "weather_tip": "Lightning cuts the magnet. The claw holds."})
+		await process_frame
+		await process_frame
+		assert(Rect2(Vector2.ZERO, Vector2(small)).encloses(hud.action.get_global_rect()), "Start stays on screen with a weather tip at %s" % small)
+	root.size = Vector2i(1280,720)
+	await process_frame
 	hud.present({"state": "finished", "score": 500, "weather_label": "Storm x1.6", "weather_bonus": 188})
 	assert(hud.details.text.contains("Storm x1.6  +188"))
 	hud.present({"state": "running"})

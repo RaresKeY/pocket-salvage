@@ -6,7 +6,7 @@
 script = ExtResource("1")
 id = &"storm"
 label = "Storm"
-tip = "Gusts, slick ground and lightning. A strike cuts power: the magnet drops its load, the claw holds on."
+tip = "Lightning cuts the magnet. The claw holds."
 chance = 0.15
 multiplier = 1.6
 wind = 80.0

@@ -6,6 +6,6 @@
 script = ExtResource("1")
 id = &"clear"
 label = "Clear"
-tip = "Calm night. Nothing between you and the bins."
+tip = "Calm night."
 chance = 0.3
 multiplier = 1.0

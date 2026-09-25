@@ -18,6 +18,8 @@ var touch_panel: PanelContainer
 var world_right_inset := 0.0
 var compact_touch_landscape := false
 const ArtLab = preload("res://labs/pixel_scaling/lab.gd")
+## Below this height the start card drops the weather tip so Start stays on screen.
+const SHORT_SCREEN := 420.0
 const HURRY_SECONDS := 10
 const HURRY_COLOR := Color("ff6b5b")
 const CONTROL_HINTS := "A/D move · W/S lift · Space grip · E swap · P pause · R restart"
@@ -164,6 +166,8 @@ func _ready() -> void:
 	top.resized.connect(func(): _layout_modal(); layout_changed.emit())
 	bottom.resized.connect(func(): layout_changed.emit())
 	resized.connect(_responsive_layout)
+	# Card text depends on screen height, and unchanged data is cached, so force a rebuild on resize.
+	resized.connect(func(): _displayed = {}; present(_pending))
 	_responsive_layout()
 	present(_pending)
 
@@ -261,7 +265,9 @@ func present(data: Dictionary) -> void:
 		_:
 			heading.text = "Pocket Salvage"
 			details.text = "10 pieces · 4 minutes\nMagnet lifts steel. Claw lifts copper and rubber.\nPark and swap heads at the left stands.\nSort into matching bins. Wrong bin: −25."
-			if not weather.is_empty(): details.text = "%s\n%s\n\n%s" % [weather, str(data.get("weather_tip", "")), details.text]
+			if not weather.is_empty():
+				if get_viewport_rect().size.y < SHORT_SCREEN: details.text = "%s · %s" % [weather, details.text]
+				else: details.text = "%s: %s\n%s" % [weather, str(data.get("weather_tip", "")), details.text]
 			action.text = "Start round"
 	if previous != state:
 		if modal.visible: action.grab_focus()
