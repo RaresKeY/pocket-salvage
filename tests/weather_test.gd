@@ -160,5 +160,19 @@ func run() -> void:
 	assert(flashes.size() == 1 and stormy.weather.power_cut.is_connected(stormy.power_cut), "storm lightning is wired to the round's power")
 	stormy.queue_free()
 	await process_frame
-	print("WEATHER_TEST_OK profiles, weighted pick, calm, wind and gusts, lightning sequence, pause, forced weather, grip, multiplier, wind, rain, fog, lightning and power cuts")
+	var loud = Lab.instantiate()
+	loud.forced_weather = &"storm"
+	root.add_child(loud)
+	await process_frame
+	loud.start_round()
+	await frames(5)
+	for sound in [&"wind_loop", &"rain_loop", &"thunder"]: assert(load("res://assets/audio/%s.wav" % sound) is AudioStreamWAV, "%s exists" % sound)
+	assert(loud.sfx.loop_level(&"rain_loop") == 1.0 and loud.sfx.loops.has(&"wind_loop"), "storm runs rain and wind loops")
+	loud.sfx.set_effects_enabled(false)
+	assert(loud.sfx.loops[&"rain_loop"].current == 0.0 and loud.sfx.loops[&"wind_loop"].current == 0.0, "SFX off silences rain and wind")
+	loud.set_music(false)
+	assert(loud.sfx.effects_enabled == false, "music toggle leaves the SFX setting alone")
+	loud.queue_free()
+	await process_frame
+	print("WEATHER_TEST_OK profiles, weighted pick, calm, wind and gusts, lightning sequence, pause, forced weather, grip, multiplier, wind, rain, fog, lightning and power cuts, sounds")
 	quit()

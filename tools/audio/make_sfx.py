@@ -55,6 +55,7 @@ RECIPES = {
     "claw_shut": (0.16, lambda t, p, n: 0.45 * envelope(p, 0.003, 3.0) * (tone(sweep(900, 500, p), t, "square") * 0.5 + n * 0.5)),
     "claw_open": (0.18, lambda t, p, n: 0.3 * envelope(p, 0.01, 2.0) * (tone(sweep(400, 700, p), t, "triangle") * 0.6 + n * 0.3)),
     "clank": (0.4, lambda t, p, n: 0.4 * envelope(p, 0.002, 2.5) * (n * 0.35 + tone(610, t, "square") * 0.3 + tone(1340, t, "sine") * 0.35)),
+    "thunder": (2.2, lambda t, p, n: 0.5 * envelope(p, 0.01, 1.3) * (n * 0.7 + tone(sweep(60, 35, p), t, "sine") * 0.4)),
     "start": (0.3, lambda t, p, n: 0.28 * envelope(p, 0.01, 1.0) * tone(440 if p < 0.45 else 880, t, "square")),
 }
 
@@ -62,6 +63,8 @@ RECIPES = {
 ## Integer-Hz oscillators repeat each second; smooth the boundary for the noise layer too.
 LOOPS = {
     "trolley_loop": lambda t, p, n: 0.32 * (tone(55, t, "saw") * 0.5 + tone(110, t, "square") * 0.2 + n * 0.25 * (0.5 + 0.5 * tone(12, t, "sine"))),
+    "wind_loop": lambda t, p, n: 0.3 * n * (0.55 + 0.45 * tone(1, t, "sine")) + 0.08 * tone(170, t, "sine") * tone(3, t, "sine"),
+    "rain_loop": lambda t, p, n: 0.22 * n + 0.06 * n * tone(40, t, "square"),
     "winch_loop": lambda t, p, n: 0.22 * (tone(220, t, "saw") * 0.45 + tone(330, t, "triangle") * 0.35 + tone(6, t, "sine") * tone(440, t, "sine") * 0.2),
 }
 

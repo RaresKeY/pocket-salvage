@@ -1,6 +1,6 @@
 extends SceneTree
 const Sfx = preload("res://scripts/audio/sfx.gd")
-const CUES := [&"ui_click", &"start", &"pickup", &"clank", &"claw_open", &"claw_shut", &"magnet_on", &"magnet_off", &"correct", &"wrong", &"eject", &"land", &"tick", &"finish"]
+const CUES := [&"ui_click", &"start", &"pickup", &"clank", &"claw_open", &"claw_shut", &"magnet_on", &"magnet_off", &"correct", &"wrong", &"eject", &"land", &"tick", &"finish", &"thunder"]
 
 func _initialize() -> void: call_deferred("run")
 
@@ -20,7 +20,7 @@ func run() -> void:
 		assert(voice.playback_type == Sfx.playback_mode(), "Players use the platform audio policy")
 	var real := "--require-pulse" in OS.get_cmdline_user_args()
 	if real: assert(AudioServer.get_driver_name() == "PulseAudio", "Real driver required")
-	for cue in CUES + [&"trolley_loop", &"winch_loop", &"music_yard"]:
+	for cue in CUES + [&"trolley_loop", &"winch_loop", &"wind_loop", &"rain_loop", &"music_yard"]:
 		var stream = load("res://assets/audio/%s.wav" % cue)
 		assert(stream is AudioStreamWAV and stream.get_length() > 0.03)
 		var playback = stream.instantiate_playback()
@@ -39,7 +39,7 @@ func run() -> void:
 		if real:
 			await create_timer(0.18).timeout
 			check_mix(capture, cue)
-	for cue in [&"trolley_loop", &"winch_loop", &"music_yard"]:
+	for cue in [&"trolley_loop", &"winch_loop", &"wind_loop", &"rain_loop", &"music_yard"]:
 		for voice in sound._voices: voice.stop()
 		if real: await create_timer(0.08).timeout
 		capture.clear_buffer()
