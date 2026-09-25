@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="WeatherProfile" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/weather/weather_profile.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = &"storm"
+label = "Storm"
+tip = "Gusts, slick ground and lightning. A strike cuts power: the magnet drops its load, the claw holds on."
+chance = 0.15
+multiplier = 1.6
+wind = 70.0
+gust = 110.0
+gust_every = Vector2(4, 8)
+gust_rise = 0.8
+grip = 0.35
+rain = 220.0
+lightning_every = Vector2(12, 25)
+warning = 1.0
+power_cut = 1.1

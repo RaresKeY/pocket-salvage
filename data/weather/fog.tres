@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="WeatherProfile" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/weather/weather_profile.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = &"fog"
+label = "Fog"
+tip = "Fog: the far bins fade. Read them by colour and symbol."
+chance = 0.15
+multiplier = 1.2
+fog = 0.75

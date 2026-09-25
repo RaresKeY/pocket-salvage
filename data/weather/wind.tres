@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="WeatherProfile" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/weather/weather_profile.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = &"wind"
+label = "Wind"
+tip = "Wind pushes the head and anything in the air. Aim upwind."
+chance = 0.2
+multiplier = 1.3
+wind = 45.0
+gust = 75.0
+gust_every = Vector2(4, 9)
+gust_rise = 1.0

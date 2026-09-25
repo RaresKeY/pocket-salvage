@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="WeatherProfile" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/weather/weather_profile.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = &"clear"
+label = "Clear"
+tip = "Calm night. Nothing between you and the bins."
+chance = 0.3
+multiplier = 1.0
