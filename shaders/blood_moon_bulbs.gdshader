@@ -3,6 +3,8 @@ shader_type canvas_item;
 uniform bool beacon = false;
 uniform vec4 tint : source_color = vec4(1.0, 0.32, 0.27, 1.0);
 uniform float power : hint_range(0.0, 1.0) = 1.0;
+// Developer tint control: how much of the red lens glow is applied.
+uniform float strength : hint_range(0.0, 1.0) = 1.0;
 
 void fragment() {
     vec4 source = COLOR;
@@ -19,5 +21,5 @@ void fragment() {
     }
     float brightness = max(source.r, max(source.g, source.b));
     vec3 lit = brightness * tint.rgb * mix(0.08, 1.0, power);
-    COLOR = vec4(mix(source.rgb, lit, lens), source.a);
+    COLOR = vec4(mix(source.rgb, lit, lens * strength), source.a);
 }

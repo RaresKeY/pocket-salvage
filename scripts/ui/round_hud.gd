@@ -1,5 +1,6 @@
 extends Control
 ## Presentation-only round HUD. The caller owns game state and shortcuts.
+const TintSettings = preload("res://scripts/level/tint_settings.gd")
 signal level_selected(index: int)
 signal levels_requested
 signal start_requested
@@ -9,6 +10,7 @@ signal music_requested
 signal effects_requested
 signal volume_requested(music: float, effects: float)
 signal debug_requested(hitboxes: bool, masks: bool)
+signal tint_requested(key: StringName, value: float)
 signal layout_changed
 
 const Levels = preload("res://scripts/level/level_catalog.gd")
@@ -21,6 +23,9 @@ var developer_enabled := false
 var developer_section: VBoxContainer
 var developer_button: Button
 var developer_controls: HBoxContainer
+var tint_controls: VBoxContainer
+## Tint key -> slider, built from TintSettings.SLIDERS.
+var tint_sliders: Dictionary = {}
 var hitboxes_check: CheckButton
 var masks_check: CheckButton
 var touch_enabled := false
@@ -241,35 +246,40 @@ func _build_audio_settings(parent: VBoxContainer) -> void:
 	audio_settings.add_theme_constant_override("separation", 0)
 	parent.add_child(audio_settings)
 	for name in ["Music", "SFX"]:
-		var row := HBoxContainer.new()
-		row.add_theme_constant_override("separation", 10)
-		audio_settings.add_child(row)
-		var label := _label(row, name)
-		label.custom_minimum_size.x = 55
-		label.size_flags_vertical = SIZE_SHRINK_CENTER
-		var slider := HSlider.new()
-		slider.min_value = 0
-		slider.max_value = 100
-		slider.step = 1
-		slider.value = 100
-		slider.size_flags_horizontal = SIZE_EXPAND_FILL
-		slider.custom_minimum_size = Vector2(90, 36)
-		slider.tooltip_text = name + " volume. Left/right adjusts; mute is separate."
-		row.add_child(slider)
-		var value := _label(row, "100%")
-		value.custom_minimum_size.x = 44
-		value.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
-		value.size_flags_vertical = SIZE_SHRINK_CENTER
+		var parts := _slider_row(audio_settings, name, 55, 0, 100, 1, 100, name + " volume. Left/right adjusts; mute is separate.")
 		if name == "Music":
-			music_slider = slider
-			music_value = value
+			music_slider = parts[0]
+			music_value = parts[1]
 		else:
-			effects_slider = slider
-			effects_value = value
+			effects_slider = parts[0]
+			effects_value = parts[1]
 	for slider in [music_slider, effects_slider]:
 		slider.value_changed.connect(func(_value: float):
 			_update_volume_labels()
 			volume_requested.emit(music_slider.value / 100.0, effects_slider.value / 100.0))
+
+## A labelled slider with a readout: [slider, value label]. The caller formats the readout.
+func _slider_row(parent: Node, name: String, label_width: float, low: float, high: float, step: float, start: float, hint: String) -> Array:
+	var row := HBoxContainer.new()
+	row.add_theme_constant_override("separation", 10)
+	parent.add_child(row)
+	var label := _label(row, name)
+	label.custom_minimum_size.x = label_width
+	label.size_flags_vertical = SIZE_SHRINK_CENTER
+	var slider := HSlider.new()
+	slider.min_value = low
+	slider.max_value = high
+	slider.step = step
+	slider.value = start
+	slider.size_flags_horizontal = SIZE_EXPAND_FILL
+	slider.custom_minimum_size = Vector2(90, 36)
+	slider.tooltip_text = hint
+	row.add_child(slider)
+	var value := _label(row, "")
+	value.custom_minimum_size.x = 44
+	value.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+	value.size_flags_vertical = SIZE_SHRINK_CENTER
+	return [slider, value]
 
 func _update_volume_labels() -> void:
 	music_value.text = "%d%%" % int(music_slider.value)
@@ -287,8 +297,14 @@ func _build_developer_options(parent: VBoxContainer) -> void:
 	developer_controls = HBoxContainer.new()
 	developer_controls.visible = false
 	developer_section.add_child(developer_controls)
+	tint_controls = VBoxContainer.new()
+	tint_controls.visible = false
+	tint_controls.add_theme_constant_override("separation", 0)
+	developer_section.add_child(tint_controls)
+	_build_tint_sliders()
 	developer_button.toggled.connect(func(open: bool):
 		developer_controls.visible = open
+		tint_controls.visible = open
 		audio_settings.visible = not open and state == "paused")
 	hitboxes_check = CheckButton.new()
 	hitboxes_check.text = "Hitboxes"
@@ -304,6 +320,24 @@ func _build_developer_options(parent: VBoxContainer) -> void:
 		button.toggled.connect(func(_on: bool): debug_requested.emit(hitboxes_check.button_pressed, masks_check.button_pressed))
 	hitboxes_check.tooltip_text = "Green: physical shapes. Blue: Area2D sensors. Disabled shapes are omitted."
 	masks_check.tooltip_text = "Pink: source art masks, not collision geometry. Orange: active visual occlusion masks."
+
+## Blood Moon tint strengths, one slider per TintSettings entry; defaults are the shipped look.
+func _build_tint_sliders() -> void:
+	for entry in TintSettings.SLIDERS:
+		var parts := _slider_row(tint_controls, entry.label, 130, entry.min, entry.max, 0.01, entry.default, entry.hint + " Blood Moon only.")
+		var slider: HSlider = parts[0]
+		var readout: Label = parts[1]
+		readout.text = "%.2f" % slider.value
+		slider.value_changed.connect(func(value: float):
+			readout.text = "%.2f" % value
+			tint_requested.emit(entry.key, value))
+		tint_sliders[entry.key] = slider
+	var reset := Button.new()
+	reset.text = "Reset tints"
+	reset.custom_minimum_size.y = 36
+	reset.pressed.connect(func():
+		for entry in TintSettings.SLIDERS: tint_sliders[entry.key].value = entry.default)
+	tint_controls.add_child(reset)
 
 func _audio_button(parent: Node, text: String, hint: String, callback: Callable) -> Button:
 	var button := Button.new()

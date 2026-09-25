@@ -1,8 +1,8 @@
 shader_type canvas_item;
 // Applied to the yard's viewport container, leaving menus/HUD readable.
 uniform vec4 taint : source_color = vec4(0.65, 0.06, 0.09, 1.0);
-uniform float wash : hint_range(0.0, 0.1) = 0.05;
-uniform float edge_tint : hint_range(0.0, 0.1) = 0.05;
+uniform float wash : hint_range(0.0, 0.2) = 0.05;
+uniform float edge_tint : hint_range(0.0, 0.2) = 0.05;
 
 void fragment() {
     vec4 source = texture(TEXTURE, UV);

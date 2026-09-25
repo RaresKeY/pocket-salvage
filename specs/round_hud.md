@@ -45,3 +45,5 @@ The square theme, weather-visual refresh and volume-control verification are rec
 The playable ready modal supports the [level grid](levels.md), with Levels navigation from pause/results. Standalone HUD fixtures omit `level_menu` and keep the simple Start modal.
 
 Level-flow presentation: `victory` selects the Victory heading and Continue action. The scene handles the finished primary request as Continue-to-grid on victory or Retry on timeout; the synthetic HUD lab retains Play again. Victory hides the redundant secondary Levels button. Ready grid details show the selected scrap count.
+
+Developer options also hold the Blood Moon tint sliders (`tint_sliders`, built from `TintSettings.SLIDERS`, emitting `tint_requested(key, value)`) and a Reset tints button. Audio and tint rows share one `_slider_row` helper.

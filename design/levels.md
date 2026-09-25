@@ -29,3 +29,5 @@ Blood Moon art (RaresKeY chose, 2026-09-25, [record](../prompts/source/blood-moo
 Skyline variety (Dale asked, 2026-09-25: the skyline repeated over and over): Claude drew two more 128 px skyline designs in each palette (normal and Blood Moon), repaints every tile's sky and ground with the first tile's colours at load (an earlier cut-out version turned silhouettes into stripes in Clear, which Dale flagged), and mixes them in a fixed shuffle with mirroring.
 
 RaresKeY, 2026-09-25: [confirmed brief magnet inversion on Violent lightning](../prompts/source/lightning-rain.md). The 0.45s duration is AI-inferred; slight/normal/violent rain audio follows particle strength.
+
+Blood Moon tint controls (RaresKeY asked, 2026-09-25): the look is split into five strengths with developer-option sliders, defaulting to the shipped look. Ranges are Claude's choices: screen wash and asset edges 0 to 0.2 (default 0.05), sky 0 to 1 (default 1, blending night blue to blood red), light cones 0 to 2 (default 1), bulbs 0 to 1 (default 1). Session only, not saved.

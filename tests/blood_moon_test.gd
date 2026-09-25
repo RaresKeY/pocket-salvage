@@ -35,6 +35,26 @@ func run() -> void:
 	assert(game.ambience.blood_moon and game.blood_cycle != null)
 	assert(moon_of(game).texture.resource_path.contains("backdrop_blood_moon"), "Blood Moon shows the generated blood moon")
 	assert(backdrop_of(game).skylines.all(func(tile): return tile.resource_name.begins_with("backdrop_blood_skyline")), "Blood Moon uses the crimson skylines")
+	var Tints = preload("res://scripts/level/tint_settings.gd")
+	assert(game.tint == Tints.defaults() and Tints.SLIDERS.size() == 5, "Tints start at the shipped look")
+	assert(is_equal_approx(game.stage.material.get_shader_parameter("wash"), 0.05) and is_equal_approx(game.stage.material.get_shader_parameter("edge_tint"), 0.05))
+	game.set_tint(&"screen", 0.15)
+	game.set_tint(&"assets", 0.12)
+	game.set_tint(&"bulbs", 0.3)
+	game.set_tint(&"sky", 0.0)
+	game.set_tint(&"lights", 5.0)
+	assert(is_equal_approx(game.stage.material.get_shader_parameter("wash"), 0.15) and is_equal_approx(game.stage.material.get_shader_parameter("edge_tint"), 0.12), "Screen and asset sliders drive the grade")
+	assert(game.ambience.bulb_materials.size() > 0 and game.ambience.bulb_materials.all(func(m): return is_equal_approx(m.get_shader_parameter("strength"), 0.3)), "Bulb slider drives every bulb")
+	assert(game.ambience.clouds.all(func(c): return is_equal_approx(c.modulate.g, 1.0)), "Sky at 0 leaves clouds untinted")
+	assert(game.tint[&"lights"] == 2.0, "Values clamp to the slider range")
+	game.restart_round()
+	await process_frame
+	assert(is_equal_approx(game.stage.material.get_shader_parameter("wash"), 0.15) and game.ambience.sky_strength == 0.0 and game.ambience.bulb_materials.all(func(m): return is_equal_approx(m.get_shader_parameter("strength"), 0.3)), "Tints survive a restart")
+	if game.hud.developer_enabled:
+		assert(game.hud.tint_sliders.size() == 5)
+		game.hud.tint_sliders[&"screen"].value = 0.1
+		assert(is_equal_approx(game.tint[&"screen"], 0.1), "The developer slider drives the round")
+	for key in Tints.defaults(): game.set_tint(key, Tints.defaults()[key])
 	game.ambience._spawn_gulls()
 	game.ambience.rat_wait = 0
 	game.ambience._process(1.0)

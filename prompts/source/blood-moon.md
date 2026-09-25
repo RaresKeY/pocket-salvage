@@ -25,3 +25,8 @@ After the comparison screenshots:
 Dale, 2026-09-25 (spelling corrected):
 
 > Can we improve that skyline, as it repeats over and over?
+
+## Tint controls (relayed by Dale)
+
+> The tint looks okay, we might get better polish, but maybe segment them to assets/sky/screenspace/light/masked light bulbs
+> and add sliders in the developer options, minmax in between sensible values and default what we have atm, but honestly I think it looks okay, for dev options(they show on play.sh in pause menu, I put collision boxes there

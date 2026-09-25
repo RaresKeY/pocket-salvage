@@ -21,6 +21,9 @@ const DebugOverlay = preload("res://scripts/debug/yard_debug_overlay.gd")
 const Levels = preload("res://scripts/level/level_catalog.gd")
 var selected_level := 0
 const BLOOD_GRADE = preload("res://shaders/blood_moon_grade.gdshader")
+const TintSettings = preload("res://scripts/level/tint_settings.gd")
+## Blood Moon tint strengths from the developer options; kept across restarts, session only.
+var tint := TintSettings.defaults()
 const BloodMoon = preload("res://scripts/level/blood_moon.gd")
 var blood_cycle: Node
 const HUD = preload("res://scripts/ui/round_hud.gd")
@@ -122,6 +125,7 @@ func _ready() -> void:
 	hud.effects_requested.connect(func(): sfx.set_effects_enabled(not sfx.effects_enabled); refresh_hud())
 	hud.volume_requested.connect(func(music: float, effects: float): sfx.set_volumes(music, effects); refresh_hud())
 	hud.debug_requested.connect(_set_debug_overlay)
+	hud.tint_requested.connect(set_tint)
 	hud.layout_changed.connect(_fit)
 	hud.touch_controls.axes_changed.connect(controls.set_touch_axes)
 	hud.touch_controls.command_requested.connect(controls.touch_command)
@@ -243,6 +247,7 @@ func _build_world() -> void:
 	victory = false
 	round_state.configure(ROUND_SECONDS,payloads.size(),weather.profile.multiplier)
 	rebuilding = false
+	_apply_tint()
 	_state_changed()
 
 ## "Storm x1.6", or just "Clear" when the weather has no multiplier.
@@ -577,6 +582,18 @@ func _notification(what: int) -> void:
 	if what == NOTIFICATION_WM_WINDOW_FOCUS_OUT and controls != null: controls.release_controls()
 	if what == NOTIFICATION_WM_WINDOW_FOCUS_OUT and round_state != null and round_state.state == &"running":
 		round_state.set_paused(true)
+
+func set_tint(key: StringName, value: float) -> void:
+	tint[key] = TintSettings.clamp_value(key, value)
+	_apply_tint()
+
+func _apply_tint() -> void:
+	if stage.material is ShaderMaterial:
+		stage.material.set_shader_parameter("wash", tint[&"screen"])
+		stage.material.set_shader_parameter("edge_tint", tint[&"assets"])
+	ambience.sky_strength = tint[&"sky"]
+	ambience.light_strength = tint[&"lights"]
+	ambience.bulb_strength = tint[&"bulbs"]
 
 func _set_debug_overlay(hitboxes: bool, masks: bool) -> void:
 	if debug_overlay != null: debug_overlay.configure(world, hitboxes, masks)

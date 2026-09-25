@@ -26,6 +26,19 @@ const RAIL_TOP := 24.0
 const RAIL_PERCHES := [260.0, 520.0, 780.0, 1000.0]
 const RAT_SPEED := 120.0
 const LAMP_GLOW := Color(1.0, 0.95, 0.75, 0.16)
+const BLOOD_SKY_TOP := Color("220912")
+const BLOOD_SKY_BOTTOM := Color("391721")
+## Developer tint strengths (see tint_settings.gd); 1 is the shipped Blood Moon look.
+var sky_strength := 1.0:
+	set(value):
+		sky_strength = value
+		for cloud in clouds: cloud.modulate = Color(_cloud_tint(), cloud.modulate.a)
+var light_strength := 1.0
+var bulb_strength := 1.0:
+	set(value):
+		bulb_strength = value
+		for material in bulb_materials: material.set_shader_parameter("strength", value)
+var bulb_materials: Array[ShaderMaterial] = []
 const CROW_HEIGHT := 12
 const Backdrop = preload("res://scripts/level/yard_backdrop.gd")
 
@@ -66,7 +79,7 @@ func configure(value: Dictionary, cursed: bool = false) -> void:
 	for index in CLOUD_COUNT:
 		var cloud := _sprite(far, "backdrop_cloud", Vector2(rng.randf_range(0, bounds.size.x), rng.randf_range(70, 220)))
 		if cloud:
-			cloud.modulate = Color(BLOOD_TINT if blood_moon else Color.WHITE, rng.randf_range(0.5, 0.85))
+			cloud.modulate = Color(_cloud_tint(), rng.randf_range(0.5, 0.85))
 			clouds.append(cloud)
 	for x in [62.0, bounds.end.x - 62.0]:
 		var pole := _sprite(near, "yard_floodlight", Vector2.ZERO)
@@ -200,8 +213,8 @@ func _draw_far(layer: Node2D) -> void:
 	var bounds: Rect2 = layout.bounds
 	var horizon := fence_top(Backdrop.FENCE_SKY_ROWS) - SKYLINE_ROWS * art_scale
 	var bands := 16
-	var sky_top := Color("220912") if blood_moon else SKY_TOP
-	var sky_bottom := Color("391721") if blood_moon else SKY_BOTTOM
+	var sky_top := SKY_TOP.lerp(BLOOD_SKY_TOP, sky_strength) if blood_moon else SKY_TOP
+	var sky_bottom := SKY_BOTTOM.lerp(BLOOD_SKY_BOTTOM, sky_strength) if blood_moon else SKY_BOTTOM
 	for band in bands:
 		var top := horizon * band / bands
 		layer.draw_rect(Rect2(0, top, bounds.size.x, horizon / bands + 1), sky_top.lerp(sky_bottom, float(band) / (bands - 1)))
@@ -217,7 +230,7 @@ func _draw_near(layer: Node2D) -> void:
 	for index in lamps.size():
 		var lamp := lamps[index]
 		var level := (right_lamp_level if index == 1 else 1.0) if generator_running else 0.0
-		var glow := Color(BLOOD_TINT, LAMP_GLOW.a) if blood_moon else LAMP_GLOW
+		var glow := Color(BLOOD_TINT, LAMP_GLOW.a * light_strength) if blood_moon else LAMP_GLOW
 		var floor_y: float = layout.ground_top
 		var spread := 120.0
 		layer.draw_colored_polygon(PackedVector2Array([lamp + Vector2(-8, 0), lamp + Vector2(8, 0), Vector2(lamp.x + spread, floor_y), Vector2(lamp.x - spread, floor_y)]),
@@ -228,4 +241,9 @@ func bulb_material(is_beacon: bool) -> ShaderMaterial:
 	material.shader = BULB_SHADER
 	material.set_shader_parameter("beacon", is_beacon)
 	material.set_shader_parameter("tint", BLOOD_TINT)
+	material.set_shader_parameter("strength", bulb_strength)
+	bulb_materials.append(material)
 	return material
+
+func _cloud_tint() -> Color:
+	return Color.WHITE.lerp(BLOOD_TINT, sky_strength) if blood_moon else Color.WHITE
