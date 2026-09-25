@@ -413,6 +413,11 @@ func move_crane(horizontal: float, reel: float, delta: float) -> void:
 	sfx.set_loop(&"trolley_loop",travel,1.0,-8.0)
 	sfx.set_loop(&"winch_loop",absf(reeled),1.12 if reeled < 0.0 else 0.92,-10.0)
 
+## Wind shoves the trolley along the rail; the player steers against it. Stays within the rail's travel.
+func drift_crane(dx: float) -> void:
+	suspension.anchor.x = clampf(suspension.anchor.x + dx,80,1120)
+	trolley.position = suspension.anchor
+
 func toggle_grip() -> void:
 	if round_state.state != &"running": return
 	if head == Heads.Kind.NONE:

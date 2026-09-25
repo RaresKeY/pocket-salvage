@@ -84,7 +84,7 @@ The existing ten-piece salvage test forces Clear, so it stays deterministic.
 
 ### Implementation notes (Claude, 2026-09-25)
 
-- Wind and gust strengths are the starting numbers above, not yet tuned by play. Tuning is a playtest item in [TODO](../TODO.md).
+- Dale played the first build: wind was invisible, and he asked for it to blow the crane and make it harder (2026-09-25, [record](../prompts/source/weather.md)). Claude added gust streaks and blowing dust, a trolley drift the player steers against (`wind x 0.22` units/s), and raised Wind to 60 + 110 and Storm to 80 + 150 so a gust visibly swings the head. Still to tune by play; see [TODO](../TODO.md).
 - The drawn rope does not lean with the wind: the rope solver takes no external force, and changing RaresKeY's rope module was out of scope. Deferred in TODO.
 - Wind skips scrap being thrown back out of a wrong bin, so the aimed landing stays inside crane reach.
 - The screenshots caught a weather badge that wrapped one letter per line and rain spilling past the yard edges; both were fixed, and the badge has a layout test.

@@ -27,3 +27,13 @@ Dale Mooney's words, working through Claude Code. Spelling and punctuation are c
 [Design section 3, visuals, sound and tests]
 
 > OK, go for it.
+
+After playing the first build:
+
+> Can we see each one? Can you load them so I can see them?
+
+> Only see fog and rain?
+
+> Wind, I couldn't see anything?
+
+> And doesn't it affect the crane? Maybe it can blow the crane and make it harder.

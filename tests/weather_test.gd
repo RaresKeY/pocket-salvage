@@ -99,6 +99,20 @@ func run() -> void:
 	thrown.delivered = true
 	assert(not breezy.blown_bodies().has(thrown) and breezy.blown_bodies().has(resting), "thrown-back scrap is not blown; resting scrap is offered and friction holds it")
 	assert(breezy.ambience.wind == breezy.weather.wind_now(), "clouds follow the wind")
+	var wind_fx = breezy.weather.get_children().filter(func(e): return e.has_method("strength"))[0]
+	assert(wind_fx.streaks.emitting and wind_fx.dust.emitting, "wind shows streaks and blowing dust")
+	assert(signf(wind_fx.streaks.direction.x) == breezy.weather.direction, "streaks blow the way the wind goes")
+	assert(wind_fx.streaks.modulate.a > 0.2 and wind_fx.streaks.modulate.a <= 1.0, "streaks are visible and scale with strength")
+	var parked: float = breezy.suspension.anchor.x
+	for frame in 120:
+		await physics_frame
+	assert(signf(breezy.suspension.anchor.x - parked) == breezy.weather.direction and absf(breezy.suspension.anchor.x - parked) > 10, "wind pushes the crane downwind when nobody steers")
+	breezy.suspension.anchor.x = 600
+	var tilt := 0.0
+	for frame in 60 * 10:
+		await physics_frame
+		tilt = maxf(tilt, absf(breezy.tip.rotation))
+	assert(rad_to_deg(tilt) > 6.0, "a gust visibly swings the head (peak %.1f degrees)" % rad_to_deg(tilt))
 	breezy.queue_free()
 	await process_frame
 	var drizzle = Lab.instantiate()
