@@ -13,7 +13,7 @@ The user's direct-commit rules supersede the initial bootstrap's pull-request wo
 1. Work on `main` in your own clone. Use an experimental branch and separate worktree only when isolation is useful. Never share a dirty checkout between concurrent workers.
 2. Make focused commits and checkpoints as needed. Keep matching specs synchronized, separate explicit user design from AI inference, and record deferred work in `TODO.md`.
 3. Before each push, commit the work being preserved, fetch the latest remote, and rebase unpublished commits onto it. Resolve conflicts, inspect the resulting diff, and run relevant checks. Push normally; if another contributor has pushed first, fetch and rebase again.
-4. Push directly to `main`, with verification and limitations recorded in commit messages or the handoff. No pull requests, release tags, or mandatory feature branches. Preserve published history; do not force-push shared `main`.
+4. Push directly to `main`, with verification and limitations recorded in commit messages or the handoff. No pull requests or mandatory feature branches. Release tags are reserved for explicitly requested GitHub releases. Preserve published history; do not force-push shared `main`.
 
 The normal sequence after making local commits is:
 
@@ -36,7 +36,7 @@ Use `git bisect` to locate regressions and add a corrective or revert commit on 
 
 Private development does not automatically increment release versions. Build from a clean committed source tree, resolving the source SHA after rebasing. Do not identify dirty source as an unchanged commit build.
 
-The user explicitly requested prototype version `0.1.0`; `project.godot` supplies the in-game label. The [build script](../specs/builds.md) records the full source commit and toolchain hashes in each candidate manifest and verifies repeat builds on request. No release tags are created. Keep the current requested candidate locally and generated outputs ephemeral otherwise.
+The user explicitly requested prototype version `0.1.0`; `project.godot` supplies the in-game label. The [build script](../specs/builds.md) records the full source commit and toolchain hashes in each candidate manifest and verifies repeat builds on request. Release tags are created only when the user explicitly requests a GitHub release. Keep the current requested candidate locally and generated outputs ephemeral otherwise.
 
 ## Proposed automation
 

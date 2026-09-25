@@ -86,6 +86,9 @@ func _ready() -> void:
 	hud.start_requested.connect(start_round)
 	hud.restart_requested.connect(restart_round)
 	hud.pause_requested.connect(toggle_pause)
+	hud.music_requested.connect(func(): set_music(not music_on))
+	hud.effects_requested.connect(func(): sfx.set_effects_enabled(not sfx.effects_enabled); refresh_hud())
+	hud.layout_changed.connect(_fit)
 	resized.connect(_fit)
 	_build_world()
 	_fit()
@@ -93,8 +96,10 @@ func _ready() -> void:
 
 func _fit() -> void:
 	if stage == null: return
-	stage.position = Vector2(0,100)
-	stage.size = Vector2(size.x, maxf(120, size.y - 221))
+	var top: float = hud.top_panel.get_global_rect().end.y + 6 if hud != null else 100.0
+	var bottom: float = hud.bottom_panel.get_global_rect().position.y - 6 if hud != null else size.y - 121.0
+	stage.position = Vector2(0, top)
+	stage.size = Vector2(size.x, maxf(120, bottom - top))
 	var zoom := minf(stage.size.x / 1200.0, stage.size.y / 480.0)
 	stage_transform = Transform2D(0,Vector2.ONE * zoom,0,(stage.size - Vector2(1200,480) * zoom)*0.5)
 	viewport.canvas_transform = stage_transform
@@ -248,6 +253,7 @@ func _engage(closed: bool) -> void:
 func set_music(on: bool) -> void:
 	music_on = on
 	sfx.set_loop(MUSIC,1.0 if on else 0.0,1.0,MUSIC_DB)
+	refresh_hud()
 
 func _say(text: String, seconds: float) -> void:
 	feedback = text
@@ -306,6 +312,7 @@ func restart_round() -> void:
 	start_round()
 
 func toggle_pause() -> void:
+	sfx.play(&"ui_click", -6.0)
 	if round_state.state == &"running": round_state.set_paused(true)
 	elif round_state.state == &"paused": round_state.set_paused(false)
 
@@ -421,7 +428,7 @@ func _delivered(body: RigidBody2D, material: StringName, bin: Node2D) -> void:
 
 func refresh_hud() -> void:
 	if hud == null or round_state == null: return
-	hud.present({"state":round_state.state,"score":round_state.score,"time_left":round_state.remaining_time,"correct":round_state.correct_count,"wrong":round_state.wrong_count,"total":payloads.size(),"delivered":round_state.delivered_count,"magnet_on":gripping,"grip_label":Heads.label(head,gripping,is_instance_valid(held_body)),"held_material":str(held_body.material_id) if is_instance_valid(held_body) else "","feedback":feedback if feedback_left > 0 else "Copper, rubber and steel each have a bin.","finish_reason":finish_reason,"time_bonus":round_state.time_bonus,"navigation_hint":"" if OS.has_feature("standalone") else "F2 preview"})
+	hud.present({"state":round_state.state,"score":round_state.score,"time_left":round_state.remaining_time,"correct":round_state.correct_count,"wrong":round_state.wrong_count,"total":payloads.size(),"delivered":round_state.delivered_count,"magnet_on":gripping,"grip_label":Heads.label(head,gripping,is_instance_valid(held_body)),"held_material":str(held_body.material_id) if is_instance_valid(held_body) else "","feedback":feedback if feedback_left > 0 else "Copper, rubber and steel each have a bin.","finish_reason":finish_reason,"time_bonus":round_state.time_bonus,"music_on":music_on,"effects_on":sfx.effects_enabled,"navigation_hint":"" if OS.has_feature("standalone") else "F2 preview"})
 
 func _unhandled_key_input(event: InputEvent) -> void:
 	if not event is InputEventKey or not event.pressed or event.echo: return

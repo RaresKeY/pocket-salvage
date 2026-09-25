@@ -2,19 +2,21 @@
 
 Control a magnetic crane, collect scrap, and sort it before the timer expires. Pocket Salvage is a small Godot 4.7 collaboration experiment, organized around Jam Sync's conventions. The repository and upstream remain **`random-game`**.
 
-Run the project to see the [scrapyard scene preview](specs/scene_preview.md), arranging the contributed crane, scrap and sorting-bin sprites. Choose **Play prototype** to try the [two-minute salvage round](labs/salvage/README.md): operate the crane, lift six pieces of scrap and release them into matching bins. The yard composition remains separately inspectable. Open the [rope lab](labs/rope/README.md) to experiment with slack, reeling and terrain wrapping, or the [pixel-scaling lab](labs/pixel_scaling/README.md) to compare sampling. The [reusable rope component](scripts/rope/README.md) combines copied White Approach physics with Plug & Prosper's refined cable drawing.
+Run the project to see the [scrapyard scene preview](specs/scene_preview.md), arranging the contributed crane, scrap and sorting-bin sprites. Choose **Play prototype** to try the [four-minute salvage round](labs/salvage/README.md): operate the crane, lift ten pieces of scrap and release them into matching bins. The yard composition remains separately inspectable. Open the [rope lab](labs/rope/README.md) to experiment with slack, reeling and terrain wrapping, or the [pixel-scaling lab](labs/pixel_scaling/README.md) to compare sampling. The [reusable rope component](scripts/rope/README.md) combines copied White Approach physics with Plug & Prosper's refined cable drawing.
 
 The [object-physics components](scripts/physics/README.md) provide caller-authored solid shapes, separate sensors and visual occlusion masks. The [mask and collision fixture](labs/physics/README.md) demonstrates their independence. The playable lab supplies provisional concrete geometry; the reusable physics components remain independent.
 
 ## Start here
 
+Run `./play.sh` on the shared workstation to import and play with desktop audio. It prepares a small local audio-enabled image on first use and forwards only the desktop PulseAudio/PipeWire-Pulse socket through the shared hardware GPU runner. Set `GODOT_PODMAN_RUNNER` outside the usual sibling checkout. Extra arguments pass to Godot, e.g. `./play.sh --fullscreen`.
+
 - Open `project.godot` with Godot 4.7.
 - Read [the specs map](specs/_readme.md) for implemented reality and [the design map](design/_readme.md) for evolving intent.
 - Read [the collaboration guide](docs/collaboration.md). Agents follow the shared [AGENTS.md](AGENTS.md) (`CLAUDE.md` imports it): read specs and design first, update both with every change, and keep explicit human direction separate from AI inference.
-- Commit directly to `main`; use an experimental branch only when separation helps. Rebase unpublished commits onto the latest remote before every push. No pull requests or release tags.
+- Commit directly to `main`; use an experimental branch only when separation helps. Rebase unpublished commits onto the latest remote before every push. No pull requests. Release tags are reserved for explicitly requested GitHub releases.
 - Keep the relevant specs updated with implementation changes and record verification with the commits. Start with a shared design spike, then implement a small MVP.
 
-The user-requested standalone prototype is **v0.1.0**, shown in the HUD. From clean committed source, run `python3 tools/build/build_all.py --verify` to build Linux, Windows, Web and unsigned macOS candidates and compare two independent exports byte for byte. Outputs and source/toolchain hashes are under `build/pocket-salvage-0.1.0/`; see [the build contract](specs/builds.md) for launch instructions and platform validation limits. No release tag or publishing step is implied.
+The user-requested standalone prototype is **v0.1.1**, shown in the HUD. From clean committed source, run `python3 tools/build/build_all.py --targets windows linux web --verify` to build Linux, Windows and Web candidates and compare two independent exports byte for byte. Outputs and source/toolchain hashes are under `build/pocket-salvage-0.1.1/`; see [the build contract](specs/builds.md) for launch instructions and platform validation limits. The requested v0.1.1 GitHub release uses local builds, with no GitHub Actions build workflow.
 
 **Push and conflict rules:** always fetch `origin` before pushing. If `origin/main` has advanced, rebase unpublished commits onto it, inspect the combined result and rerun relevant checks. If a push loses a race, fetch and rebase again; never force-push shared history. For simple compatible conflicts, AI should resolve them while keeping all contributors' work. If AI cannot preserve all work, or the intended direction splits, **stop and ask the user for direction** before resolving or pushing. Preserve both versions and local commits; do not silently choose a side.
 

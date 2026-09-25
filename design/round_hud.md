@@ -15,3 +15,7 @@ Ready, paused and finished states present one clear focused action: start, resum
 2026-09-25 additions (Claude): the contributed coin and timer icons sit beside score and time; the time turns red and pulses in the last 10 seconds; "Sorted" counts correct sorts only; the status line names the fitted head and its state ("Magnet ON", "Claw READY", "Bare hook") through a caller-supplied `grip_label`; the controls footer lists Space grip, E swap head at a stand and M music. Feedback lines explain refusals ("The magnet won't hold rubber. Swap to the claw at the tool stands (E).") so the head rule teaches itself.
 
 Exact scoring language, feedback wording, final styling and final control bindings remain provisional pending RaresKeY's UI pass. The lab's synthetic numbers do not select gameplay balance. See [implementation contract](../specs/round_hud.md).
+
+## Compact follow-up, 2026-09-25
+
+User design (RaresKeY): [exact request](../prompts/source/audio-ui-release.md) to compactly simplify using Supper Guard and Plug Charge. AI-inferred choices: single-row status, shorter footer, measured yard clearances, clear primary action and separate Music/SFX toggles above modals. Retain this game’s dark/mint theme, art and gameplay.

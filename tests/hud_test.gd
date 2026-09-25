@@ -3,6 +3,8 @@ const HUD = preload("res://scripts/ui/round_hud.gd")
 var starts := 0
 var pauses := 0
 var restarts := 0
+var music_changes := 0
+var effects_changes := 0
 
 func _initialize() -> void: call_deferred("run")
 
@@ -14,16 +16,23 @@ func run() -> void:
 	root.add_child(hud)
 	hud.start_requested.connect(func(): starts += 1)
 	hud.pause_requested.connect(func(): pauses += 1)
+	hud.music_requested.connect(func(): music_changes += 1)
+	hud.effects_requested.connect(func(): effects_changes += 1)
 	hud.restart_requested.connect(func(): restarts += 1)
 	await process_frame
 	await process_frame
 	assert(hud.action.has_focus())
+	await click(hud.music_button)
+	await click(hud.effects_button)
+	assert(music_changes == 1 and effects_changes == 1, "Audio controls work above ready modal")
 	await click(hud.action)
 	assert(starts == 1)
 	hud.present({"state": "running", "score": 9999, "time_left": 60.1, "delivered": 3, "total": 6, "magnet_on": true, "held_material": "Metal"})
 	assert(not hud.modal.visible and root.gui_get_focus_owner() == null)
 	assert(hud.time_label.text == "Time  1:01")
 	assert(hud.score_label.text == "Score  9999")
+	await click(hud.music_button)
+	assert(root.gui_get_focus_owner() == null, "Audio click returns Space to crane controls")
 	assert(hud.magnet_label.text.contains("Metal"))
 	await process_frame
 	await click(hud.pause_button)
@@ -38,7 +47,7 @@ func run() -> void:
 	assert(hud.details.text.contains("Correct  4") and hud.details.text.contains("Wrong  2"))
 	await click(hud.action)
 	assert(restarts == 1)
-	for dimensions in [Vector2i(768,480), Vector2i(1280,720)]:
+	for dimensions in [Vector2i(768,480), Vector2i(854,480), Vector2i(960,540), Vector2i(1280,720), Vector2i(1920,1080)]:
 		root.size = dimensions
 		await process_frame
 		await process_frame
@@ -49,6 +58,19 @@ func run() -> void:
 		assert(version.is_visible_in_tree())
 		assert(Rect2(Vector2.ZERO, Vector2(dimensions)).encloses(version.get_global_rect()))
 		assert(not version.get_global_rect().intersects(hud.hints_label.get_global_rect()))
+		for button in [hud.music_button, hud.effects_button, hud.pause_button]:
+			if button.visible:
+				assert(Rect2(Vector2.ZERO, Vector2(dimensions)).encloses(button.get_global_rect()))
+				assert(button.size.y >= 44)
+		assert(not hud.music_button.get_global_rect().intersects(hud.effects_button.get_global_rect()))
+		assert(hud.top_panel.get_global_rect().end.y < hud.bottom_panel.position.y)
+	hud.present({"state":"running", "time_left":9, "score":-25, "total":10, "grip_label":"Claw READY", "music_on":false, "effects_on":false})
+	assert(hud.time_label.get_theme_color("font_color") == hud.HURRY_COLOR)
+	assert(hud.time_label.modulate.a >= 0.55 and hud.time_label.modulate.a <= 1.0)
+	assert(hud.music_button.text == "Music off" and hud.effects_button.text == "SFX off")
+	assert(hud.magnet_label.text.begins_with("Claw READY") and hud.score_label.text == "Score  -25")
+	hud.present({"state":"paused", "time_left":9})
+	assert(hud.time_label.modulate.a == 1.0, "Pulse stops outside running")
 	hud.queue_free()
 	await process_frame
 	print("HUD_TEST_OK states, signals, real mouse clicks, focus, counters, responsive actions")

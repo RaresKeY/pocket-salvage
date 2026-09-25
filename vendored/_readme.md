@@ -1,5 +1,7 @@
 # Dependency Map
 
+[Desktop audio](audio_launch.md) records the local container's PulseAudio client prerequisite and launcher ownership.
+
 This directory owns dependencies and copied-source provenance. [Rope sources](rope_sources/README.md) preserves White Approach and Plug & Prosper snapshots used to derive the in-repository rope component. These are user-owned project copies, not a newly licensed third-party package. Godot and the workstation runner remain external prerequisites.
 
 When adding a dependency, record its name, purpose, upstream source, pinned version or revision, license, integrity information where applicable, local patches, owning source paths, and update/verification procedure. Link its focused provenance document from this map.

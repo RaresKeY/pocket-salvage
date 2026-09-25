@@ -16,7 +16,7 @@ When unsure whether something was asked for or inferred, treat it as inferred.
 
 ## Working rules
 
-- Commit straight to `main`. No pull requests or release tags.
+- Commit straight to `main`. No pull requests. Release tags are permitted only for explicitly requested GitHub releases.
 - Always fetch before pushing. If `origin/main` moved, rebase unpublished commits onto it, recheck, then push. Never force-push.
 - In a conflict, keep everyone's work. If that is impossible or the direction splits, stop and ask the user before resolving or pushing.
 - Run the checks for engine changes (`./tests/check`, or `python3 tests/run_checks.py` with a local Godot 4.7). Report real results. Fix failures rather than weakening checks. A bug found gets a test that fails without the fix.

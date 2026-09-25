@@ -7,6 +7,8 @@ var _voices: Array[AudioStreamPlayer] = []
 var _next := 0
 var played: Array[StringName] = []
 var _silent := AudioServer.get_driver_name() == "Dummy"
+var effects_enabled := true
+var output_bus: StringName = &"Master"
 ## Looping motors: name -> {player, level (0..1 target), current, pitch}.
 var loops: Dictionary = {}
 const LOOP_FLOOR_DB := -40.0
@@ -17,11 +19,14 @@ func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	for index in VOICES:
 		var voice := AudioStreamPlayer.new()
+		voice.playback_type = AudioServer.PLAYBACK_TYPE_STREAM
+		voice.bus = output_bus
 		add_child(voice)
 		_voices.append(voice)
 
 ## Headless runs use the Dummy driver, which never mixes, so its playbacks would outlive the game.
 func play(sound: StringName, volume_db: float = 0.0, pitch_jitter: float = 0.0) -> void:
+	if not effects_enabled: return
 	played.append(sound)
 	if played.size() > 256: played.pop_front()
 	if _silent: return
@@ -40,6 +45,8 @@ func play(sound: StringName, volume_db: float = 0.0, pitch_jitter: float = 0.0) 
 func set_loop(sound: StringName, level: float, pitch: float = 1.0, volume_db: float = -6.0) -> void:
 	if not loops.has(sound):
 		var player := AudioStreamPlayer.new()
+		player.playback_type = AudioServer.PLAYBACK_TYPE_STREAM
+		player.bus = output_bus
 		add_child(player)
 		var path := DIR + String(sound) + ".wav"
 		if ResourceLoader.exists(path):
@@ -56,8 +63,19 @@ func set_loop(sound: StringName, level: float, pitch: float = 1.0, volume_db: fl
 func loop_level(sound: StringName) -> float:
 	return loops[sound].level if loops.has(sound) else 0.0
 
+func set_effects_enabled(value: bool) -> void:
+	effects_enabled = value
+	if not value:
+		for voice in _voices: voice.stop()
+		for sound in loops:
+			if sound != &"music_yard":
+				loops[sound].player.stop()
+				loops[sound].current = 0.0
+
 func _process(delta: float) -> void:
-	for entry in loops.values():
+	for sound in loops:
+		var entry: Dictionary = loops[sound]
+		if sound != &"music_yard" and not effects_enabled: continue
 		entry.current = move_toward(entry.current, entry.level, LOOP_FADE * delta)
 		var player: AudioStreamPlayer = entry.player
 		if _silent or player.stream == null: continue

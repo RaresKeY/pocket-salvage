@@ -13,15 +13,16 @@ Pocket Salvage is the official game name; its private GitHub repository remains 
 - `labs/pixel_scaling/` owns the standalone scaling lab; [the art module](art/_readme.md) owns its scaling/filtering contract and related creation tool.
 - `scripts/rope/` and `labs/rope/` own the [rope subsystem and showcase](rope.md); `vendored/rope_sources/` preserves original copied source.
 - `scripts/physics/`, `shaders/occlusion_mask.gdshader` and `labs/physics/` own [separate visual mask, solid and sensor capabilities](physics.md). Concrete geometry lives in prototype callers rather than the reusable physics components.
+- `play.sh` imports assets and launches the playable scene through the managed runner, with hardware GPU access and real desktop audio. Import and play share one project lock; extra arguments pass unchanged to Godot. See [audio](audio.md).
 - `tests/check` runs `tests/run_checks.py` through the external shared Godot Podman runner. It resolves the runner from a sibling checkout or `GODOT_PODMAN_RUNNER`.
 - `scripts/crane/`, `scripts/round/`, `scripts/ui/`, `scripts/level/`, `scripts/fx/`, `scripts/art/yard_art.gd`, `scripts/audio/` and `labs/salvage/` own the playable prototype; see the [specs map](_readme.md).
 - [Repository structure](repository.md) describes project memory, collaboration, file handling, and the source layout.
 
 ## Collaboration contract
 
-The private GitHub repository uses direct commits to `main`, rebasing unpublished work onto the latest remote before pushing. Experimental branches are optional; pull requests and release tags are not part of the current workflow. The [collaboration guide](../docs/collaboration.md) owns conflict, recovery, and build-identity rules. Optional future coordination automation lives in [design](../design/collaboration.md).
+The private GitHub repository uses direct commits to `main`, rebasing unpublished work onto the latest remote before pushing. Experimental branches are optional; pull requests are not part of the current workflow; release tags are permitted for explicitly requested GitHub releases. The [collaboration guide](../docs/collaboration.md) owns conflict, recovery, and build-identity rules. Optional future coordination automation lives in [design](../design/collaboration.md).
 
-`project.godot` declares the user-requested prototype version `0.1.0`. No project license has been selected.
+`project.godot` declares version `0.1.1`, the assistant-selected patch version for the requested release. No project license has been selected.
 
 Physics runs at 60 Hz with native 2D physics interpolation enabled. Physical bodies and the hoist move on physics ticks; custom cable geometry interpolates its previous/current particle positions at render cadence without modifying the solver. Explicit restart/spawn teleports reset interpolation history.
 

@@ -1,6 +1,6 @@
 # Development Labs
 
-[Pixel scaling](pixel_scaling/README.md) is the first runnable experiment and currently opens when the project starts. Labs isolate technical comparisons and showcases from the eventual game loop. Keep their intent in `design/` and current behavior in focused specs.
+[Pixel scaling](pixel_scaling/README.md) is the first runnable experiment. Labs isolate technical comparisons and showcases from the eventual game loop. Keep their intent in `design/` and current behavior in focused specs.
 
 [Rope](rope/README.md) showcases Pocket Salvage's reusable slack, tension, terrain-contact and curve-rendering component. Run the scene directly or use `./labs/capture rope` for off-desktop GPU evidence.
 
@@ -10,4 +10,6 @@
 
 Subsystem proving scenes: `crane/lab.tscn`, `sorting/lab.tscn`, `hud/lab.tscn`, and `level/main.tscn`. Each has focused design/spec documentation and independent tests.
 
-[Playable salvage integration](salvage/README.md) composes these modules into a two-minute round; launch from the main scene’s Play prototype button.
+[Playable salvage integration](salvage/README.md) composes these modules into a four-minute round; launch from the main scene’s Play prototype button.
+
+[Audio lab](audio/lab.tscn) auditions the generated cues and loops independently; run `./play.sh --scene res://labs/audio/lab.tscn`.

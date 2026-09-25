@@ -3,11 +3,18 @@ extends Control
 signal start_requested
 signal restart_requested
 signal pause_requested
+signal music_requested
+signal effects_requested
+signal layout_changed
 
 const ArtLab = preload("res://labs/pixel_scaling/lab.gd")
 const HURRY_SECONDS := 10
 const HURRY_COLOR := Color("ff6b5b")
-const CONTROL_HINTS := "A / D move   ·   W / S raise / lower   ·   Space grip   ·   E swap head at a stand   ·   P pause   ·   R restart   ·   M music"
+const CONTROL_HINTS := "A/D move · W/S lift · Space grip · E swap · P pause · R restart"
+var top_panel: PanelContainer
+var bottom_panel: PanelContainer
+var music_button: Button
+var effects_button: Button
 var hints_label: Label
 var score_label: Label
 var time_label: Label
@@ -30,6 +37,7 @@ func _ready() -> void:
 	theme = art.make_theme()
 	art.free()
 	var top := PanelContainer.new()
+	top_panel = top
 	top.set_anchors_and_offsets_preset(PRESET_TOP_WIDE)
 	top.offset_left = 12
 	top.offset_right = -12
@@ -38,24 +46,25 @@ func _ready() -> void:
 	compact.set_content_margin_all(8)
 	top.add_theme_stylebox_override("panel", compact)
 	add_child(top)
-	var column := VBoxContainer.new()
-	top.add_child(column)
 	var row := HBoxContainer.new()
-	row.add_theme_constant_override("separation", 24)
-	column.add_child(row)
+	row.add_theme_constant_override("separation", 12)
+	top.add_child(row)
 	score_label = _stat(row, preload("res://assets/bitwright_8x/hud_coin.png"), "Score  0")
-	score_label.custom_minimum_size.x = 130
+	score_label.custom_minimum_size.x = 90
 	time_label = _stat(row, preload("res://assets/bitwright_8x/hud_timer.png"), "Time  0:00")
-	time_label.custom_minimum_size.x = 110
+	time_label.custom_minimum_size.x = 94
 	progress_label = _label(row, "Sorted  0 / 0")
 	progress_label.size_flags_horizontal = SIZE_EXPAND_FILL
+	music_button = _audio_button(row, "Music on", "Toggle music (M)", func(): music_requested.emit())
+	effects_button = _audio_button(row, "SFX on", "Toggle sound effects and crane motors", func(): effects_requested.emit())
 	pause_button = Button.new()
 	pause_button.text = "Pause"
-	pause_button.custom_minimum_size = Vector2(90, 44)
+	pause_button.custom_minimum_size = Vector2(70, 44)
 	pause_button.pressed.connect(func(): pause_requested.emit())
 	row.add_child(pause_button)
-	magnet_label = _label(column, "Magnet OFF  ·  Holding: nothing")
 	var bottom := PanelContainer.new()
+	bottom_panel = bottom
+	bottom.add_theme_stylebox_override("panel", compact)
 	bottom.set_anchors_and_offsets_preset(PRESET_BOTTOM_WIDE)
 	bottom.grow_vertical = GROW_DIRECTION_BEGIN
 	bottom.offset_left = 12
@@ -64,12 +73,14 @@ func _ready() -> void:
 	add_child(bottom)
 	var foot := VBoxContainer.new()
 	bottom.add_child(foot)
+	magnet_label = _label(foot, "Magnet OFF  ·  Empty")
+	magnet_label.add_theme_font_size_override("font_size", 14)
 	feedback_label = _label(foot, "")
 	feedback_label.add_theme_color_override("font_color", Color("a1e8c1"))
 	hints_label = _label(foot, CONTROL_HINTS)
 	hints_label.add_theme_font_size_override("font_size", 14)
 	modal = ColorRect.new()
-	modal.color = Color(0.03, 0.06, 0.08, 0.80)
+	modal.color = Color(0.03, 0.06, 0.08, 0.65)
 	modal.set_anchors_and_offsets_preset(PRESET_FULL_RECT)
 	add_child(modal)
 	var center := CenterContainer.new()
@@ -77,7 +88,7 @@ func _ready() -> void:
 	center.mouse_filter = MOUSE_FILTER_IGNORE
 	modal.add_child(center)
 	var card := PanelContainer.new()
-	card.custom_minimum_size.x = 500
+	card.custom_minimum_size.x = 460
 	center.add_child(card)
 	var content := VBoxContainer.new()
 	content.add_theme_constant_override("separation", 16)
@@ -86,10 +97,13 @@ func _ready() -> void:
 	heading.add_theme_font_size_override("font_size", 28)
 	heading.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	details = _label(content, "")
-	details.custom_minimum_size.x = 460
+	details.custom_minimum_size.x = 428
 	details.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	action = Button.new()
 	action.custom_minimum_size.y = 48
+	var primary: StyleBoxFlat = theme.get_stylebox("normal", "Button").duplicate()
+	primary.bg_color = Color("355c50")
+	action.add_theme_stylebox_override("normal", primary)
 	action.pressed.connect(_activate)
 	content.add_child(action)
 	var version := Label.new()
@@ -104,9 +118,26 @@ func _ready() -> void:
 	version.offset_top = -22
 	version.offset_bottom = -4
 	add_child(version)
+	# Audio controls stay available above the modal on ready, pause and results.
+	move_child(top, get_child_count() - 1)
 	_ignore_decoration(self)
 	modal.mouse_filter = MOUSE_FILTER_STOP
+	top.resized.connect(func(): layout_changed.emit())
+	bottom.resized.connect(func(): layout_changed.emit())
 	present(_pending)
+
+func _audio_button(parent: Node, text: String, hint: String, callback: Callable) -> Button:
+	var button := Button.new()
+	button.text = text
+	button.tooltip_text = hint
+	button.toggle_mode = true
+	button.custom_minimum_size = Vector2(78, 44)
+	button.add_theme_font_size_override("font_size", 14)
+	button.pressed.connect(func():
+		callback.call()
+		if state == "running": button.release_focus())
+	parent.add_child(button)
+	return button
 
 func _label(parent: Node, text: String) -> Label:
 	var result := Label.new()
@@ -140,6 +171,10 @@ func present(data: Dictionary) -> void:
 	hints_label.text = CONTROL_HINTS + ("   ·   " + navigation if not navigation.is_empty() else "")
 	var previous := state
 	state = str(data.get("state", "ready"))
+	music_button.set_pressed_no_signal(data.get("music_on", true))
+	music_button.text = "Music on" if music_button.button_pressed else "Music off"
+	effects_button.set_pressed_no_signal(data.get("effects_on", true))
+	effects_button.text = "SFX on" if effects_button.button_pressed else "SFX off"
 	var seconds := maxi(0, ceili(float(data.get("time_left", 0.0))))
 	score_label.text = "Score  %d" % int(data.get("score", 0))
 	time_label.text = "Time  %d:%02d" % [seconds / 60, seconds % 60]
@@ -150,7 +185,7 @@ func present(data: Dictionary) -> void:
 	progress_label.text = "Sorted  %d / %d" % [int(data.get("delivered", 0)), int(data.get("total", 0))]
 	var held := str(data.get("held_material", ""))
 	var grip := str(data.get("grip_label", "Magnet " + ("ON" if data.get("magnet_on", false) else "OFF")))
-	magnet_label.text = "%s  ·  Holding: %s" % [grip, held if not held.is_empty() else "nothing"]
+	magnet_label.text = "%s  ·  %s" % [grip, "Carrying " + held if not held.is_empty() else "Empty"]
 	feedback_label.text = str(data.get("feedback", ""))
 	feedback_label.visible = not feedback_label.text.is_empty()
 	modal.visible = state != "running"
@@ -169,7 +204,7 @@ func present(data: Dictionary) -> void:
 			action.text = "Play again"
 		_:
 			heading.text = "Pocket Salvage"
-			details.text = "Lift scrap with the magnet.\nRelease it into the matching bin before time runs out."
+			details.text = "10 pieces · 4 minutes\nMagnet lifts steel. Claw lifts copper and rubber.\nPark and swap heads at the left stands with E.\nSort into matching bins. Wrong bin: −25."
 			action.text = "Start round"
 	if previous != state:
 		if modal.visible: action.grab_focus()

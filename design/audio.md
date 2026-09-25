@@ -2,15 +2,17 @@
 
 ## User design
 
-2026-09-25 ([jam polish](../prompts/source/jam-polish.md)): Dale approved the AI's proposal to add sound effects as part of "yes do it all"; asked for noise when the crane moves ("when the machine moves down it doesnt make a noise or when moving"); and asked for "some bacjkgriound music also soemethign sublee". RaresKeY will prepare music and sound effects to bring it together.
+2026-09-25 ([jam polish](../prompts/source/jam-polish.md)): Dale approved the AI's proposal to add sound effects as part of "yes do it all"; asked for noise when the crane moves ("when the machine moves down it doesnt make a noise or when moving"); and asked for "some bacjkgriound music also soemethign sublee". RaresKeY subsequently asked to repair existing music/SFX and cancelled new music generation; [exact correction](../prompts/source/audio-ui-release.md).
 
 ## AI-inferred design
 
-Everything currently in `assets/audio/` is an **AI-generated placeholder** (Claude), synthesised by seeded standard-library Python scripts in `tools/audio/`, so any sound can be edited and regenerated identically. RaresKeY's music and effects are expected to replace these files under the same names, or the names in the playback calls can change.
+Everything currently in `assets/audio/` is an **AI-generated placeholder** (Claude), synthesised by seeded standard-library Python scripts in `tools/audio/`, so any sound can be edited and regenerated identically. Keep existing music for this release; future replacements remain a separate decision.
 
 - One-shots: start, magnet on and off, claw shut and open, pickup, landing thud (louder for heavy scrap), correct chime, wrong buzz, the throw-back, a tick each second in the last 10, finish, and a clank when a head is parked or fitted.
-- Motor loops: `trolley_loop` and `winch_loop` are one-second loops whose frequencies complete whole cycles, so the seam is silent. Their level follows the crane's real movement each frame; the winch pitches up when raising.
+- Motor loops: `trolley_loop` and `winch_loop` are one-second loops whose frequencies complete whole cycles, with a short boundary correction for the noise layer. Their level follows the crane's real movement each frame; the winch pitches up when raising.
 - Music: `music_yard`, a 32-second loop in A minor at 90 BPM with slow pad chords (Am, F, C, G), a soft bass and a sparse plucked arpeggio. Note tails wrap round the loop point so it has no seam. It plays quietly from the start screen onwards; M mutes it.
 - Headless test runs record which sounds would play instead of playing them, because the dummy audio driver never mixes and its playbacks would outlive the test.
 
-Open: final music, final effects, mix levels and whether the player gets separate music and effects volume controls. See [the salvage integration spec](../specs/salvage_prototype.md).
+Open: final music, final effects, mix levels and whether to add persistent volume sliders beyond the session-only Music/SFX toggles. See [the salvage integration spec](../specs/salvage_prototype.md).
+
+AI-inferred v0.1.1 repair: explicit streamed playback, exact desktop audio socket forwarding, separate on/off controls, a quiet synthesized pause/resume click, and an independent audio lab/mixer test. No new music prompt or track is produced.

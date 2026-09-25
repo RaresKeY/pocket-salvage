@@ -17,3 +17,7 @@ Current round (Claude, 2026-09-25, from the directions above): ten pieces in a t
 Feedback polish (Claude, approved in "yes do it all"): sparks on pickup and on a correct sort, dust where scrap lands hard, floating score numbers, a small stage shake when heavy scrap lands, and a pulsing timer in the last 10 seconds.
 
 Keep independent crane, sorting, HUD and level labs useful as regression and reproduction scenes. Future integration can add bin-front masks, richer level variation and more physical load coupling once handling has been reviewed. Current behavior and limitations are in [the integration spec](../specs/salvage_prototype.md).
+
+## Audio/UI release follow-up, 2026-09-25
+
+User design (RaresKeY): [exact request and correction](../prompts/source/audio-ui-release.md) to repair existing audio, polish UI and build Windows/Linux/Web locally for a GitHub release. New music prompts/generation were cancelled. AI-inferred choices: retain existing music, use the workspace’s desktop audio pattern, compact HUD and clearer head instructions, and version this patch as v0.1.1.

@@ -1,0 +1,6 @@
+FROM localhost/godot-podman:4.7
+
+# PulseAudio's client also supports the desktop PipeWire-Pulse service.
+RUN apt-get update -o Acquire::Retries=3 \
+    && apt-get install -y --no-install-recommends libpulse0 \
+    && rm -rf /var/lib/apt/lists/*

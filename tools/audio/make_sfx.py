@@ -42,6 +42,7 @@ def sweep(start, end, progress):
 
 
 RECIPES = {
+    "ui_click": (0.09, lambda t, p, n: 0.3 * envelope(p, 0.03, 2.5) * (tone(740, t, "sine") * 0.8 + n * 0.12)),
     "magnet_on": (0.35, lambda t, p, n: 0.35 * envelope(p, 0.05, 1.0) * (tone(sweep(90, 260, p), t, "saw") * 0.7 + tone(sweep(180, 520, p), t) * 0.3)),
     "magnet_off": (0.25, lambda t, p, n: 0.3 * envelope(p, 0.01, 2.0) * tone(sweep(240, 70, p), t, "saw")),
     "pickup": (0.18, lambda t, p, n: 0.5 * envelope(p, 0.005, 3.0) * (tone(sweep(160, 90, p), t, "square") * 0.6 + n * 0.4)),
@@ -58,7 +59,7 @@ RECIPES = {
 }
 
 
-## Loops last a whole second so every frequency (whole hertz) completes whole cycles and the seam is silent.
+## Integer-Hz oscillators repeat each second; smooth the boundary for the noise layer too.
 LOOPS = {
     "trolley_loop": lambda t, p, n: 0.32 * (tone(55, t, "saw") * 0.5 + tone(110, t, "square") * 0.2 + n * 0.25 * (0.5 + 0.5 * tone(12, t, "sine"))),
     "winch_loop": lambda t, p, n: 0.22 * (tone(220, t, "saw") * 0.45 + tone(330, t, "triangle") * 0.35 + tone(6, t, "sine") * tone(440, t, "sine") * 0.2),
@@ -75,9 +76,23 @@ def write(name, samples):
         file.writeframes(frames)
 
 
+def loop_samples(sample):
+    samples = render(1.0, sample)
+    overlap = int(RATE * 0.02)
+    # Preserve a one-second loop; endpoints meet at a common midpoint.
+    midpoint = (samples[0] + samples[-1]) * 0.5
+    first, last = samples[0], samples[-1]
+    # Taper boundary correction without fading the motor to silence.
+    for i in range(overlap):
+        weight = (1.0 - i / overlap) ** 2
+        samples[i] += (midpoint - first) * weight
+        samples[-1 - i] += (midpoint - last) * weight
+    return samples
+
+
 if __name__ == "__main__":
     for name, (seconds, sample) in RECIPES.items():
         write(name, render(seconds, sample))
     for name, sample in LOOPS.items():
-        write(name, render(1.0, sample))
+        write(name, loop_samples(sample))
     print(f"wrote {len(RECIPES) + len(LOOPS)} sounds to {OUT}")

@@ -20,7 +20,7 @@ A/D or arrows move the trolley at 220 units/s within x80 to 1120; W/S or arrows 
 
 ## Round rules
 
-`ROUND_SECONDS` is 240. A released piece in the matching bin scores +100 and is retired. A wrong bin scores −25 (the score may go negative) and lobs the piece to `REJECT_CLEARANCE` (120) units in front of the leftmost bin, clear of its wall and within reach, so it must still be sorted. Sorting all ten correctly ends the round with 5 points per remaining whole second; reaching zero ends it without. Either end releases the load, disables bins and shows results. The HUD receives snapshots and never owns state.
+`ROUND_SECONDS` is 240. A released piece in the matching bin scores +100 and is retired. A wrong bin scores −25 (the score may go negative) and lobs the piece to `REJECT_CLEARANCE` (120) units in front of the leftmost bin, clear of its wall and within reach, so it must still be sorted. Sorting all ten correctly ends the round with 5 points per displayed remaining second (ceiling, matching the timer); reaching zero ends it without. Either end releases the load, disables bins and shows results. The HUD receives snapshots and never owns state.
 
 ## Presentation
 
@@ -37,3 +37,7 @@ Effects, motor loops and music come from [`scripts/audio/sfx.gd`](audio.md). The
 2026-09-25 validation: full `tests/run_checks.py` passes on Windows Godot 4.7 (17 marked checks). The ten-piece round with one head swap completes in 170.05 simulated seconds of 240. Windowed screenshots checked; Gamescope/GPU captures not rerun.
 
 History: on 2026-09-24 the six-piece prototype passed `./tests/check`, six correct deliveries in 92.38 simulated seconds, and Gamescope captures at five window sizes on an RTX 2080 Ti.
+
+## v0.1.1 audio and UI revision
+
+The yard now fits between the actual HUD panel bounds with 6px clearance. Independent Music/SFX buttons work in every state and preserve their choices across round restarts in the same scene. Pause/resume plays a quiet click. The existing generated music remains; no new music was requested after the final correction. The full suite passed on Linux, still completing in 170.05 simulated seconds; focused HUD/audio checks and five-size RTX 2080 Ti captures are recorded in [the review](../docs/audio-ui-review.md).

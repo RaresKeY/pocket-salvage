@@ -8,7 +8,7 @@ Reviewed: 2026-09-25. Implementation revision: `cdd8a61`.
 
 | Spec | Owning sources | Scope | Read when |
 |---|---|---|---|
-| [Project contract](project.md) | `project.godot`, `labs/`, `tests/check`, `tests/README.md` | Implemented runtime and verification | Changing engine configuration, startup, or checks |
+| [Project contract](project.md) | `project.godot`, `play.sh`, `labs/`, `tests/check`, `tests/README.md` | Implemented runtime and verification | Changing engine configuration, startup, or checks |
 | [Scene preview](scene_preview.md) | `scenes/main.tscn`, `scripts/scene/`, contributed art | Yard composition, 8× textures, smooth inspection camera and scope | Arranging the game scene or changing preview layout |
 | [Art specs module](art/_readme.md) | `assets/`, `scripts/art/`, `scripts/fx/`, `tools/pixel_art/`, `labs/pixel_scaling/`, project rendering defaults | Sampling conventions for all art and the exact-pixel tool/lab | Adding art, changing filtering/imports, or testing scaling |
 | [Enlarged sprite playground](art/sprite_playground.md) | `assets/bitwright_8x/`, `labs/sprite_playground/` | 8× stored art, runtime filtering and grabbable physics fixture | Changing enlarged derivatives or sprite interaction |
@@ -20,7 +20,7 @@ Reviewed: 2026-09-25. Implementation revision: `cdd8a61`.
 | [Round HUD](round_hud.md) | `scripts/ui/`, `labs/hud/` | State-driven counters, feedback and modal actions | Changing round presentation |
 | [Level layouts](level_layout.md) | `scripts/level/`, `labs/level/` | Prototype placements, backdrop, animated ambience and gulls | Changing layout fixtures or scenery |
 | [Playable integration](salvage_prototype.md) | `labs/salvage/` | Combined crane, heads, sorting, round, UI, level and audio prototype | Changing playable integration or controls |
-| [Audio](audio.md) | `scripts/audio/`, `tools/audio/`, `assets/audio/` | Effect pool, motor and music loops, generated placeholder sounds | Changing or replacing sounds |
+| [Audio](audio.md) | `scripts/audio/`, `tools/audio/`, `assets/audio/`, `labs/audio/`, `play.sh` | Effect pool, motor and music loops, generated placeholder sounds | Changing or replacing sounds |
 | [Standalone builds](builds.md) | `tools/build/`, `export_presets.cfg` | Clean-source multi-platform exports and reproducibility | Building the versioned prototype |
 
 ## Maintenance
