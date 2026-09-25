@@ -1,6 +1,6 @@
 # Audio
 
-Reviewed: 2026-09-25. Implementation: performance/audio update based on `cb0993d`; final measured validation recorded after release.
+Reviewed: 2026-09-25. Implementation revision: `07f1974` (v0.1.5).
 
 ## Ownership
 
@@ -33,3 +33,5 @@ The independent [audio lab](../labs/audio/lab.tscn) exposes every effect and loo
 Web voices and loops use browser-managed Sample playback, so already-started sounds are mixed by Web Audio independently of game-frame stalls. Native builds keep Stream playback and native driver mixing. The game uses no bus effects or procedural audio streams that require the Web streaming mixer. Browser priority is managed by the browser; no OS priority or custom audio thread is introduced.
 
 Stable loop volume/pitch values do not resend unchanged parameters to the browser audio graph. Fades and pitch changes retain their existing easing.
+
+Performance and underrun evidence, including intentionally silent stress tests, is recorded in [the Firefox/Linux review](../docs/performance-review.md).

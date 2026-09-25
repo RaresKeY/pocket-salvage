@@ -1,6 +1,6 @@
 # Standalone prototype builds
 
-Reviewed: 2026-09-25. Implementation revision: `6488a44` (published v0.1.4).
+Reviewed: 2026-09-25. Implementation revision: `07f1974` (published v0.1.5).
 
 The user requested a versioned standalone prototype and reproducible builds. Export presets cover Linux x86_64, Windows x86_64, Web (single-thread WebAssembly) and unsigned macOS universal. Mobile Web input is supported through the shared [input module](input.md); native mobile exports and signing remain outside this prototype. Platform availability is separate from tested runtime support: Linux and Web can be exercised on the development workstation; Windows and macOS require target-machine playtests.
 
@@ -57,3 +57,7 @@ Firefox loaded the actual HTTPS Pages site and passed keyboard start, movement/r
 2026-09-25 v0.1.4 delivery: source `6488a449cb0f049e2c8560e5583255209ab6cb96` passed the full engine suite and eight release tests locally and on GitHub. The [tag run](https://github.com/RaresKeY/pocket-salvage/actions/runs/36172352290) completed in 2m41s: Windows/Linux/Web exports matched across two clean snapshots, release uploads were downloaded and hash-compared, and every deployed Web file was verified against the candidate. Local Web exports independently passed the two-snapshot comparison. The public Linux ZIP passed SHA256SUMS, ZIP CRC and executable-mode checks, then started and exited normally through managed background Gamescope on NVIDIA RTX 2080 Ti Compatibility. Windows was exported and verified but not executed. Controller/mobile behavior, native layout captures and exported-browser evidence are detailed in [the input review](../docs/input-review.md).
 
 The live HTTPS Pages game reports v0.1.4 and source `6488a44`. Firefox checks against that actual deployment passed mobile detection, multi-touch move/reel/grip, pause/resume/rotation, and simulated gamepad start/movement/grip/audio/pause/restart/disconnect, with inspected screenshots and zero game-console errors. Generated local export/download payloads were removed after verified deployment; ignored diagnostic evidence remains.
+
+Version 0.1.5 keeps the same single-thread Web template and delivery contract; browser-managed sample audio requires no cross-origin headers or additional workers. The source project applies a Web-only 60 FPS limit. [Performance review](../docs/performance-review.md) separates clean export timing, instrumented native/Web attribution and audio-stall evidence.
+
+2026-09-25 v0.1.5 delivery: [tag workflow 36176275599](https://github.com/RaresKeY/pocket-salvage/actions/runs/36176275599) passed the full engine suite and eight delivery tests, compared two clean Windows/Linux/Web exports, verified uploaded assets and every live Pages file, and cleaned its candidate. Live `build.json` identifies `07f1974b83bc9c552f6fd7ab28f4362148dbe2c6`. Local Linux/Web validation used pre-rebase `36d4ffa`, whose runtime/build sources are identical; only Dale’s design/directive documentation differs. Real PulseAudio mixer checks passed with Master muted. See [performance evidence and limits](../docs/performance-review.md).

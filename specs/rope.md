@@ -1,6 +1,6 @@
 # Rope subsystem
 
-Reviewed: 2026-09-25. Implementation: performance/audio update based on `cb0993d`; final measured validation recorded after release.
+Reviewed: 2026-09-25. Implementation revision: `07f1974` (v0.1.5).
 
 `scripts/rope/` is an in-repository reusable 2D subsystem, not an external Git dependency. `rope_solver.gd` owns Verlet particles, eight alternating tension-only constraint passes plus endpoint reach limits, slack initialization, fixed endpoints and swept contacts. `rope_path.gd` owns static polygon visibility and persistent convex-corner guides. `rope_render.gd` owns Plug & Prosper's adaptive midpoint curves (0.30 authored pixel target, at most six subdivisions) and rounded folds. `rope_2d.gd` binds world-space ray queries and drawing. Endpoints and pinned contacts remain exact; render geometry never feeds back into physics.
 

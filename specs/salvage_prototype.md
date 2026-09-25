@@ -1,6 +1,6 @@
 # Playable subsystem integration
 
-Reviewed: 2026-09-25. Implementation: performance/audio update based on `cb0993d`; final measured validation recorded after release.
+Reviewed: 2026-09-25. Implementation revision: `07f1974` (v0.1.5).
 
 ## Composition
 
