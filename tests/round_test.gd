@@ -96,6 +96,7 @@ func _run() -> void:
 	check(is_equal_approx(thrown.linear_damp, 1.8) and thrown.linear_damp_mode == RigidBody2D.DAMP_MODE_COMBINE, "damping restored after the arc")
 	thrown.queue_free()
 	body.queue_free()
+	await check_shared_rim(bin_node)
 	bin_node.queue_free()
 	round_node.queue_free()
 	await process_frame
@@ -112,7 +113,7 @@ func _run() -> void:
 		print("ROUND_TEST_OK")
 	quit(failures)
 
-func fixture_at(at: Vector2) -> RigidBody2D:
+func fixture_at(at: Vector2, size: float = 12) -> RigidBody2D:
 	var body := Fixture.new()
 	body.position = at
 	body.gravity_scale = 0
@@ -121,11 +122,26 @@ func fixture_at(at: Vector2) -> RigidBody2D:
 	body.add_to_group(&"salvage_scrap")
 	var collision := CollisionShape2D.new()
 	var rectangle := RectangleShape2D.new()
-	rectangle.size = Vector2(12, 12)
+	rectangle.size = Vector2.ONE * size
 	collision.shape = rectangle
 	body.add_child(collision)
 	root.add_child(body)
 	return body
+
+## Scrap dropped on the wall two bins share must fall into one of them, never balance on top.
+func check_shared_rim(left: Node2D) -> void:
+	var right := Bin.new()
+	right.configure(&"rubber", left.position + Vector2(left.bin_size.x - Bin.WALL, 0))
+	root.add_child(right)
+	var junction_x: float = (left.position.x + right.position.x) * 0.5
+	for offset in [0.0, 0.4, -0.4, 3.0, -3.0]:
+		var dropped := fixture_at(Vector2(junction_x + offset, left.position.y - 140), 42)
+		dropped.gravity_scale = 1
+		await frames(100)
+		var caught: bool = left.sensor.get_overlapping_bodies().has(dropped) or right.sensor.get_overlapping_bodies().has(dropped)
+		check(caught, "scrap dropped %+.0f from a shared wall lands in a bin (rest=%s)" % [offset, dropped.position])
+		dropped.queue_free()
+	right.queue_free()
 
 func frames(count: int) -> void:
 	for index in range(count):

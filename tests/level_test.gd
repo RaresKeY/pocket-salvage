@@ -26,7 +26,9 @@ func _initialize() -> void:
 			assert(rectangle.position.y > layout.crane_anchor.y + 100)
 			assert(ResourceLoader.exists(bin.texture))
 			for previous in rectangles: assert(not previous.intersects(rectangle))
-			rectangles.append(rectangle)
+		for index in range(1, layout.bins.size()):
+			var gap: float = layout.bins[index].position.x - layout.bins[index - 1].position.x
+			assert(is_equal_approx(gap, layout.bins[index].size.x - SortingBin.WALL), "Neighbouring bins share a wall, leaving no gap to jam")
 	var altered := Layout.create_layout()
 	altered.scrap[0].position = Vector2.ZERO
 	assert(Layout.create_layout().scrap[0].position != Vector2.ZERO, "Callers own independent data")
