@@ -6,7 +6,7 @@ RaresKeY, 2026-09-25: [exact directive](../prompts/source/public-release.md). Ma
 
 ## AI-inferred design
 
-Use `pocket-salvage` as the repository slug and `v0.1.2` as the first automated patch release. Test main pushes; stable `vMAJOR.MINOR.PATCH` tags must match the project version and belong to main. Tagged releases test and export Windows/Linux/Web twice, using the existing reproducible packager. Keep macOS outside automated releases until target-machine validation is available.
+Use `pocket-salvage` as the repository slug and `v0.1.3` as the first published automated patch release (`v0.1.2` exposed a draft-lookup defect and remains an unchanged historical tag). Test main pushes; stable `vMAJOR.MINOR.PATCH` tags must match the project version and belong to main. Tagged releases test and export Windows/Linux/Web twice, using the existing reproducible packager. Keep macOS outside automated releases until target-machine validation is available.
 
 Use checksum-pinned official Godot 4.7 downloads on an ephemeral Ubuntu runner, Python and shell, with bounded jobs and no dependency installation through JavaScript tooling. Main checks download only the editor; tags also fetch templates. This avoids downloading the 5 GB general-purpose CI image on every push. Hosted headless checks prove behavior/export consistency, not hardware rendering. Local engine work retains the shared managed runner.
 

@@ -9,6 +9,7 @@ import subprocess
 import tempfile
 import time
 import urllib.request
+from urllib.parse import quote
 import zipfile
 
 from build_all import ROOT, digest
@@ -71,10 +72,11 @@ def validate_candidate(candidate, version, source):
 
 
 def publish(repo, tag, source, assets):
-    releases = json.loads(run('gh', 'release', 'list', '--repo', repo, '--limit', '1000', '--json', 'tagName,isDraft,isPrerelease'))
-    existing = next((release for release in releases if release['tagName'] == tag), None)
-    if existing is None:
-        api(f'repos/{repo}/releases', 'POST', {
+    pages = json.loads(run('gh', 'api', '--paginate', '--slurp', f'repos/{repo}/releases?per_page=100'))
+    releases = [release for page in pages for release in page]
+    release = next((item for item in releases if item['tag_name'] == tag), None)
+    if release is None:
+        release = api(f'repos/{repo}/releases', 'POST', {
             'tag_name': tag, 'target_commitish': source, 'name': f'Pocket Salvage {tag}', 'draft': True,
             'body': f'Play at https://{repo.split("/")[0].lower()}.github.io/{repo.split("/")[1]}/\n\n'
                     'Windows, Linux and Web packages from the same tested source. '
@@ -82,21 +84,26 @@ def publish(repo, tag, source, assets):
                     'See manifest.json and SHA256SUMS for source, toolchain and download hashes. '
                     'Windows requires a target-machine playtest; desktop exports are unsigned.\n\n'
                     f'Source: {source}'})
-    release = api(f'repos/{repo}/releases/tags/{tag}')
     remote = {asset['name']: asset for asset in release['assets']}
     for path in assets:
         if path.name not in remote:
             if not release['draft']:
                 raise ValueError('Published release is incomplete; refusing to mutate its assets.')
-            subprocess.run(['gh', 'release', 'upload', tag, str(path), '--repo', repo], check=True)
+            upload = release['upload_url'].split('{')[0] + '?name=' + quote(path.name)
+            subprocess.run(['gh', 'api', upload, '--method', 'POST', '-H', 'Content-Type: application/octet-stream',
+                            '--input', str(path)], check=True, stdout=subprocess.DEVNULL)
     # Verify actual remote bytes, including on retries. Never overwrite a differing asset.
+    remote = {asset['name']: asset for asset in api(f'repos/{repo}/releases/{release["id"]}')['assets']}
     with tempfile.TemporaryDirectory(prefix='release-verify-') as directory:
-        subprocess.run(['gh', 'release', 'download', tag, '--repo', repo, '--dir', directory], check=True)
         for path in assets:
-            if digest(Path(directory) / path.name) != digest(path):
+            downloaded = Path(directory) / path.name
+            with downloaded.open('wb') as output:
+                subprocess.run(['gh', 'api', f'repos/{repo}/releases/assets/{remote[path.name]["id"]}',
+                                '-H', 'Accept: application/octet-stream'], check=True, stdout=output)
+            if digest(downloaded) != digest(path):
                 raise ValueError(f'Remote asset differs: {path.name}')
-    newer = any(not r['isDraft'] and not r['isPrerelease'] and
-                re.fullmatch(r'v\d+\.\d+\.\d+', r['tagName']) and version_tuple(r['tagName']) > version_tuple(tag)
+    newer = any(not r['draft'] and not r['prerelease'] and
+                re.fullmatch(r'v\d+\.\d+\.\d+', r['tag_name']) and version_tuple(r['tag_name']) > version_tuple(tag)
                 for r in releases)
     if release['draft']:
         api(f'repos/{repo}/releases/{release["id"]}', 'PATCH', {'draft': False, 'make_latest': 'false' if newer else 'true'})

@@ -30,16 +30,16 @@ Hosted jobs use Ubuntu 24.04, its Python and preinstalled GitHub CLI, and `setup
 
 Pages serves the extracted Web payload from `gh-pages` at https://rareskey.github.io/pocket-salvage/. Deployment adds `.nojekyll` and `build.json` with version/source identity. The branch preserves its deployment history and is never merged into main. A Pages build is explicitly requested through the API after the push; workflow-token pushes do not trigger it by themselves. Publication polls the matching build, waits for live metadata and compares every hosted game file’s SHA256. Only then is the local candidate removed. A failed deployment leaves the release available; rerun the failed release job to retry. Workflow jobs retain no extra Actions artifact archives.
 
-Release procedure: commit a new project version with matching specs/design; fetch/rebase/recheck and push main; create the matching annotated version tag, fetch once more, verify its source is on current main, and push that tag. Never move a published tag. For example, after preparing version `0.1.2`:
+Release procedure: commit a new project version with matching specs/design; fetch/rebase/recheck and push main; create the matching annotated version tag, fetch once more, verify its source is on current main, and push that tag. Never move a published tag. For example, after preparing version `0.1.3`:
 
 ```sh
 git fetch origin
 git rebase origin/main
 git push origin main
-git tag -a v0.1.2 -m 'Pocket Salvage 0.1.2'
+git tag -a v0.1.3 -m 'Pocket Salvage 0.1.3'
 git fetch origin
-git merge-base --is-ancestor 'v0.1.2^{commit}' origin/main
-git push origin v0.1.2
+git merge-base --is-ancestor 'v0.1.3^{commit}' origin/main
+git push origin v0.1.3
 ```
 
 The Pages source must be configured once to `gh-pages` at `/`. Existing release v0.1.1 assets remain intact. Public visibility does not add a project license.
@@ -47,3 +47,5 @@ The Pages source must be configured once to `gh-pages` at `/`. Existing release 
 CI extraction preserves executable permission on the Linux template. The offline release suite also verifies that corrupt toolchain downloads fail closed and are removed before extraction.
 
 2026-09-25 public-delivery preflight: six offline release-contract tests and the complete managed engine suite passed (`CHECKS_OK`). Reachable Git history (1,543 named objects) had no matches for the inspected credential patterns or sensitive filenames; this is a bounded scan, not a universal secrets guarantee. Repository rename/public visibility and Dale’s unchanged write grant were confirmed through the GitHub API. Hosted delivery and live-browser evidence are recorded after the first tag run.
+
+The first tag run (`v0.1.2`, source `527d43e`) passed all tests and two-snapshot three-platform reproducibility, then stopped before publication because the release-by-tag endpoint does not return a draft. Publication now uses the draft’s numeric release/asset IDs throughout, with a regression test. The empty draft is removed; the tag is preserved.

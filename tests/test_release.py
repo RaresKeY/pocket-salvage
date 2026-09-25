@@ -83,6 +83,25 @@ class ReleaseTests(unittest.TestCase):
         with patch.object(setup_ci.urllib.request, 'urlopen', return_value=io.BytesIO(b'official bytes')):
             self.assertEqual(setup_ci.download(self.root, ('fixture.zip', expected)).read_bytes(), b'official bytes')
 
+    def test_new_draft_uses_numeric_ids_until_verified_publication(self):
+        asset = self.root / 'game.zip'
+        asset.write_bytes(b'valid archive fixture')
+        draft = {'id': 42, 'draft': True, 'assets': [], 'upload_url': 'https://uploads.github.com/example{?name}'}
+        def fake_api(route, method='GET', data=None):
+            self.assertNotIn('/tags/', route, 'Drafts cannot be fetched through the published-tag endpoint')
+            if method == 'POST':
+                return draft
+            if method == 'GET':
+                return {**draft, 'assets': [{'id': 51, 'name': asset.name}]}
+            self.assertEqual((route, method, data['draft']), ('repos/owner/game/releases/42', 'PATCH', False))
+        def fake_transfer(args, **kwargs):
+            if '/releases/assets/51' in ' '.join(args):
+                kwargs['stdout'].write(asset.read_bytes())
+        with patch.object(release, 'run', return_value='[[]]'), patch.object(release, 'api', side_effect=fake_api) as calls, \
+                patch.object(release.subprocess, 'run', side_effect=fake_transfer):
+            self.assertTrue(release.publish('owner/game', 'v1.2.3', 'source', [asset]))
+        self.assertEqual(calls.call_args.args[1], 'PATCH')
+
     def test_tag_must_match_project_and_main_ancestry(self):
         def git(*args):
             return release.run('git', *args, cwd=self.root)
