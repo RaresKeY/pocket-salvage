@@ -268,6 +268,15 @@ func event(script: Script) -> Node:
 		if is_instance_valid(level_event) and level_event.get_script() == script: return level_event
 	return null
 
+## False while a level event has the yard's power out (the Blood Moon generator, an Electric Storm blackout).
+func powered() -> bool:
+	return events.all(func(level_event): return level_event.get("generator_running") != false)
+
+## Only the electrically powered head needs power; Blood Moon gives that role to the claw.
+func head_has_power() -> bool:
+	if Heads.function_kind(head, reversed_heads()) != Heads.Kind.MAGNET: return true
+	return power_out_left <= 0.0 and powered()
+
 ## Blood Moon swaps which head grips which material.
 func reversed_heads() -> bool:
 	return Levels.get_value(selected_level, "reversed_heads")
@@ -509,8 +518,7 @@ func toggle_grip() -> void:
 	refresh_hud()
 
 func try_pickup() -> void:
-	if not gripping or is_instance_valid(held_body) or power_out_left > 0.0: return
-	if blood_cycle != null and not blood_cycle.generator_running and Heads.function_kind(head, true) == Heads.Kind.MAGNET: return
+	if not gripping or is_instance_valid(held_body) or not head_has_power(): return
 	var candidate: RigidBody2D
 	var refused: RigidBody2D
 	var nearest := PICKUP_RANGE

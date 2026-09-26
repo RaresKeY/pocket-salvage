@@ -47,3 +47,13 @@ AI-inferred design (approved as a whole by Dale; the numbers are Claude's and aw
 - Level data: each level is one entry in `level_catalog.gd` (title, weather, scrap, look, reversed heads, lightning flips magnet, start tip, weather rolls, events). Level-number checks are gone; Blood Moon behaves as before.
 
 AI-inferred verification repair (2026-09-26): isolate Storm’s mass threshold and shove force from tool-stand collisions and crane suspension, testing both directions. The original fixture’s left-side heavy-body position overlapped a stand. Use a free rigid-body head probe for the force contract while retaining the full-scene cycle, spawn, cleanup and round-win checks. This is test setup, not a gameplay redesign.
+
+## Level 6 Electric Storm
+
+User design: Dale asked for an electrical storm that causes a power outage and chose its own level, Level 6, on 2026-09-26. The corner magnet moves to Level 7. [Exact words](../prompts/source/storm.md).
+
+AI-inferred design (the shape was proposed by Claude and approved; the numbers are Claude's and await playtesting):
+- Blackouts: the first comes 20 to 30 s in, then every 35 to 50 s. Both floodlights and the corner beacons stutter for 2 s with a crackle and a message, then a strike blacks the yard out for 5 to 7 s. The yard goes 82% dark, so only lightning flashes show it clearly. The magnet drops its load and cannot grip until the power returns; swapping heads does not bring it back. The claw is not electric, so swapping to it is the way through. Then the lights come back with a power-up sound and "Power's back."
+- Ordinary lightning every 7 to 12 s cuts the magnet for 0.8 s instead of flipping it, so the whole level is about power.
+- Moderate weather (wind 40, gust 60, rain 160, fog 0.15, grip 0.6), x1.8 and 12 pieces.
+- The blackout and Blood Moon's generator share one power-event base (warning stutter, cut, restore), and the round asks `powered()` and `head_has_power()` rather than asking the Blood Moon event directly.

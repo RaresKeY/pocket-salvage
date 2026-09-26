@@ -15,6 +15,22 @@ var wind := 0.0
 var blood_moon := false
 var generator_running := true
 var right_lamp_level := 1.0
+var left_lamp_level := 1.0
+## Corner beacon brightness, 0 to 1; power events dim them.
+var beacon_level := 1.0:
+	set(value):
+		beacon_level = value
+		for beacon in beacons: beacon.modulate = BEACON_DARK.lerp(Color.WHITE, value)
+var beacons: Array[AnimatedSprite2D] = []
+const BEACON_DARK := Color(0.25, 0.25, 0.3)
+## 0 to 1: how far a blackout has taken the yard to near black. Lightning flashes draw above it.
+var blackout := 0.0:
+	set(value):
+		blackout = value
+		if _dark: _dark.color.a = value * BLACKOUT_ALPHA
+const BLACKOUT_ALPHA := 0.82
+const BLACKOUT_Z := 15
+var _dark: ColorRect
 var lamp_sprites: Array[Sprite2D] = []
 const BULB_SHADER = preload("res://shaders/blood_moon_bulbs.gdshader")
 const BLOOD_TINT := Color(1.0, 0.32, 0.27)
@@ -106,8 +122,21 @@ func configure(value: Dictionary, cursed: bool = false) -> void:
 	for x in [300.0, 1110.0]: perches.append(Vector2(x, fence_top(Backdrop.FENCE_SKY_ROWS)))
 	for x in [bounds.position.x + 19.0, bounds.end.x - 19.0]:
 		var beacon := _animated(near, "yard_beacon", Vector2(x, 34), 4.0)
-		if beacon and blood_moon: beacon.material = bulb_material(true)
+		if beacon:
+			beacons.append(beacon)
+			if blood_moon: beacon.material = bulb_material(true)
+	_dark = ColorRect.new()
+	_dark.color = Color(0.02, 0.02, 0.05, 0.0)
+	_dark.size = bounds.size
+	_dark.z_index = BLACKOUT_Z
+	_dark.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	add_child(_dark)
 	crow = _animated(near, "critter_crow", Vector2(510, fence_top(10) - 0.5 * CROW_HEIGHT * art_scale), 5.0)
+
+## Floodlight `index` (0 left, 1 right) brightness; both are dark while the generator is off.
+func lamp_level(index: int) -> float:
+	if not generator_running: return 0.0
+	return right_lamp_level if index == 1 else left_lamp_level
 
 func fence_top(extra_rows: float = 0.0) -> float:
 	return layout.ground_top - YardArt.world_size(Backdrop.FENCE, art_scale).y + extra_rows * art_scale
@@ -169,7 +198,7 @@ func _process(delta: float) -> void:
 		crow.flip_h = not crow.flip_h
 		crow.position.x = clampf(crow.position.x + rng.randf_range(-40, 40), 460, 560)
 	for index in lamp_sprites.size():
-		var level := (right_lamp_level if index == 1 else 1.0) if generator_running else 0.0
+		var level := lamp_level(index)
 		if blood_moon: lamp_sprites[index].material.set_shader_parameter("power", level)
 	far.queue_redraw()
 	near.queue_redraw()
@@ -237,7 +266,7 @@ func _draw_near(layer: Node2D) -> void:
 	var flicker := 0.9 + 0.1 * sin(time * 17.0) * sin(time * 3.1)
 	for index in lamps.size():
 		var lamp := lamps[index]
-		var level := (right_lamp_level if index == 1 else 1.0) if generator_running else 0.0
+		var level := lamp_level(index)
 		var glow := Color(BLOOD_TINT, LAMP_GLOW.a * light_strength) if blood_moon else LAMP_GLOW
 		var floor_y: float = layout.ground_top
 		var spread := 120.0

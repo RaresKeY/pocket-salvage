@@ -56,6 +56,9 @@ RECIPES = {
     "claw_open": (0.18, lambda t, p, n: 0.3 * envelope(p, 0.01, 2.0) * (tone(sweep(400, 700, p), t, "triangle") * 0.6 + n * 0.3)),
     "clank": (0.4, lambda t, p, n: 0.4 * envelope(p, 0.002, 2.5) * (n * 0.35 + tone(610, t, "square") * 0.3 + tone(1340, t, "sine") * 0.35)),
     "thunder": (2.2, lambda t, p, n: 0.5 * envelope(p, 0.01, 1.3) * (n * 0.7 + tone(sweep(60, 35, p), t, "sine") * 0.4)),
+    "crackle": (1.2, lambda t, p, n: 0.32 * envelope(p, 0.02, 0.6) * (n * 0.7 * (tone(11, t, "square") > 0.2) + tone(100, t, "saw") * 0.25)),
+    "power_down": (0.9, lambda t, p, n: 0.4 * envelope(p, 0.005, 1.4) * (tone(sweep(240, 35, p), t, "saw") * 0.7 + n * 0.25)),
+    "power_up": (0.7, lambda t, p, n: 0.3 * envelope(p, 0.1, 1.2) * tone(sweep(45, 260, p), t, "saw")),
     "start": (0.3, lambda t, p, n: 0.28 * envelope(p, 0.01, 1.0) * tone(440 if p < 0.45 else 880, t, "square")),
 }
 

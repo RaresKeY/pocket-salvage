@@ -24,3 +24,13 @@ Dale, on the first twister art (spelling corrected):
 RaresKeY, relayed by Dale, 2026-09-26:
 
 > Storm looks interesting, is it in 3d? it looks pretty cool, but it takes too long for it to show up?
+
+## Electric Storm (Level 6)
+
+Dale, 2026-09-26 (spelling corrected):
+
+> It would be good to add an electrical storm also that causes a power outage.
+
+Claude proposed a blackout (flicker and crackle warning, a strike, 5 to 7 s of dark with the magnet dead and the claw working, sharing the Blood Moon generator code) and asked whether it belonged in Level 5 or its own Level 6. Dale:
+
+> Yes, level 6.

@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="WeatherProfile" load_steps=2 format=3]
+[ext_resource type="Script" path="res://scripts/weather/weather_profile.gd" id="1"]
+[resource]
+script = ExtResource("1")
+id = &"electric_storm"
+label = "Electric Storm"
+tip = "Every strike cuts the magnet. Blackouts kill it for seconds; the claw still works."
+multiplier = 1.8
+wind = 40.0
+gust = 60.0
+gust_every = Vector2(6, 10)
+gust_rise = 1.0
+grip = 0.6
+fog = 0.15
+rain = 160.0
+lightning_every = Vector2(7, 12)
+warning = 1.0
+power_cut = 0.8

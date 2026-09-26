@@ -7,6 +7,7 @@ extends RefCounted
 const SLOT_COUNT := 12
 const BLOOD_MOON := "res://scripts/level/blood_moon.gd"
 const STORM_FRONT := "res://scripts/level/storm_front.gd"
+const BLACKOUT := "res://scripts/level/blackout.gd"
 const DEFAULTS := {"look": &"night", "reversed_heads": false, "lightning_flips_magnet": false, "rolls": {}, "events": [],
 	"start_tip": "Magnet lifts steel. Swap to the claw at the tool stands for copper and rubber."}
 const LEVELS := [
@@ -19,6 +20,8 @@ const LEVELS := [
 		"rolls": {"wind": Vector2(16, 40), "gust": Vector2(18, 40), "rain": Vector2(45, 120), "fog": Vector2(0.1, 0.28), "grip": Vector2(0.55, 0.85)}},
 	{"title": "Storm", "weather": preload("res://data/levels/storm.tres"), "scrap": 12, "lightning_flips_magnet": true, "events": [STORM_FRONT],
 		"start_tip": "Storms roll in and out. Twisters carry off light scrap, so sort it while the sky is calm."},
+	{"title": "Electric Storm", "weather": preload("res://data/levels/electric_storm.tres"), "scrap": 12, "events": [BLACKOUT],
+		"start_tip": "Lightning cuts the power. In a blackout the magnet is dead, but the claw still works."},
 ]
 
 static func unlocked(index: int) -> bool:

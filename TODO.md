@@ -1,7 +1,8 @@
 # Deferred Work
 
 
-- [ ] Level 6: the top-left corner magnet (RaresKeY's idea, agreed as the next level).
+- [ ] Level 7: the top-left corner magnet (RaresKeY's idea; moved from 6 when Dale chose Electric Storm for Level 6).
+- [ ] Playtest Electric Storm: blackout length and spacing, and how dark the yard gets.
 - [ ] Playtest Storm: cycle lengths, twister speed and lift, and whether 1.7 is fair.
 - [ ] Playtest Breezy, Violent and Blood Moon level balance; later level content and unlock rules remain undecided.
 - [ ] Human-playtest the ten-piece round: is 240 s right, is crane handling fair, is the head swap worth its time?
