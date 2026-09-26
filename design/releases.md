@@ -41,3 +41,5 @@ Use v0.1.7 for curved wind, sparse dust, square pixel UI, bundled Tiny5 and paus
 Marketing refresh: use fresh, unmodified 1280×720 native gameplay and level-grid captures from `3557892`, with the existing game art and UI. Keep gameplay as the hero, place the grid beside its explanation, and explicitly distinguish source-only levels from hosted v0.1.7. This request changes documentation and promotional captures, not releases or deployments.
 
 Use v0.1.8 for the current five-level game, Storm/twister, Blood Moon defaults, skyline/wind refinements and mobile overlay. Run the existing tagged Windows/Linux/Web pipeline and deploy its verified Web ZIP to Firebase.
+
+Release README refresh: describe all five published levels and Storm’s initial calm period; retain existing marketing images and label their older four-level view.

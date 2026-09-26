@@ -28,9 +28,9 @@ Correct sorts earn **100 points**. A wrong bin throws the item back and costs **
 
 **Desktop:** extract the whole ZIP and keep the executable beside its PCK file. Run `pocket-salvage.exe` on Windows or `pocket-salvage.x86_64` on Linux. The downloadable Web ZIP needs an HTTP server; the hosted links are ready to play.
 
-## Levels on main
+## Levels
 
-The source version adds a classic 12-slot grid, with four levels unlocked:
+Choose from five unlocked levels in the 12-slot grid:
 
 | Level | Pieces | Weather |
 |---|---|---|
@@ -38,14 +38,17 @@ The source version adds a classic 12-slot grid, with four levels unlocked:
 | 02 · Breezy | 6 | Light wind, rain, fog and occasional lightning |
 | 03 · Violent | 10 | Strong gusts, heavy rain and frequent lightning |
 | 04 · Blood Moon | 12 | Crimson sky, reversed heads, generator failures and shifting mild-to-medium weather |
+| 05 · Storm | 12 | Storm cycles, magnet-flipping lightning and a twister that lifts light scrap |
 
 Blood Moon reverses the tools: the magnet lifts copper/rubber and the claw lifts steel. Wind changes sides smoothly; generator outages disable the claw briefly. Only crows inhabit the cursed yard.
 
-The other eight slots are locked placeholders. The game opens on this grid. Clear a level to see **Victory**, then **Continue** back to selection with the next playable level highlighted. Timeout offers **Retry** or **Levels**. Explicit restart keeps the same level. Select a tile with mouse/touch, or choose with controller directions and press A to start.
+Storm starts with 40–60 seconds of calm, then builds for 15 seconds before reaching full strength. The first twister warning appears roughly 59–87 seconds into active play.
 
-![The current source level grid: Clear, Breezy, Violent and Blood Moon unlocked, with eight locked slots.](marketing/levels.png)
+The other seven slots are locked placeholders. The game opens on this grid. Clear a level to see **Victory**, then **Continue** back to selection with the next playable level highlighted. Timeout offers **Retry** or **Levels**. Explicit restart keeps the same level. Select a tile with mouse/touch, or choose with controller directions and press A to start.
 
-**Published version: [v0.1.7](https://github.com/RaresKeY/pocket-salvage/releases/tag/v0.1.7).** Both hosted sites currently run v0.1.7, which rolls weather per round and does not yet include the level grid. The screenshots above show current source. Firebase is updated manually; GitHub Pages updates with tagged releases.
+![Earlier four-level grid capture; the current release also unlocks Storm.](marketing/levels.png)
+
+**Published version: [v0.1.8](https://github.com/RaresKeY/pocket-salvage/releases/tag/v0.1.8).** Both hosted sites run the five-level game, including Storm, Blood Moon and the updated mobile controls. The screenshots above predate Storm. Firebase is updated manually; GitHub Pages updates with tagged releases.
 
 ## Development
 
