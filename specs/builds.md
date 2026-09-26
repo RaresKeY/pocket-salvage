@@ -1,6 +1,6 @@
 # Standalone prototype builds
 
-Reviewed: 2026-09-26. Implementation: reward-audio/v0.1.9 preparation in this commit, based on `95f7797`.
+Reviewed: 2026-09-26. Implementation revision: `d89464c` (v0.1.9).
 
 The user requested a versioned standalone prototype and reproducible builds. Export presets cover Linux x86_64, Windows x86_64, Web (single-thread WebAssembly) and unsigned macOS universal. Mobile Web input is supported through the shared [input module](input.md); native mobile exports and signing remain outside this prototype. Platform availability is separate from tested runtime support: Linux and Web can be exercised on the development workstation; Windows and macOS require target-machine playtests.
 
@@ -87,3 +87,7 @@ Version 0.1.8 packages the five-level game, approved Blood Moon defaults and mob
 Firebase v0.1.8 browser validation: silent Firefox on the actual HTTPS site loaded the five-level grid, selected Storm with mouse input, started and ran over 90 seconds with movement/reeling/grip/pause. Inspected captures show the calm-to-storm transition, twister warning and lightning magnet inversion; no game-console errors, nonzero audio upstream of the muted destination. WebGL reported a privacy-masked NVIDIA renderer. Local release downloads, extracted payloads and Firebase deployment cache were removed; ignored browser/hash evidence remains under `.local/release018/`.
 
 Version 0.1.9 packages the softer, varied wind and a modest −3dB correct-delivery reward adjustment through the existing tagged Windows/Linux/Web pipeline, followed by the requested manual Firebase sync from the verified release Web ZIP.
+
+2026-09-26 v0.1.9 delivery: [tag workflow 36251694701](https://github.com/RaresKeY/pocket-salvage/actions/runs/36251694701) passed tests, compared two Windows/Linux/Web exports, published verified assets and updated Pages. Firebase received the downloaded Web ZIP after archive/manifest/payload checks. All ten files on each host match the release payload or equivalent build metadata, identifying `d89464cb5642627945dc7ba5c1bede29b4feda87`. The verified Linux package started and exited normally through the managed runner and background Gamescope on NVIDIA RTX 2080 Ti Compatibility. Windows was built and hash-verified but not executed.
+
+The actual Firebase HTTPS game passed a silent Firefox smoke check: select Storm, start, move/reel/grip, ten seconds of active play and pause; captures confirm gameplay and pause while carrying steel. Audio upstream of the muted destination was nonzero, with no game-console errors. WebGL reported a privacy-masked NVIDIA renderer. This is startup/control verification, not subjective sound-balance assessment. Generated local downloads, extracted payloads and deployment cache were removed after verification; ignored evidence remains in `.local/release019/`.
