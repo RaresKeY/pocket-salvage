@@ -5,9 +5,13 @@ signal scheme_changed(scheme: StringName)
 signal controls_released
 
 const Motion = preload("res://scripts/input/crane_motion.gd")
-const DEADZONE := Motion.DEADZONE
-var stick := Vector2.ZERO
-const DIRECTIONS := [&"salvage_left", &"salvage_right", &"salvage_up", &"salvage_down"]
+## Movement actions: keys and the D-pad button for each. The order is left, right, up, down.
+const DIRECTION_BINDINGS := {
+	&"salvage_left": {"keys": [KEY_A, KEY_LEFT], "pad": JOY_BUTTON_DPAD_LEFT},
+	&"salvage_right": {"keys": [KEY_D, KEY_RIGHT], "pad": JOY_BUTTON_DPAD_RIGHT},
+	&"salvage_up": {"keys": [KEY_W, KEY_UP], "pad": JOY_BUTTON_DPAD_UP},
+	&"salvage_down": {"keys": [KEY_S, KEY_DOWN], "pad": JOY_BUTTON_DPAD_DOWN},
+}
 const PAD_COMMANDS := {
 	JOY_BUTTON_A: &"primary", JOY_BUTTON_X: &"swap", JOY_BUTTON_Y: &"restart",
 	JOY_BUTTON_START: &"menu", JOY_BUTTON_B: &"pause",
@@ -20,6 +24,7 @@ const KEY_COMMANDS := {
 	KEY_P: &"pause", KEY_ESCAPE: &"pause", KEY_ENTER: &"primary",
 }
 var scheme: StringName = &"keyboard"
+var stick := Vector2.ZERO
 var mobile_touch := false
 var playing := false
 var virtual_axes := Vector2.ZERO
@@ -40,19 +45,16 @@ func _ready() -> void:
 	Input.joy_connection_changed.connect(_connection_changed)
 
 static func install_movement_actions() -> void:
-	var keys := [[KEY_A, KEY_LEFT], [KEY_D, KEY_RIGHT], [KEY_W, KEY_UP], [KEY_S, KEY_DOWN]]
-	var buttons := [JOY_BUTTON_DPAD_LEFT, JOY_BUTTON_DPAD_RIGHT, JOY_BUTTON_DPAD_UP, JOY_BUTTON_DPAD_DOWN]
-	for index in DIRECTIONS.size():
-		var action: StringName = DIRECTIONS[index]
+	for action in DIRECTION_BINDINGS:
 		if InputMap.has_action(action): continue
-		InputMap.add_action(action, DEADZONE)
-		for code in keys[index]:
+		InputMap.add_action(action, Motion.DEADZONE)
+		for code in DIRECTION_BINDINGS[action].keys:
 			var key := InputEventKey.new()
 			key.physical_keycode = code
 			InputMap.action_add_event(action, key)
 		var button := InputEventJoypadButton.new()
 		button.device = -1
-		button.button_index = buttons[index]
+		button.button_index = DIRECTION_BINDINGS[action].pad
 		InputMap.action_add_event(action, button)
 
 func set_playing(value: bool) -> void:
@@ -74,9 +76,10 @@ func touch_command(command: StringName) -> void:
 	command_requested.emit(command)
 
 func movement() -> Vector2:
-	var physical := Vector2(Input.get_axis(DIRECTIONS[0], DIRECTIONS[1]), Input.get_axis(DIRECTIONS[2], DIRECTIONS[3]))
+	var actions := DIRECTION_BINDINGS.keys()
+	var physical := Vector2(Input.get_axis(actions[0], actions[1]), Input.get_axis(actions[2], actions[3]))
 	if _neutral_required:
-		if physical.length_squared() < 0.0001 and Motion.analog(stick, DEADZONE) == Vector2.ZERO: _neutral_required = false
+		if physical.length_squared() < 0.0001 and Motion.analog(stick, Motion.DEADZONE) == Vector2.ZERO: _neutral_required = false
 		else: return Vector2.ZERO
 	if not playing: return Vector2.ZERO
 	return Motion.combine(physical, stick, virtual_axes)
@@ -90,12 +93,12 @@ func _input(event: InputEvent) -> void:
 	if event is InputEventJoypadMotion:
 		if event.axis not in [JOY_AXIS_LEFT_X, JOY_AXIS_LEFT_Y]: return
 		if active_pad != event.device:
-			if absf(event.axis_value) <= DEADZONE: return
+			if absf(event.axis_value) <= Motion.DEADZONE: return
 			stick = Vector2.ZERO
 			active_pad = event.device
 		if event.axis == JOY_AXIS_LEFT_X: stick.x = event.axis_value
 		else: stick.y = event.axis_value
-		if stick.length() > DEADZONE: _set_scheme(&"gamepad")
+		if stick.length() > Motion.DEADZONE: _set_scheme(&"gamepad")
 	elif event is InputEventJoypadButton:
 		if event.pressed:
 			active_pad = event.device
