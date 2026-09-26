@@ -3,6 +3,13 @@ extends SceneTree
 const Levels = preload("res://scripts/level/level_catalog.gd")
 const StormFront = preload("res://scripts/level/storm_front.gd")
 const Tornado = preload("res://scripts/level/tornado.gd")
+# Keep the head-force check independent of the crane cable and background wind.
+class ForceContext extends Node:
+	var layout: Dictionary
+	var tip := RigidBody2D.new()
+	var bodies: Array
+	func blown_bodies() -> Array: return bodies
+
 func _initialize() -> void: call_deferred("run")
 
 func tornado_of(game) -> Node:
@@ -13,6 +20,9 @@ func tornado_of(game) -> Node:
 func place(body: RigidBody2D, at: Vector2) -> void:
 	PhysicsServer2D.body_set_state(body.get_rid(), PhysicsServer2D.BODY_STATE_TRANSFORM, Transform2D(0, at))
 	PhysicsServer2D.body_set_state(body.get_rid(), PhysicsServer2D.BODY_STATE_LINEAR_VELOCITY, Vector2.ZERO)
+	PhysicsServer2D.body_set_state(body.get_rid(), PhysicsServer2D.BODY_STATE_ANGULAR_VELOCITY, 0.0)
+	body.global_position = at
+	body.rotation = 0.0
 	body.sleeping = false
 
 func run() -> void:
@@ -75,21 +85,40 @@ func run() -> void:
 	var ground: float = game.layout.ground_top
 	twister._physics_process(Tornado.WARNING + 0.01)
 	assert(twister.state == Tornado.State.CROSSING)
-	var ahead: float = twister.position.x + twister.direction * 20.0
-	place(light, Vector2(ahead, ground - light.dimensions.y * 0.5 - 1))
-	place(heavy, Vector2(ahead - twister.direction * 55.0, ground - heavy.dimensions.y * 0.5 - 1))
-	var heavy_start := heavy.global_position
-	var head_start: Vector2 = game.tip.linear_velocity
-	var light_low := light.global_position.y
-	for i in 30:
-		twister.position.x = ahead - twister.direction * 5.0
-		game.tip.global_position.x = twister.position.x
-		twister._apply_forces()
-		await physics_frame
-	assert(light.global_position.y < light_low - 20.0, "Light scrap is lifted")
-	assert(twister.carried.has(light) and not twister.carried.has(heavy), "Heavy scrap is never lifted")
-	assert(heavy.global_position.y >= heavy_start.y - 2.0, "Heavy scrap stays down")
-	assert(signf(game.tip.linear_velocity.x - head_start.x) == twister.direction, "The head is shoved along")
+	# Test both directions in the clear gap between pile and bins. The left spawn's
+	# old heavy-body position (x75) overlapped the tool stand at x96, which pushed
+	# it upward independently of tornado forces. Step forces once per physics frame.
+	var fixture := ForceContext.new()
+	fixture.layout = game.layout
+	fixture.tip.gravity_scale = 0.0
+	fixture.tip.collision_layer = 0
+	fixture.tip.collision_mask = 0
+	fixture.bodies = [light, heavy, fixture.tip]
+	game.world.add_child(fixture)
+	fixture.add_child(fixture.tip)
+	twister.context = fixture
+	twister.set_physics_process(false)
+	for direction in [-1.0, 1.0]:
+		twister.direction = direction
+		twister.carried.clear()
+		var ahead: float = 450.0 + direction * 20.0
+		place(light, Vector2(ahead, ground - light.dimensions.y * 0.5 - 1))
+		place(heavy, Vector2(ahead - twister.direction * 55.0, ground - heavy.dimensions.y * 0.5 - 1))
+		place(fixture.tip, Vector2(ahead, 200))
+		var heavy_start := heavy.global_position
+		var head_start: Vector2 = fixture.tip.linear_velocity
+		var light_low := light.global_position.y
+		for i in 30:
+			twister.position.x = ahead - twister.direction * 5.0
+			fixture.tip.global_position.x = twister.position.x
+			twister._apply_forces()
+			await physics_frame
+		assert(light.global_position.y < light_low - 20.0, "Light scrap is lifted")
+		assert(twister.carried.has(light) and not twister.carried.has(heavy), "Heavy scrap is never lifted")
+		assert(heavy.global_position.y >= heavy_start.y - 2.0, "Heavy scrap stays down")
+		assert(signf(fixture.tip.linear_velocity.x - head_start.x) == twister.direction, "The head is shoved along")
+	twister.context = game
+	fixture.queue_free()
 	twister._physics_process(1000.0)
 	assert(twister.state == Tornado.State.GONE and twister.carried.is_empty(), "It drops everything when it breaks up")
 	await create_timer(1.2).timeout

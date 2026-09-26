@@ -1,6 +1,6 @@
 # Level selection
 
-Reviewed: 2026-09-26. Implementation: tint-default change in this commit, based on `39cf4a0`.
+Reviewed: 2026-09-26. Implementation: Storm test-fixture repair in this commit, based on `0fa2f34`.
 
 `scripts/level/level_catalog.gd` owns twelve slots and five unlocked levels, each one data entry in `LEVELS` (title, weather, scrap, look, reversed_heads, lightning_flips_magnet, start_tip, rolls, events; missing keys take `DEFAULTS`). The round reads these through `get_value`, `look`, `scrap_count` and `roll_weather`; there are no level-number checks. Events are script paths the round loads and configures with `configure(round, seed)` on every world build, kept in `events` and found with `event(script)`; `blood_cycle` is the Blood Moon event. Paths rather than preloads, because preloading the storm from the catalog kept the art scripts' static caches alive at exit. Level 1 reuses `data/weather/clear.tres` with no effects. Levels 2 and 3 use `data/levels/breezy.tres` and `violent.tres`; both enable all five existing effects with increasing intensity. Original weighted weather resources/API remain available to labs and tests.
 
@@ -57,3 +57,7 @@ Reviewed: 2026-09-25, Level 5 change on top of `634da2a`.
 `yard_ambience.gd` `gloom`: clouds blend to storm grey, the sky to near black, stars and the moon fade, and at 0.3 gulls leave and stop coming.
 
 Verification: `tests/storm_test.gd` covers the level entry, calm scaling and no lightning, building warning and rumble, storm strength and lightning, one twister, light scrap lifted and heavy scrap left, the head shoved, the twister dropping everything and leaving, clearing back to calm, other levels unaffected and a Level 5 win. Full suite passed (`CHECKS_OK`). Rendered captures (local): `Downloads/pocket-salvage/storm/`.
+
+Storm force verification isolates the force contract in the clear gap between the pile and bins and checks both travel directions. The former x75 heavy-body placement intersected the x96 tool stand; the independent head probe now excludes crane-cable and ambient-wind forces. Test placement synchronizes transforms and resets angular velocity, and tornado forces step once per physics frame. Production Storm code is unchanged.
+
+Force-fixture validation: three repeated two-direction runs and the full managed suite passed. A temporary negative control removing the production mass gate failed the heavy-scrap assertion, proving the repaired fixture still detects that regression.

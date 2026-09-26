@@ -45,3 +45,5 @@ AI-inferred design (approved as a whole by Dale; the numbers are Claude's and aw
 - The twister is drawn in code (rings of dust streaks that snake and turn, with debris), not Bitwright frames: the Bitwright draws read as a stack of plates, which Dale flagged.
 - x1.7 multiplier and 12 pieces.
 - Level data: each level is one entry in `level_catalog.gd` (title, weather, scrap, look, reversed heads, lightning flips magnet, start tip, weather rolls, events). Level-number checks are gone; Blood Moon behaves as before.
+
+AI-inferred verification repair (2026-09-26): isolate Storm’s mass threshold and shove force from tool-stand collisions and crane suspension, testing both directions. The original fixture’s left-side heavy-body position overlapped a stand. Use a free rigid-body head probe for the force contract while retaining the full-scene cycle, spawn, cleanup and round-win checks. This is test setup, not a gameplay redesign.

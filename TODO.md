@@ -1,6 +1,5 @@
 # Deferred Work
 
-- [ ] Investigate intermittent `tests/storm_test.gd` “Heavy scrap stays down” failure; reproduced on unchanged `39cf4a0` in three of four isolated runs during tint-default verification.
 
 - [ ] Level 6: the top-left corner magnet (RaresKeY's idea, agreed as the next level).
 - [ ] Playtest Storm: cycle lengths, twister speed and lift, and whether 1.7 is fair.
