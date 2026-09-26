@@ -35,3 +35,13 @@ RaresKeY asks for non-harsh rain with slight, normal and violent strengths ([exa
 ### AI-inferred design
 
 Replace the one-second white-noise/square-modulated rain with three eight-second seeded rain beds. Use three low-pass stages at 700/950/1200Hz, slow smooth amplitude variation and corrected loop seams; no unfiltered hiss or sharp taps. Source RMS levels are 0.035/0.055/0.075, mixed at −22/−19/−16dB respectively. Retain the normal `rain_loop` name; add `rain_slight_loop` and `rain_violent_loop`. These are synthesized soft rain washes, not field recordings. Existing music, thunder and wind audio are unchanged.
+
+## Soft wind remake, 2026-09-26
+
+### User design
+
+RaresKeY reported the continuous sound on levels 02–05 and requested softer, less harsh, more natural and varied wind, then commit and push ([exact words](../prompts/source/soft-wind.md)).
+
+### AI-inferred design
+
+Replace the one-second pulsing noise and 170Hz hum with a 24-second seeded noise bed. Three low-pass stages with slowly varying 210–650Hz cutoff and a 65Hz high-pass soften hiss and rumble. Overlapping smooth swells vary loudness and texture; normalize the master to RMS 0.045 and correct the seam over 25ms. Retain weather intensity control and its existing mix. These durations, filters and levels are implementation choices; naturalness still needs player listening feedback.

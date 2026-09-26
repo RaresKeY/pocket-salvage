@@ -6,6 +6,7 @@ import sys
 ROOT = Path(__file__).resolve().parents[1]
 BASE = ["godot", "--headless", "--path", str(ROOT)]
 checks = [
+    ([sys.executable, "tests/test_wind_audio.py"], None),
     ([sys.executable, "tests/test_rain_audio.py"], None),
     ([sys.executable, "tests/test_launcher.py"], None),
     (BASE + ["--editor", "--import", "--quit"], None),
