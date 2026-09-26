@@ -25,3 +25,5 @@ F2 has no command mapping. The game has no preview scene-switch handler or previ
 Validation: full managed Godot 4.7 engine suite passed (`CHECKS_OK`), including real F2 key events in all four states. Silent hardware captures refreshed the README images without the old hint. Evidence: `.local/no-preview-review/`.
 
 Landscape HUD verification: see the 2026-09-26 follow-up in [mobile overlay review](../docs/mobile-overlay-review.md), including nine viewport sizes, dense counters, orientation/state transitions and native GPU evidence.
+
+Tables (2026-09-26 tidy): `salvage_input.gd` `DIRECTION_BINDINGS` maps each movement action to its keys and D-pad button; `touch_controller.gd` `BUTTONS` maps each touch command to its icon and centre from the bottom-left corner, so a new button is one entry.

@@ -53,6 +53,10 @@ On Level 3 specifically, lightning instead inverts the actual magnet switch for 
 
 The HUD shows `weather_label()` ("Storm x1.6", or just "Clear") as a badge, the label and tip on the start card, and the weather bonus on the results card. See [round HUD](round_hud.md) and [sorting and rounds](round.md) for the multiplier.
 
+## Effect helpers
+
+`weather_effect.gd` gives every effect `_add(node, z)` (adds to the round's world at depth `z`, tinted with the profile) and `_particles(amount, at, extents, color, life, z, texture)` (a rectangle-emitting, gravity-free particle layer). Shared textures and flat overlays come from `YardArt.solid_texture(size)` and `YardArt.overlay(rect, color)`. `strike()` emits one bolt over the yard, 100 px clear of each edge; the lightning clock and level events both use it. Reviewed 2026-09-26 (code tidy).
+
 ## Intensity
 
 `intensity` (0 to 1, default 1) is set by level events. `wind_now()` scales by it, so wind force, crane drift, trails and wind sound follow. Fog density and rain streak/splash alpha and loop level scale by it. Lightning does not count down below `STRIKE_INTENSITY` (0.8). Effects share looping-sound handling with other nodes through `scripts/audio/sound_loops.gd` (`loop_sound`).

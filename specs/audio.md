@@ -53,3 +53,5 @@ Wind validation (2026-09-26): regression rejects the previous one-second master;
 Correct-delivery reward playback uses −3dB in the salvage round (previously 0dB), before the SFX slider gain. The generated cue retains its existing pitch, duration and waveform.
 
 Reward balance validation (2026-09-26): full managed Godot 4.7 suite passed (`CHECKS_OK`), including audio decode/mute/volume checks and correct-delivery playback requests. Eight release-contract tests passed. The −3dB adjustment is a mix choice, not a subjective listening measurement.
+
+`Sfx.MUSIC` names the music loop, the one loop that follows the music volume. The generators share `seal_loop`, `normalise` and `lowpass` from `make_sfx.py`; `make_rain.generate()` and `make_wind.generate()` return how many files they wrote. Regenerating after the 2026-09-26 tidy produced byte-identical WAVs.
