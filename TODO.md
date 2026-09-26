@@ -1,5 +1,6 @@
 # Deferred Work
 
+- [ ] Add a physical, in-world (diegetic) hint when the player needs to switch heads. Likely trigger: all remaining scrap requires the other head; trigger and presentation remain to be decided. RaresKeY, 2026-09-26; see `design/game.md`.
 
 - [ ] Level 7: the top-left corner magnet (RaresKeY's idea; moved from 6 when Dale chose Electric Storm for Level 6).
 - [ ] Playtest Electric Storm: blackout length and spacing, and how dark the yard gets.

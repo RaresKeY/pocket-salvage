@@ -10,6 +10,8 @@ The next agreed phase is a lightweight shared design spike, followed by a small 
 
 2026-09-25, recorded in [jam polish](../prompts/source/jam-polish.md): RaresKeY asked Dale to treat the repository as their jam entry, find and solve problems, and move towards polish. Dale then set these directions: the crane gets **swappable heads**, a magnet and a gripper, that are put down and picked up ("magnet wont pick up rubber"); scrap starts as **a big pile** rather than a neat row; the yard gets a livelier background with more sprites, movement and "a moon or something"; the crane makes noise when it moves; the game gets subtle background music; the code stays DRY and reusable. RaresKeY will supply music, sound effects and UI polish, then publish builds on GitHub releases.
 
+2026-09-26: RaresKeY requested a deferred physical, in-world (diegetic) hint when the player needs to switch heads, suggesting that it likely triggers when all remaining scrap needs the other head. The trigger is tentative; no presentation has been selected. [Exact request](../prompts/source/head-switch-hint.md); tracked in `TODO.md`.
+
 ## AI-inferred design
 
 Use Godot 4.7 and initially explore a 2D crane, following the reusable rope source games. A rope showcase precedes reusable [mask and collision support](physics.md); concrete object/box definitions are deferred per the user's clarification. The timed sorting round remains the eventual MVP. See [rope design](rope.md). The lab presentation does not select final game art.

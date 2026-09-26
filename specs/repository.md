@@ -1,12 +1,13 @@
 # Repository Structure
 
-Reviewed: 2026-09-26. Runtime revision: `3bcb824` (v0.1.8); release/README refresh.
+Reviewed: 2026-09-27. Implementation reviewed: `925381e`; badge and v0.1.10 README refresh in this commit.
 
 ## Current contract
 
 The repository implements Jam Sync's organizational conventions through tracked maps and directory guides. [The alignment map](../docs/jam-sync-alignment.md) accounts for each source idea, including the optional and design-only parts. These directories are source-ownership boundaries; their presence does not mean a subsystem has been implemented.
 
 - `design/` records evolving intent, separating explicit user direction from AI-inferred proposals. `specs/` describes current reality and records the implementation revision reviewed. `TODO.md` holds deferred work. Plans and journals are optional and separate from all three.
+- The deferred diegetic head-switch hint is recorded in `TODO.md`, `design/game.md`, and `prompts/source/head-switch-hint.md`; this record adds no runtime behavior.
 - `docs/` holds contributor guidance; `research/` holds dated, source-backed investigations. `prototype/` holds visual targets and references, `prompts/` preserves exact directives and generation lineage, `marketing/` holds intentional promotional deliverables, and `artifacts/` holds working material according to its reproducibility.
 - `vendored/` maps dependency ownership and provenance, including copied user-owned rope source snapshots. The bundled Tiny5 font is recorded in `vendored/tiny5.md`; `THIRD_PARTY_NOTICES.md` and its complete OFL file preserve the required attribution.
 - `tests/` owns verification, `tools/` owns creation utilities (`superscale`, `pixel_art/` including `import_bitwright.py`, `audio/` sound and music generators, `build/`), and `labs/` owns runnable technical comparisons. The pixel-scaling tool and lab share `scripts/art/` and diagnostic media under `assets/pixel_lab/`. The reusable rope lives under `scripts/rope/` with its own lab and focused spec. Other product source areas remain ready for the later game.
@@ -36,6 +37,6 @@ The root README leads with browser play and desktop downloads, current-source ga
 
 The main workstation checkout is now named `pocket-salvage`. Git links for its nine existing sibling worktrees were repaired after the move; their paths and branches remain intact. Launchers resolve the project from their own location, so they follow the rename without hard-coded path changes. Local instruction files moved with the checkout and remain ignored.
 
-The public About website is Firebase Hosting (`https://pocket-salvage.web.app/`), a manually deployed v0.1.8 snapshot. README retains GitHub Pages as the destination updated by tagged releases and labels that difference. Firebase configuration is tracked; credentials, deployment caches/logs and downloaded release payloads are not.
+The public About website is Firebase Hosting (`https://pocket-salvage.web.app/`), a manually deployed release snapshot. README retains GitHub Pages as the destination updated by tagged releases and labels that difference. Firebase configuration is tracked; credentials, deployment caches/logs and downloaded release payloads are not.
 
-The README describes the published five-level v0.1.8 game, Storm timing, controls and mobile support. Both hosted payloads were verified against the v0.1.8 release (`3bcb824`). Existing marketing captures remain explicitly labeled as predating Storm; their provenance is recorded in `marketing/README.md`.
+The README links v0.1.10 and describes six playable levels, including Electric Storm, earlier Storm timing, wind-driven clouds, controls and mobile support. Its title is followed by the official Awesome mentioned badge linking to Awesome AI-Built Games. GitHub release notes retain human/AI attribution; delivery verification lives in [builds](builds.md). Existing marketing captures remain explicitly labeled as predating Storm; their provenance is recorded in `marketing/README.md`.

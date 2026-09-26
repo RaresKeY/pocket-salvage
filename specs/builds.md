@@ -1,6 +1,6 @@
 # Standalone prototype builds
 
-Reviewed: 2026-09-26. Implementation revision: `d89464c` (v0.1.9).
+Reviewed: 2026-09-27. Implementation reviewed: `925381e`; v0.1.10 release preparation in this commit.
 
 The user requested a versioned standalone prototype and reproducible builds. Export presets cover Linux x86_64, Windows x86_64, Web (single-thread WebAssembly) and unsigned macOS universal. Mobile Web input is supported through the shared [input module](input.md); native mobile exports and signing remain outside this prototype. Platform availability is separate from tested runtime support: Linux and Web can be exercised on the development workstation; Windows and macOS require target-machine playtests.
 
@@ -91,3 +91,7 @@ Version 0.1.9 packages the softer, varied wind and a modest −3dB correct-deliv
 2026-09-26 v0.1.9 delivery: [tag workflow 36251694701](https://github.com/RaresKeY/pocket-salvage/actions/runs/36251694701) passed tests, compared two Windows/Linux/Web exports, published verified assets and updated Pages. Firebase received the downloaded Web ZIP after archive/manifest/payload checks. All ten files on each host match the release payload or equivalent build metadata, identifying `d89464cb5642627945dc7ba5c1bede29b4feda87`. The verified Linux package started and exited normally through the managed runner and background Gamescope on NVIDIA RTX 2080 Ti Compatibility. Windows was built and hash-verified but not executed.
 
 The actual Firebase HTTPS game passed a silent Firefox smoke check: select Storm, start, move/reel/grip, ten seconds of active play and pause; captures confirm gameplay and pause while carrying steel. Audio upstream of the muted destination was nonzero, with no game-console errors. WebGL reported a privacy-masked NVIDIA renderer. This is startup/control verification, not subjective sound-balance assessment. Generated local downloads, extracted payloads and deployment cache were removed after verification; ignored evidence remains in `.local/release019/`.
+
+Version 0.1.10 packages Electric Storm, earlier Storm twisters, wind-driven clouds and the shared-code cleanup through `925381e`. The README carries the Awesome AI-Built Games badge and current six-level description. GitHub release notes credit Dale/Claude for the new level, Storm timing and cleanup, RaresKeY/Codex for cloud movement, and Codex at RaresKeY's request for release integration. Tagged reproducible Windows/Linux/Web delivery and manual Firebase sync keep the same contract; the physical head-switch hint remains deferred.
+
+2026-09-27 release preflight: the complete managed Godot 4.7 suite passed (`CHECKS_OK`), including Electric Storm and wind-driven cloud checks; all eight offline release-contract tests passed. Tagged exports and remote verification are recorded after publication.

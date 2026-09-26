@@ -1,5 +1,7 @@
 # Pocket Salvage
 
+[![Mentioned in Awesome AI-Built Games](https://awesome.re/mentioned-badge.svg)](https://github.com/lappemic/awesome-ai-built-games)
+
 A four-minute scrapyard shift. Drive a swinging crane, swap between a magnet and a claw, and sort scrap before time runs out.
 
 **[Play in your browser](https://pocket-salvage.web.app/)** · **[Download for Windows or Linux](https://github.com/RaresKeY/pocket-salvage/releases/latest)** · [GitHub Pages mirror](https://rareskey.github.io/pocket-salvage/)
@@ -30,7 +32,7 @@ Correct sorts earn **100 points**. A wrong bin throws the item back and costs **
 
 ## Levels
 
-Choose from five unlocked levels in the 12-slot grid:
+Choose from six unlocked levels in the 12-slot grid:
 
 | Level | Pieces | Weather |
 |---|---|---|
@@ -39,16 +41,19 @@ Choose from five unlocked levels in the 12-slot grid:
 | 03 · Violent | 10 | Strong gusts, heavy rain and frequent lightning |
 | 04 · Blood Moon | 12 | Crimson sky, reversed heads, generator failures and shifting mild-to-medium weather |
 | 05 · Storm | 12 | Storm cycles, magnet-flipping lightning and a twister that lifts light scrap |
+| 06 · Electric Storm | 12 | Lightning and blackouts disable the magnet; the claw keeps working |
 
 Blood Moon reverses the tools: the magnet lifts copper/rubber and the claw lifts steel. Wind changes sides smoothly; generator outages disable the claw briefly. Only crows inhabit the cursed yard.
 
-Storm starts with 40–60 seconds of calm, then builds for 15 seconds before reaching full strength. The first twister warning appears roughly 59–87 seconds into active play.
+Storm starts with 10–15 seconds of calm, then builds for 15 seconds before reaching full strength. The first twister warning appears roughly 28–36 seconds into active play.
 
-The other seven slots are locked placeholders. The game opens on this grid. Clear a level to see **Victory**, then **Continue** back to selection with the next playable level highlighted. Timeout offers **Retry** or **Levels**. Explicit restart keeps the same level. Select a tile with mouse/touch, or choose with controller directions and press A to start.
+Electric Storm warns with flickering lights before a 5–7 second blackout. The magnet drops its load and cannot grip until power returns; the claw remains usable. Clouds follow the live wind direction and strength.
+
+The other six slots are locked placeholders. The game opens on this grid. Clear a level to see **Victory**, then **Continue** back to selection with the next playable level highlighted. Timeout offers **Retry** or **Levels**. Explicit restart keeps the same level. Select a tile with mouse/touch, or choose with controller directions and press A to start.
 
 ![Earlier four-level grid capture; the current release also unlocks Storm.](marketing/levels.png)
 
-**Published version: [v0.1.8](https://github.com/RaresKeY/pocket-salvage/releases/tag/v0.1.8).** Both hosted sites run the five-level game, including Storm, Blood Moon and the updated mobile controls. The screenshots above predate Storm. Firebase is updated manually; GitHub Pages updates with tagged releases.
+**Release: [v0.1.10](https://github.com/RaresKeY/pocket-salvage/releases/tag/v0.1.10).** The six-level game includes Electric Storm, earlier Storm twisters and wind-driven clouds. The screenshots above predate Storm. Firebase is updated manually; GitHub Pages updates with tagged releases.
 
 ## Development
 

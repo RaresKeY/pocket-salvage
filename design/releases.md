@@ -53,3 +53,13 @@ RaresKeY requests commit/push, a build/release tag and Firebase sync after the r
 ### AI-inferred design
 
 Use patch version v0.1.9 for the softer wind and quieter correct-delivery chime. Use the existing tagged Windows/Linux/Web workflow, then deploy its checksum-verified Web payload to Firebase and verify the live files.
+
+## Badge and Electric Storm release, 2026-09-27
+
+### User design
+
+RaresKeY requests the Awesome AI-Built Games badge in README, commit/push and a build tag, attributed latest-change notes and the latest Firebase deployment. He confirms GitHub release notes as the devlog destination ([exact words](../prompts/source/badge-release.md)).
+
+### AI-inferred design
+
+Use v0.1.10 to package current source through `925381e`: Dale/Claude's Electric Storm, earlier Storm twisters and shared-code cleanup, and RaresKeY/Codex's wind-driven clouds. Add the list's official mentioned badge near the README title and refresh its level count/timing. Credit gameplay/design separately from release integration in GitHub notes. Preserve the pending head-switch hint as deferred documentation, with no claim that it is playable. Run the existing tagged Windows/Linux/Web pipeline, then deploy the same verified Web asset to Firebase.
