@@ -1,7 +1,7 @@
 """Seeded, softly shifting wind; run this file to regenerate only wind_loop.wav."""
 import math
 import random
-from make_sfx import RATE, write
+from make_sfx import RATE, write, seal_loop, normalise, lowpass
 
 SECONDS = 24
 RMS = 0.045
@@ -24,28 +24,16 @@ def wind_samples():
                      + 0.06 * math.sin(5 * phase + 0.4))
             cutoff = 430 + 140 * math.sin(2 * phase + 1.2) + 80 * math.sin(5 * phase)
             alpha = 1 - math.exp(-math.tau * cutoff / RATE)
-            for stage in range(3):
-                states[stage] += alpha * (value - states[stage])
-                value = states[stage]
+            value = lowpass(value, states, alpha)
             rumble += rumble_alpha * (value - rumble)
             if cycle:
                 samples.append((value - rumble) * swell)
-    mean = sum(samples) / count
-    samples = [value - mean for value in samples]
-    rms = math.sqrt(sum(value * value for value in samples) / count)
-    samples = [value * RMS / rms for value in samples]
-    midpoint = (samples[0] + samples[-1]) * 0.5
-    first, last = samples[0], samples[-1]
-    overlap = int(RATE * 0.025)
-    for i in range(overlap):
-        weight = (1 - i / overlap) ** 2
-        samples[i] += (midpoint - first) * weight
-        samples[-1-i] += (midpoint - last) * weight
-    return samples
+    return seal_loop(normalise(samples, RMS), 0.025)
 
 
 def generate():
     write('wind_loop', wind_samples())
+    return 1
 
 
 if __name__ == '__main__':

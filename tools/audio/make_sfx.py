@@ -81,13 +81,12 @@ def write(name, samples):
         file.writeframes(frames)
 
 
-def loop_samples(sample):
-    samples = render(1.0, sample)
-    overlap = int(RATE * 0.02)
-    # Preserve a one-second loop; endpoints meet at a common midpoint.
+def seal_loop(samples, seconds):
+    """Bend the first and last `seconds` towards a shared midpoint so the loop seam doesn't click.
+    The taper keeps the rest of the sound untouched."""
+    overlap = int(RATE * seconds)
     midpoint = (samples[0] + samples[-1]) * 0.5
     first, last = samples[0], samples[-1]
-    # Taper boundary correction without fading the motor to silence.
     for i in range(overlap):
         weight = (1.0 - i / overlap) ** 2
         samples[i] += (midpoint - first) * weight
@@ -95,13 +94,33 @@ def loop_samples(sample):
     return samples
 
 
+def normalise(samples, rms):
+    """Remove any DC offset, then scale to the given RMS loudness."""
+    mean = sum(samples) / len(samples)
+    samples = [value - mean for value in samples]
+    current = math.sqrt(sum(value * value for value in samples) / len(samples))
+    return [value * rms / current for value in samples]
+
+
+def lowpass(value, states, alpha):
+    """Run `value` through cascaded one-pole low-pass stages, updating `states` in place."""
+    for stage in range(len(states)):
+        states[stage] += alpha * (value - states[stage])
+        value = states[stage]
+    return value
+
+
+def loop_samples(sample):
+    """A one-second loop of a recipe, sealed at the seam."""
+    return seal_loop(render(1.0, sample), 0.02)
+
+
 if __name__ == "__main__":
     for name, (seconds, sample) in RECIPES.items():
         write(name, render(seconds, sample))
     for name, sample in LOOPS.items():
         write(name, loop_samples(sample))
-    from make_rain import generate
-    generate()
+    from make_rain import generate as generate_rain
     from make_wind import generate as generate_wind
-    generate_wind()
-    print(f"wrote {len(RECIPES) + len(LOOPS) + 4} sounds to {OUT}")
+    extra = generate_rain() + generate_wind()
+    print(f"wrote {len(RECIPES) + len(LOOPS) + extra} sounds to {OUT}")

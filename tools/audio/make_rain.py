@@ -4,7 +4,7 @@ Run python3 tools/audio/make_rain.py to regenerate only the three rain WAVs.
 """
 import math
 import random
-from make_sfx import RATE, write
+from make_sfx import RATE, write, seal_loop, normalise, lowpass
 
 # Name, low-pass cutoff, RMS amplitude, seed. Density grows without a bright hiss.
 TIERS = {
@@ -25,31 +25,18 @@ def rain_samples(cutoff, amplitude, seed):
     samples = []
     for cycle in range(2):
         for i, value in enumerate(noise):
-            for stage in range(3):
-                states[stage] += alpha * (value - states[stage])
-                value = states[stage]
+            value = lowpass(value, states, alpha)
             if cycle:
                 # Slow, periodic variation; no square-wave tremolo or sharp taps.
                 phase = 2 * math.pi * i / count
                 samples.append(value * (0.87 + 0.08 * math.sin(phase) + 0.05 * math.sin(phase * 3)))
-    mean = sum(samples) / count
-    samples = [value - mean for value in samples]
-    rms = math.sqrt(sum(value * value for value in samples) / count)
-    samples = [value * amplitude / rms for value in samples]
-    # Gentle local correction makes the quantized loop endpoints identical.
-    midpoint = (samples[0] + samples[-1]) * 0.5
-    first, last = samples[0], samples[-1]
-    overlap = int(RATE * 0.025)
-    for i in range(overlap):
-        weight = (1 - i / overlap) ** 2
-        samples[i] += (midpoint - first) * weight
-        samples[-1-i] += (midpoint - last) * weight
-    return samples
+    return seal_loop(normalise(samples, amplitude), 0.025)
 
 
 def generate():
     for name, recipe in TIERS.items():
         write(name, rain_samples(*recipe))
+    return len(TIERS)
 
 
 if __name__ == '__main__':
