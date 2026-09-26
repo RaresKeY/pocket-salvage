@@ -19,14 +19,10 @@ func _start() -> void:
 	var bounds: Rect2 = context.layout.bounds
 	var floor_y: float = context.layout.ground_top
 	_visual_rng.seed = 10873
-	trails = WindTrails.new()
-	trails.z_index = 4
-	context.world.add_child(trails)
+	trails = _add(WindTrails.new(), 4)
 	trails.configure(bounds)
-	trails.modulate = weather.profile.tint
-	dust = _particles(7, Vector2(bounds.size.x * 0.5, floor_y - 28), Vector2(55, 8), Color.WHITE, 2.6, Vector2(4, 3))
+	dust = _particles(7, Vector2(bounds.size.x * 0.5, floor_y - 28), Vector2(55, 8), Color.WHITE, 2.6, 4, YardArt.solid_texture(Vector2i(4, 3)))
 	dust.emitting = false
-	dust.modulate = weather.profile.tint
 	dust.one_shot = true
 	dust.explosiveness = 0.65
 	dust.randomness = 0.5
@@ -42,23 +38,6 @@ func _start() -> void:
 	fade.offsets = PackedFloat32Array([0.0, 0.15, 0.55, 1.0])
 	fade.colors = PackedColorArray([Color(1,1,1,0), Color(1,1,1,0.6), Color(1,1,1,0.35), Color(1,1,1,0)])
 	dust.color_ramp = fade
-
-func _particles(amount: int, at: Vector2, extents: Vector2, color: Color, life: float, size: Vector2) -> CPUParticles2D:
-	var particles := CPUParticles2D.new()
-	particles.amount = amount
-	particles.lifetime = life
-	particles.position = at
-	particles.emission_shape = CPUParticles2D.EMISSION_SHAPE_RECTANGLE
-	particles.emission_rect_extents = extents
-	particles.color = color
-	particles.gravity = Vector2.ZERO
-	particles.spread = 4
-	particles.z_index = 4
-	var image := Image.create(int(size.x), int(size.y), false, Image.FORMAT_RGBA8)
-	image.fill(Color.WHITE)
-	particles.texture = ImageTexture.create_from_image(image)
-	context.world.add_child(particles)
-	return particles
 
 ## 0 at calm, 1 at the strongest gust this weather can blow.
 func strength() -> float:

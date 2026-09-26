@@ -39,7 +39,7 @@ func run() -> void:
 	var ambience := Ambience.new()
 	root.add_child(ambience)
 	ambience.configure(Layout.create_layout())
-	ambience.gull_wait = INF
+	ambience.waits[&"gull"] = INF
 	check_cloud_wind(ambience)
 	assert(ambience.perches.size() == 9, "Two floodlights, four rail spots, the heap and two fence spots")
 	var crane := []
@@ -80,7 +80,7 @@ func run() -> void:
 	assert(not is_instance_valid(passer), "Crossing gull leaves the yard")
 	assert(highest - lowest > 8.0, "Flight rises and dips rather than running level")
 
-	ambience.gull_wait = 0.0
+	ambience.waits[&"gull"] = 0.0
 	await frames(3)
 	var spawned: Array = get_nodes_in_group(&"yard_gull")
 	assert(spawned.size() >= 1 and spawned.size() <= Ambience.MAX_GULLS)

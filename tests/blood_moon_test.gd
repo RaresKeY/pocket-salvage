@@ -57,7 +57,7 @@ func run() -> void:
 		assert(is_equal_approx(game.tint[&"screen"], 0.1), "The developer slider drives the round")
 	for key in Tints.defaults(): game.set_tint(key, Tints.defaults()[key])
 	game.ambience._spawn_gulls()
-	game.ambience.rat_wait = 0
+	game.ambience.waits[&"rat"] = 0
 	game.ambience._process(1.0)
 	assert(get_nodes_in_group(&"yard_gull").is_empty())
 	assert(game.ambience.visitors.is_empty() and game.ambience.crow != null)

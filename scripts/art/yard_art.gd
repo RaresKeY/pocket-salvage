@@ -5,6 +5,24 @@ const FACTOR := 8.0
 ## The original 1x art, used where a texture has to be processed before enlarging.
 const SOURCE_DIR := "res://assets/bitwright/"
 static var _matched_skies: Dictionary = {}
+static var _solid_textures: Dictionary = {}
+
+## A plain white texture of `size`, shared, for particles.
+static func solid_texture(size: Vector2i) -> Texture2D:
+	if not _solid_textures.has(size):
+		var image := Image.create(size.x, size.y, false, Image.FORMAT_RGBA8)
+		image.fill(Color.WHITE)
+		_solid_textures[size] = ImageTexture.create_from_image(image)
+	return _solid_textures[size]
+
+## A flat colour rectangle that ignores the mouse, for flashes, darkness and sheens. The caller adds it.
+static func overlay(rect: Rect2, color: Color) -> ColorRect:
+	var shape := ColorRect.new()
+	shape.position = rect.position
+	shape.size = rect.size
+	shape.color = color
+	shape.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	return shape
 
 static func path(name: String) -> String:
 	return DIR + name + ".png"

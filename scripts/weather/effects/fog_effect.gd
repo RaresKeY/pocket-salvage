@@ -11,11 +11,8 @@ func applies(profile) -> bool:
 	return profile.fog > 0.0
 
 func _start() -> void:
-	layer = Node2D.new()
-	layer.z_index = 6
-	layer.modulate = weather.profile.tint
+	layer = _add(Node2D.new(), 6)
 	layer.draw.connect(_draw_fog)
-	context.world.add_child(layer)
 	for label in context.bin_labels: label.modulate.a = 1.0 - weather.profile.fog * LABEL_DIM
 
 func density_at(x: float) -> float:

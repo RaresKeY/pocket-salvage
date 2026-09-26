@@ -22,6 +22,15 @@ var bob_rate := 1.0
 var climb := 0.0
 var time := 0.0
 var width := 1200.0
+## Critters start this far outside the yard and are gone once this far past either edge.
+const ENTER_MARGIN := 30.0
+const EXIT_MARGIN := 40.0
+
+static func entry_x(from_left: bool, yard_width: float) -> float:
+	return -ENTER_MARGIN if from_left else yard_width + ENTER_MARGIN
+
+static func off_yard(x: float, yard_width: float) -> bool:
+	return x < -EXIT_MARGIN or x > yard_width + EXIT_MARGIN
 var half_height := 0.0
 ## Returns true when something (the crane) is close enough to scare a perched gull.
 var is_threatened: Callable = func(_at: Vector2) -> bool: return false
@@ -51,7 +60,7 @@ func setup(generator: RandomNumberGenerator, art_scale: float, yard_width: float
 	add_child(sprite)
 	sprite.play(&"fly")
 	sprite.frame = rng.randi_range(0, frames.get_frame_count(&"fly") - 1)
-	position = Vector2(-30.0 if from_left else width + 30.0, altitude)
+	position = Vector2(entry_x(from_left, width), altitude)
 	_face(direction)
 	glide_timer = rng.randf_range(1.5, 4.0)
 
@@ -84,7 +93,7 @@ func _cross(delta: float) -> void:
 	position.y = cruise_y + sin(time * bob_rate + bob_phase) * 10.0 + sin(time * 0.31 + bob_phase) * 18.0
 	if perch != Vector2.INF and absf(perch.x - position.x) < LAND_RANGE and signf(perch.x - position.x) == direction:
 		state = State.LANDING
-	elif position.x < -40.0 or position.x > width + 40.0:
+	elif off_yard(position.x, width):
 		queue_free()
 
 func _land(delta: float) -> void:
@@ -133,5 +142,5 @@ func _leave(delta: float) -> void:
 	position.y += climb * delta
 	climb = move_toward(climb, -10.0, 60.0 * delta)
 	if sprite.speed_scale > 1.0: sprite.speed_scale = move_toward(sprite.speed_scale, 1.0, delta * 0.5)
-	if position.x < -40.0 or position.x > width + 40.0 or position.y < -30.0:
+	if off_yard(position.x, width) or position.y < -ENTER_MARGIN:
 		queue_free()
