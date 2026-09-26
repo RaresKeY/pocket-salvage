@@ -1,6 +1,6 @@
 # Project Contract
 
-Reviewed: 2026-09-26. Implementation: v0.1.8 release preparation in this commit, based on `5e1cb17`.
+Reviewed: 2026-09-26. Implementation: reward-audio/v0.1.9 preparation in this commit, based on `95f7797`.
 
 ## Status and scope
 
@@ -22,7 +22,7 @@ Pocket Salvage is the official game name; its public GitHub repository is `Rares
 
 The public GitHub repository uses direct commits to `main`, rebasing unpublished work onto the latest remote before pushing. Experimental branches are optional; pull requests are not part of the current workflow; release tags are permitted for explicitly requested GitHub releases. The [collaboration guide](../docs/collaboration.md) owns conflict, recovery, and build-identity rules. Optional future coordination automation lives in [design](../design/collaboration.md).
 
-`project.godot` declares version `0.1.8`, the assistant-selected patch version for the requested release. No project license has been selected.
+`project.godot` declares version `0.1.9`, the assistant-selected patch version for the requested release. No project license has been selected.
 
 Physics runs at 60 Hz with native 2D physics interpolation enabled. Physical bodies and the hoist move on physics ticks; custom cable geometry interpolates its previous/current particle positions at render cadence without modifying the solver. Explicit restart/spawn teleports reset interpolation history.
 
@@ -37,6 +37,6 @@ Player input is shared through `scripts/input/salvage_input.gd`; [input](input.m
 Web exports cap presentation at 60 FPS through `application/run/max_fps.web`; native builds retain the platform/VSync rate. Physics remains 60 Hz with interpolation. The cap avoids chasing a 165 Hz desktop refresh when the Web frame budget cannot reliably sustain it.
 
 
-Current source version is 0.1.8: five playable levels including Storm and Blood Moon, approved tint defaults and mobile overlay controls, with local Developer controls hidden in exports.
+Current source version is 0.1.9: five playable levels including Storm and Blood Moon, approved tint defaults and mobile overlay controls, with local Developer controls hidden in exports.
 
 `play-mobile.sh` adds a Linux phone-layout preview of current local source, with mouse-operated analog touch controls. See [input](input.md).

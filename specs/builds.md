@@ -1,6 +1,6 @@
 # Standalone prototype builds
 
-Reviewed: 2026-09-26. Implementation revision: `3bcb824` (v0.1.8).
+Reviewed: 2026-09-26. Implementation: reward-audio/v0.1.9 preparation in this commit, based on `95f7797`.
 
 The user requested a versioned standalone prototype and reproducible builds. Export presets cover Linux x86_64, Windows x86_64, Web (single-thread WebAssembly) and unsigned macOS universal. Mobile Web input is supported through the shared [input module](input.md); native mobile exports and signing remain outside this prototype. Platform availability is separate from tested runtime support: Linux and Web can be exercised on the development workstation; Windows and macOS require target-machine playtests.
 
@@ -85,3 +85,5 @@ Version 0.1.7 packages the verified `53982f2` wind/UI implementation with the di
 Version 0.1.8 packages the five-level game, approved Blood Moon defaults and mobile overlay controls from `3bcb824`. [Tag workflow 36234438507](https://github.com/RaresKeY/pocket-salvage/actions/runs/36234438507) passed the full engine and eight release-contract tests, compared independent Windows/Linux/Web exports, verified uploaded assets and updated Pages. Firebase received the downloaded Web ZIP after archive/manifest/payload checks. All ten files on each host matched the release payload or equivalent build metadata, identifying `3bcb82412285defacec7d8efc0ea5e0136e2c5e0`. The verified Linux ZIP started and exited normally under managed background Gamescope on NVIDIA RTX 2080 Ti Compatibility; Windows was built and hash-verified but not executed. The previously observed intermittent Storm test remains tracked in TODO despite this successful CI run.
 
 Firebase v0.1.8 browser validation: silent Firefox on the actual HTTPS site loaded the five-level grid, selected Storm with mouse input, started and ran over 90 seconds with movement/reeling/grip/pause. Inspected captures show the calm-to-storm transition, twister warning and lightning magnet inversion; no game-console errors, nonzero audio upstream of the muted destination. WebGL reported a privacy-masked NVIDIA renderer. Local release downloads, extracted payloads and Firebase deployment cache were removed; ignored browser/hash evidence remains under `.local/release018/`.
+
+Version 0.1.9 packages the softer, varied wind and a modest −3dB correct-delivery reward adjustment through the existing tagged Windows/Linux/Web pipeline, followed by the requested manual Firebase sync from the verified release Web ZIP.

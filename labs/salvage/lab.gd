@@ -549,7 +549,7 @@ func release_load() -> void:
 func _delivered(body: RigidBody2D, material: StringName, bin: Node2D) -> void:
 	match round_state.accept_delivery(body.item_id,body.material_id,material):
 		Round.Delivery.CORRECT:
-			sfx.play(&"correct")
+			sfx.play(&"correct", -3.0)
 			_say("Correct sort! +%d" % Round.CORRECT_POINTS,4.0)
 			burst(body.global_position,"fx_sparks")
 			popup(body.global_position,"+%d" % Round.CORRECT_POINTS,Color("f6d44a"))

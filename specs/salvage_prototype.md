@@ -1,6 +1,6 @@
 # Playable subsystem integration
 
-Reviewed: 2026-09-26. Implementation: landscape HUD change in this commit, based on `0fa2f34`.
+Reviewed: 2026-09-26. Implementation: reward-audio/v0.1.9 preparation in this commit, based on `95f7797`.
 
 ## Composition
 
@@ -34,7 +34,7 @@ Each round uses the [selected level’s weather](levels.md) (or the test overrid
 
 ## Audio
 
-Effects, motor loops and music come from [`scripts/audio/sfx.gd`](audio.md). The lab plays start, grip/release per head, pickup, clank on a swap, landing, correct, wrong plus eject, a tick each second of the last 10 and finish; it sets the trolley and winch loops from actual travel and reel speed each move and silences them when the round is not running.
+The correct-delivery reward chime plays at −3dB before the SFX slider gain. Effects, motor loops and music come from [`scripts/audio/sfx.gd`](audio.md). The lab plays start, grip/release per head, pickup, clank on a swap, landing, correct, wrong plus eject, a tick each second of the last 10 and finish; it sets the trolley and winch loops from actual travel and reel speed each move and silences them when the round is not running.
 
 ## Verification
 

@@ -3,7 +3,7 @@ config_version=5
 
 [application]
 config/name="Pocket Salvage"
-config/version="0.1.8"
+config/version="0.1.9"
 run/max_fps.web=60
 run/main_scene="res://labs/salvage/lab.tscn"
 config/features=PackedStringArray("4.7", "GL Compatibility")

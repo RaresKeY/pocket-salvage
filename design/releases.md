@@ -43,3 +43,13 @@ Marketing refresh: use fresh, unmodified 1280×720 native gameplay and level-gri
 Use v0.1.8 for the current five-level game, Storm/twister, Blood Moon defaults, skyline/wind refinements and mobile overlay. Run the existing tagged Windows/Linux/Web pipeline and deploy its verified Web ZIP to Firebase.
 
 Release README refresh: describe all five published levels and Storm’s initial calm period; retain existing marketing images and label their older four-level view.
+
+## Audio balance release, 2026-09-26
+
+### User design
+
+RaresKeY requests commit/push, a build/release tag and Firebase sync after the reward adjustment ([exact words](../prompts/source/reward-audio-release.md)).
+
+### AI-inferred design
+
+Use patch version v0.1.9 for the softer wind and quieter correct-delivery chime. Use the existing tagged Windows/Linux/Web workflow, then deploy its checksum-verified Web payload to Firebase and verify the live files.

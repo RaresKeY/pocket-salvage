@@ -45,3 +45,13 @@ RaresKeY reported the continuous sound on levels 02–05 and requested softer, l
 ### AI-inferred design
 
 Replace the one-second pulsing noise and 170Hz hum with a 24-second seeded noise bed. Three low-pass stages with slowly varying 210–650Hz cutoff and a 65Hz high-pass soften hiss and rumble. Overlapping smooth swells vary loudness and texture; normalize the master to RMS 0.045 and correct the seam over 25ms. Retain weather intensity control and its existing mix. These durations, filters and levels are implementation choices; naturalness still needs player listening feedback.
+
+## Reward balance, 2026-09-26
+
+### User design
+
+RaresKeY requests a slightly quieter reward sound and a tagged release plus Firebase sync ([exact words](../prompts/source/reward-audio-release.md)).
+
+### AI-inferred design
+
+Interpret reward as the correct-delivery chime. Reduce its round playback by 3dB (0dB to −3dB), retaining its existing sound and the independent SFX volume control.
