@@ -1,6 +1,6 @@
 # Repository Structure
 
-Reviewed: 2026-09-27. Implementation reviewed: `925381e`; badge and v0.1.10 README refresh in this commit.
+Reviewed: 2026-09-27. Implementation reviewed: `f4d3011` (badge and v0.1.10 README).
 
 ## Current contract
 

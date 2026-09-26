@@ -1,6 +1,6 @@
 # Standalone prototype builds
 
-Reviewed: 2026-09-27. Implementation reviewed: `925381e`; v0.1.10 release preparation in this commit.
+Reviewed: 2026-09-27. Implementation revision: `f4d3011` (v0.1.10).
 
 The user requested a versioned standalone prototype and reproducible builds. Export presets cover Linux x86_64, Windows x86_64, Web (single-thread WebAssembly) and unsigned macOS universal. Mobile Web input is supported through the shared [input module](input.md); native mobile exports and signing remain outside this prototype. Platform availability is separate from tested runtime support: Linux and Web can be exercised on the development workstation; Windows and macOS require target-machine playtests.
 
@@ -95,3 +95,7 @@ The actual Firebase HTTPS game passed a silent Firefox smoke check: select Storm
 Version 0.1.10 packages Electric Storm, earlier Storm twisters, wind-driven clouds and the shared-code cleanup through `925381e`. The README carries the Awesome AI-Built Games badge and current six-level description. GitHub release notes credit Dale/Claude for the new level, Storm timing and cleanup, RaresKeY/Codex for cloud movement, and Codex at RaresKeY's request for release integration. Tagged reproducible Windows/Linux/Web delivery and manual Firebase sync keep the same contract; the physical head-switch hint remains deferred.
 
 2026-09-27 release preflight: the complete managed Godot 4.7 suite passed (`CHECKS_OK`), including Electric Storm and wind-driven cloud checks; all eight offline release-contract tests passed. Tagged exports and remote verification are recorded after publication.
+
+2026-09-27 v0.1.10 delivery: [tag workflow 36280711657](https://github.com/RaresKeY/pocket-salvage/actions/runs/36280711657) passed the full engine and eight release-contract tests, compared independent Windows/Linux/Web exports, verified uploaded assets and updated Pages. Firebase received the downloaded Web ZIP after archive/manifest/payload checks. All ten files on each host match the release payload or equivalent build metadata, identifying `f4d3011a694c74407e9552406b15b6c7cf24e2b0`. GitHub release notes describe the changes with human/AI attribution. The verified Linux download started and exited normally under managed background Gamescope on NVIDIA RTX 2080 Ti Compatibility. Windows was built and hash-verified but not executed.
+
+Live Firebase Firefox verification passed Electric Storm selection, start/movement/reeling/grip/pause and 40 seconds of active play. Inspected captures show blackout and recovery; audio upstream of a muted destination was nonzero, with no game-console errors. WebGL reported a privacy-masked NVIDIA renderer. This is sampled runtime verification, not subjective listening or performance profiling. Generated downloads, extracted payloads and deployment cache were removed after verification; ignored hash/browser evidence remains in `.local/release0110/`.

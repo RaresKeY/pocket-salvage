@@ -1,6 +1,6 @@
 # Project Contract
 
-Reviewed: 2026-09-27. Implementation reviewed: `925381e`; v0.1.10 version preparation in this commit.
+Reviewed: 2026-09-27. Implementation reviewed: `f4d3011` (v0.1.10).
 
 ## Status and scope
 
