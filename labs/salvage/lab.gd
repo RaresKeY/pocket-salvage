@@ -143,6 +143,7 @@ func _fit() -> void:
 	var top: float = hud.top_panel.get_global_rect().end.y + 6 if hud != null else 100.0
 	var bottom: float = hud.bottom_panel.get_global_rect().position.y - 6 if hud != null else size.y - 121.0
 	if hud.touch_enabled: bottom = size.y
+	if hud.landscape_overlay(): top = 0.0
 	stage.position = Vector2(0, top)
 	stage.size = Vector2(maxf(1, size.x - hud.world_right_inset), maxf(1, bottom - top))
 	var zoom := minf(stage.size.x / 1200.0, stage.size.y / 480.0)

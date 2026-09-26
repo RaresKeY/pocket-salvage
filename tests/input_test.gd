@@ -159,23 +159,54 @@ func run() -> void:
 	root.push_input(mouse, true)
 	assert(lab.controls.movement() == Vector2.ZERO, "Mouse release outside the ring clears motion")
 	touch.mouse_preview = false
-	for dimensions in [Vector2i(320,568), Vector2i(390,844), Vector2i(844,390), Vector2i(854,480), Vector2i(960,540), Vector2i(1280,720), Vector2i(1920,1080)]:
+	for dimensions in [Vector2i(320,568), Vector2i(390,844), Vector2i(568,320), Vector2i(640,360), Vector2i(844,390), Vector2i(854,480), Vector2i(960,540), Vector2i(1280,720), Vector2i(1920,1080)]:
 		root.size = dimensions
+		lab.round_state.score = 4320
+		lab.round_state.remaining_time = 9
+		lab._say("The magnet won't hold rubber. Swap to the claw at the tool stands.", 10)
 		await settle()
 		var screen := Rect2(Vector2.ZERO, Vector2(dimensions))
 		for button in touch.buttons.values():
 			assert(screen.encloses(button.get_global_rect()), "Touch controls remain on-screen at %s" % dimensions)
 			assert(button.size.x >= 44 and button.size.y >= 44)
-		assert(lab.hud.top_panel.get_global_rect().end.x <= dimensions.x - 56, "Header leaves fullscreen target clear")
+		assert(lab.hud.top_panel.get_global_rect().end.x <= dimensions.x - 56, "Header leaves fullscreen target clear at %s: %s" % [dimensions, lab.hud.top_panel.get_global_rect()])
 		assert(lab.stage.size.x == dimensions.x, "Overlay reserves no yard column")
 		assert(lab.stage.get_rect().end.y == dimensions.y, "Yard extends behind the controls")
+		if dimensions.x > dimensions.y:
+			assert(lab.stage.position == Vector2.ZERO and lab.stage.size == Vector2(dimensions), "Landscape HUD reserves no game height")
+			assert(lab.hud.top_panel.get_theme_stylebox("panel") is StyleBoxEmpty, "Landscape running HUD has no solid panel")
+			assert(not lab.hud.music_button.visible and not lab.hud.effects_button.visible, "Landscape running actions keep room for counters")
+			assert(lab.hud.pause_button.size.y >= 52)
+			for label in [lab.hud.score_label, lab.hud.time_label, lab.hud.progress_label]:
+				assert(label.get_theme_font_size("font_size") >= 24 and label.get_theme_constant("outline_size") >= 4, "Counters stay large and outlined over the yard")
+				assert(screen.encloses(label.get_global_rect()), "Overlay counters stay on screen")
+			assert(lab.hud.score_label.get_global_rect().end.x <= lab.hud.time_label.global_position.x, "Four-digit score leaves the timer clear")
+			assert(lab.hud.progress_label.get_global_rect().end.x <= lab.hud.pause_button.global_position.x, "Progress leaves Pause clear")
+			assert(lab.hud.time_label.get_theme_color("font_color") == lab.hud.HURRY_COLOR, "Outlined timer preserves the hurry warning")
+		else:
+			assert(lab.stage.position.y > 0 and lab.hud.music_button.visible, "Portrait restores its existing header")
+			assert(lab.hud.score_label.get_theme_constant("outline_size") == 0, "Rotation clears landscape styling")
 		assert(screen.has_point(touch.stick_center + Vector2(touch.RADIUS, touch.RADIUS)))
 		assert(touch.buttons[&"swap"].position.y < touch.buttons[&"grip"].position.y)
+		var running_stage: Rect2 = lab.stage.get_rect()
 		lab.toggle_pause()
 		await settle()
+		assert(lab.hud.music_button.visible and lab.hud.effects_button.visible and lab.hud.audio_settings.visible, "Audio remains accessible in Pause")
+		if dimensions.x > dimensions.y: assert(lab.stage.get_rect() == running_stage, "Opening Pause does not shrink the landscape yard")
 		assert(screen.encloses(lab.hud.action.get_global_rect()), "Phone modal stays on-screen")
-		assert(lab.hud.heading.get_global_rect().position.y >= lab.hud.top_panel.get_global_rect().end.y, "Header cannot cover the modal title")
+		assert(lab.hud.heading.get_global_rect().position.y >= lab.hud.top_panel.get_global_rect().end.y, "Header cannot cover the modal title at %s" % dimensions)
 		lab.toggle_pause()
+	root.size = Vector2i(568, 320)
+	await settle()
+	lab.toggle_pause()
+	await settle()
+	lab.toggle_pause()
+	lab.round_state.tick(241)
+	await settle()
+	assert(lab.hud.state == "finished")
+	assert(is_equal_approx(lab.hud.top_panel.size.y, lab.hud.top_panel.get_combined_minimum_size().y), "Results header has no leftover height")
+	assert(lab.hud.heading.global_position.y >= lab.hud.top_panel.get_global_rect().end.y, "Results header shrinks after wrapped landscape feedback hides")
+	assert(Rect2(Vector2.ZERO, Vector2(568,320)).encloses(lab.hud.action.get_global_rect()), "Landscape Retry remains reachable")
 	lab.free()
 	await process_frame
 	print("INPUT_TEST_OK controller commands, analog deadzone, real motion, disconnect, multi-touch, cancellation, phone layouts")

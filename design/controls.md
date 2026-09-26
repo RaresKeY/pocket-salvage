@@ -17,3 +17,5 @@ Use a rounded screen-space right analog stick and diagonal left action circles, 
 Keep the square pixel HUD, move touch feedback to its header, and let the aspect-preserved yard extend beneath controls without reserving a column/footer. The Linux preview defaults to 844×390 and supports mouse dragging. Web fullscreen uses a DOM user gesture with standard/prefixed capability detection and a browser-menu/Home-Screen fallback message. This does not promise fullscreen on browsers that disallow it.
 
 Remove the F2 mapping, scene-switch command and HUD navigation hint entirely. `play.sh` already opens the configured game and inherits this removal. Preserve the independently openable scene-preview asset/lab and its camera tests; it is not reachable from gameplay.
+
+Mobile landscape follow-up: [RaresKeY’s 2026-09-26 request](../prompts/source/mobile-overlay.md) supersedes the reserved mobile header during landscape play. The [HUD design](round_hud.md) owns the outlined counters and Pause access; input mappings, thumb controls and cancellation rules stay unchanged.

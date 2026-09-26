@@ -53,3 +53,17 @@ RaresKeY requested [rounded analog controls, diagonal left actions and fullscree
 ### AI-inferred design
 
 Keep the square main HUD. Move mobile feedback into the header, remove the reserved touch column/footer, reserve 60px for fullscreen, and reduce counter/action text at narrow widths to preserve clearance. Thumb controls use translucent circles and smooth generated pale-gray icons; menu states hide them.
+
+## Mobile landscape HUD, 2026-09-26
+
+### User design
+
+RaresKeY [asked for larger outlined HUD text over the game and more usable landscape height](../prompts/source/mobile-overlay.md).
+
+### AI-inferred design
+
+Use the existing Tiny5/mint theme with a 6px dark outline on running landscape labels. Counter text is 28px (24px below 740px wide), status is 20px and feedback 18px. Remove the running header surface/separators, keep an 80×52 Pause target, and expose Music/SFX toggles and volume sliders in Pause. Landscape touch mode fits the yard to the full screen in every state, preserving its aspect ratio and its scale across pause. Portrait and desktop retain the panel layout; analog/action touch controls retain their established sizes and behavior.
+
+AI-inferred short-screen resilience: keep landscape menu counters/actions on one row with 18px text below 740px, and hide transient feedback behind menus so the modal title remains clear at 568×320. Running text retains the larger sizes above.
+
+AI-inferred resilience: use compact counter spacing on mobile in both orientations so four-digit scores preserve fullscreen clearance. Shrink the header to its content height when wrapped feedback disappears, retaining anchored width and avoiding blank space over results.

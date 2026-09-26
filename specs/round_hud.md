@@ -1,6 +1,6 @@
 # Round HUD
 
-Reviewed: 2026-09-25. Implementation: mobile-overlay change based on `285719e`.
+Reviewed: 2026-09-26. Implementation: landscape HUD change in this commit, based on `0fa2f34`.
 
 ## Ownership and contract
 
@@ -28,7 +28,7 @@ The HUD tests cover audio buttons above the ready modal, focus return, on/off la
 
 ## Controller and phone layout
 
-`control_scheme` selects device hints. On mobile, a full-screen rounded touch overlay sits above the aspect-preserved yard and below menus. It reserves no column/footer. Feedback moves to the top panel; the redundant footer is hidden. The header leaves 60px on the right for the fullscreen control. Touch icons are smooth pale-gray PNGs with explicit linear filtering; the main HUD retains Tiny5 and square styling. See [input](input.md) and [mobile review](../docs/mobile-overlay-review.md).
+`control_scheme` selects device hints. On mobile, a full-screen rounded touch overlay sits above the aspect-preserved yard and below menus. It reserves no column/footer. Feedback moves to the top panel; the redundant footer is hidden. The header leaves 60px on the right for the fullscreen control. In landscape running touch mode it is transparent: counters use 28px text (24px below 740px width), head/weather 20px and feedback 18px, with the shared `YardOverlayLabel` 6px dark outline. Separators and quick audio toggles hide while playing; the 80×52 Pause button opens the existing audio toggles/sliders. Menus restore the regular header and hide transient landscape feedback to keep the modal title clear. Landscape menus keep one counter/action row, using 18px counter/button text below 740px, so 568×320 retains room for the modal. `landscape_overlay()` lets the caller fit the yard to the full screen in every landscape touch state, without changing aspect ratio or jumping on pause. Portrait/desktop restore regular fonts, surfaces and audio controls. Mobile counter spacing is compact in both orientations to fit four-digit scores beside fullscreen. Header height follows content minimum changes, so hiding wrapped feedback cannot leave an empty panel covering results. Touch icons are smooth pale-gray PNGs with explicit linear filtering; the main HUD retains Tiny5 and square styling. See [input](input.md) and [mobile review](../docs/mobile-overlay-review.md).
 
 HUD presentation compares snapshots after rounding the remaining time to its displayed second. Unchanged values skip label/button/theme rebuilding; the hurry alpha is still updated on every presentation. Ready buffering and state transitions remain immediate. The playable physics loop advances feedback before ticking the round and uses its changed signal for one HUD refresh per tick.
 
@@ -47,3 +47,5 @@ The playable ready modal supports the [level grid](levels.md), with Levels navig
 Level-flow presentation: `victory` selects the Victory heading and Continue action. The scene handles the finished primary request as Continue-to-grid on victory or Retry on timeout; the synthetic HUD lab retains Play again. Victory hides the redundant secondary Levels button. Ready grid details show the selected scrap count.
 
 Developer options also hold the Blood Moon tint sliders (`tint_sliders`, built from `TintSettings.SLIDERS`, emitting `tint_requested(key, value)`) and a Reset tints button. Audio and tint rows share one `_slider_row` helper.
+
+Landscape HUD verification: see the 2026-09-26 follow-up in [mobile overlay review](../docs/mobile-overlay-review.md), including nine viewport sizes, dense counters, orientation/state transitions and native GPU evidence. The final full managed Godot 4.7 suite passed (`CHECKS_OK`).

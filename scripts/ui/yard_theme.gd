@@ -22,6 +22,9 @@ static func make() -> Theme:
 	result.default_font = font
 	result.default_font_size = 20
 	result.set_color("font_color", "Label", INK)
+	result.set_type_variation("YardOverlayLabel", "Label")
+	result.set_color("font_outline_color", "YardOverlayLabel", Color("081014"))
+	result.set_constant("outline_size", "YardOverlayLabel", 6)
 	result.set_stylebox("panel", "PanelContainer", panel(Color("142126")))
 	for type in ["Button", "CheckButton", "OptionButton"]:
 		for state in ["normal", "hover", "pressed", "hover_pressed", "disabled"]:

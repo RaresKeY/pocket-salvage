@@ -1,10 +1,10 @@
 # Playable subsystem integration
 
-Reviewed: 2026-09-25. Implementation: lightning/rain change based on `826efb6`.
+Reviewed: 2026-09-26. Implementation: landscape HUD change in this commit, based on `0fa2f34`.
 
 ## Composition
 
-`labs/salvage/lab.tscn` composes crane suspension, round/bin, HUD, level layout, ambience and audio modules without replacing the static yard preview. The project opens this playable scene at the ready level grid. The independent preview retains its Play prototype button, but gameplay has no preview shortcut in source or exported builds. Each subsystem keeps its own lab and verification. The world renders into a native-resolution SubViewport between the HUD bands (measured panel bounds with 6px clearance), fitting 1200×480 world units with preserved aspect ratio. Placements come from [the layout module](level_layout.md), variant 0.
+`labs/salvage/lab.tscn` composes crane suspension, round/bin, HUD, level layout, ambience and audio modules without replacing the static yard preview. The project opens this playable scene at the ready level grid. The independent preview retains its Play prototype button, but gameplay has no preview shortcut in source or exported builds. Each subsystem keeps its own lab and verification. The world renders into a native-resolution SubViewport between the HUD bands (measured panel bounds with 6px clearance), fitting 1200×480 world units with preserved aspect ratio. Landscape touch mode uses the entire screen behind the outlined HUD, in both running and menu states; portrait touch still reserves its header and desktop reserves both bands. Placements come from [the layout module](level_layout.md), variant 0.
 
 Level-dependent 4/6/10/12 caller-configured RigidBody2D payloads (`payload.gd`, layer 2) start as a heap; three bins share walls (layer 1); the magnet body is layer 4. Payloads use rectangle shapes and 8× art scaled to their rectangle. Bin art stays axis-aligned; masks are not integrated. `payload.grip_offset()` is the middle of whichever edge currently faces up, so tumbled scrap stays reachable; `grip_point()` is its world position. Payloads emit `landed(at)` on contact while falling faster than 160 units/s.
 
@@ -53,3 +53,5 @@ The physics tick expires feedback before advancing the round; the round change s
 Level 4 integrates the [Blood Moon](levels.md) generator controller, reversed material/power rules, tainted ambience and random mild-to-medium weather. Only this level receives those rules; all worlds are rebuilt on selection/replay.
 
 Level 3 lightning uses `magnet_flicker_left` and a saved switch state to implement brief inversion/restoration, with real load release and cancellation on explicit input, head change, restart or finish. The existing `power_out_left` outage remains for other levels. See [weather](weather.md).
+
+Landscape HUD verification: see the 2026-09-26 follow-up in [mobile overlay review](../docs/mobile-overlay-review.md), including nine viewport sizes, dense counters, orientation/state transitions and native GPU evidence.

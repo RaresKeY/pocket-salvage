@@ -37,6 +37,9 @@ var footer: BoxContainer
 var world_right_inset := 0.0
 const YardTheme = preload("res://scripts/ui/yard_theme.gd")
 var header_row: BoxContainer
+var counters: HBoxContainer
+var header_style: StyleBoxFlat
+var overlay_style := StyleBoxEmpty.new()
 var audio_settings: VBoxContainer
 var music_slider: HSlider
 var effects_slider: HSlider
@@ -80,6 +83,8 @@ func _ready() -> void:
 	top.offset_top = 6
 	var compact: StyleBoxFlat = theme.get_stylebox("panel", "PanelContainer").duplicate()
 	compact.set_content_margin_all(8)
+	header_style = compact
+	for side in [SIDE_LEFT, SIDE_TOP, SIDE_RIGHT, SIDE_BOTTOM]: overlay_style.set_content_margin(side, 8)
 	top.add_theme_stylebox_override("panel", compact)
 	add_child(top)
 	var header := VBoxContainer.new()
@@ -88,7 +93,7 @@ func _ready() -> void:
 	header_row = BoxContainer.new()
 	header_row.add_theme_constant_override("separation", 12)
 	header.add_child(header_row)
-	var counters := HBoxContainer.new()
+	counters = HBoxContainer.new()
 	counters.size_flags_horizontal = SIZE_EXPAND_FILL
 	counters.add_theme_constant_override("separation", 10)
 	header_row.add_child(counters)
@@ -207,6 +212,7 @@ func _ready() -> void:
 	_ignore_decoration(self)
 	modal.mouse_filter = MOUSE_FILTER_STOP
 	top.resized.connect(func(): _layout_modal(); layout_changed.emit())
+	top.minimum_size_changed.connect(func(): _fit_header.call_deferred())
 	bottom.resized.connect(func(): layout_changed.emit())
 	resized.connect(_responsive_layout)
 	# Card text depends on screen height, and unchanged data is cached, so force a rebuild on resize.
@@ -382,6 +388,7 @@ func present(data: Dictionary) -> void:
 	hints_label.text = hints
 	var previous := state
 	state = str(data.get("state", "ready"))
+	if previous != state: _layout_header()
 	selected_level = int(data.get("selected_level", 0))
 	level_grid.visible = state == "ready" and bool(data.get("level_menu", false))
 	levels_button.visible = (state == "paused" or (state == "finished" and not bool(data.get("victory", false)))) and bool(data.get("level_menu", false))
@@ -391,11 +398,12 @@ func present(data: Dictionary) -> void:
 	music_button.text = "Music on" if music_button.button_pressed else "Music off"
 	effects_button.set_pressed_no_signal(data.get("effects_on", true))
 	effects_button.text = "SFX on" if effects_button.button_pressed else "SFX off"
-	score_label.text = "Score  %d" % int(data.get("score", 0))
-	time_label.text = "Time  %d:%02d" % [seconds / 60, seconds % 60]
+	var gap := " " if touch_enabled else "  "
+	score_label.text = "Score%s%d" % [gap, int(data.get("score", 0))]
+	time_label.text = "Time%s%d:%02d" % [gap, seconds / 60, seconds % 60]
 	if hurry: time_label.add_theme_color_override("font_color", HURRY_COLOR)
 	else: time_label.remove_theme_color_override("font_color")
-	progress_label.text = "Sorted  %d / %d" % [int(data.get("delivered", 0)), int(data.get("total", 0))]
+	progress_label.text = ("Sorted %d/%d" if touch_enabled else "Sorted  %d / %d") % [int(data.get("delivered", 0)), int(data.get("total", 0))]
 	var weather := str(data.get("weather_label", ""))
 	weather_badge.text = weather
 	weather_badge.visible = not weather.is_empty()
@@ -403,7 +411,7 @@ func present(data: Dictionary) -> void:
 	var grip := str(data.get("grip_label", "Magnet " + ("ON" if data.get("magnet_on", false) else "OFF")))
 	magnet_label.text = "%s  ·  %s" % [grip, "Carrying " + held if not held.is_empty() else "Empty"]
 	feedback_label.text = str(data.get("feedback", ""))
-	feedback_label.visible = not feedback_label.text.is_empty()
+	feedback_label.visible = not feedback_label.text.is_empty() and (not landscape_overlay() or state == "running")
 	audio_settings.visible = state == "paused" and (developer_button == null or not developer_button.button_pressed)
 	music_slider.set_value_no_signal(float(data.get("music_volume", 1.0)) * 100.0)
 	effects_slider.set_value_no_signal(float(data.get("effects_volume", 1.0)) * 100.0)
@@ -447,6 +455,7 @@ func present(data: Dictionary) -> void:
 		else:
 			var focused := get_viewport().gui_get_focus_owner()
 			if focused != null and is_ancestor_of(focused): focused.release_focus()
+	_fit_header.call_deferred()
 
 func _activate() -> void:
 	match state:
@@ -462,11 +471,7 @@ func _responsive_layout() -> void:
 	hints_label.visible = not touch_enabled
 	footer.vertical = false
 	level_grid.columns = 4 if size.x < 500 else 6
-	header_row.vertical = size.x < 760
-	for label in [score_label, time_label, progress_label]:
-		label.add_theme_font_size_override("font_size", 14 if size.x < 420 else 20)
-	for button in [music_button, effects_button, pause_button]:
-		button.add_theme_font_size_override("font_size", 14 if size.x < 360 else 20)
+	_layout_header()
 	var compact_modal := size.y < 500
 	for button in level_buttons: button.add_theme_font_size_override("font_size", 14 if compact_modal or size.x < 360 else 16)
 	modal_content.add_theme_constant_override("separation", 4 if compact_modal else 10)
@@ -477,6 +482,38 @@ func _responsive_layout() -> void:
 	score_label.custom_minimum_size.x = 0
 	time_label.custom_minimum_size.x = 0
 	layout_changed.emit()
+
+## Mobile landscape fits the yard to the entire screen, even behind menu overlays.
+func landscape_overlay() -> bool:
+	return touch_enabled and size.x > size.y
+
+func _layout_header() -> void:
+	var landscape := landscape_overlay()
+	var overlay := landscape and state == "running"
+	var compact_menu := landscape and not overlay and size.x < 740
+	top_panel.add_theme_stylebox_override("panel", overlay_style if overlay else header_style)
+	header_row.vertical = size.x < 760 and not landscape
+	# During play, Pause provides access to audio without consuming the counter row.
+	music_button.visible = not overlay
+	effects_button.visible = not overlay
+	for child in counters.get_children():
+		if child is VSeparator: child.visible = not overlay
+	for label in [score_label, time_label, progress_label, magnet_label, weather_badge, feedback_label]:
+		label.theme_type_variation = &"YardOverlayLabel" if overlay else &""
+	for label in [score_label, time_label, progress_label]:
+		label.add_theme_font_size_override("font_size", (24 if size.x < 740 else 28) if overlay else (18 if compact_menu else (14 if size.x < 420 else 20)))
+	for label in [magnet_label, weather_badge]:
+		label.add_theme_font_size_override("font_size", 20 if overlay else 16)
+	magnet_label.add_theme_color_override("font_color", YardTheme.INK if overlay else YardTheme.MUTED)
+	if touch_enabled: feedback_label.add_theme_font_size_override("font_size", 18 if overlay else 14)
+	for button in [music_button, effects_button, pause_button]:
+		button.add_theme_font_size_override("font_size", 24 if overlay else (18 if compact_menu else (14 if size.x < 360 else 20)))
+	pause_button.custom_minimum_size = Vector2(80, 52) if overlay else Vector2(70, 44)
+
+# PanelContainer grows to fit wrapped text but does not shrink its previous height
+# when feedback hides. Preserve anchored width while returning to content height.
+func _fit_header() -> void:
+	top_panel.size.y = top_panel.get_combined_minimum_size().y
 
 func _layout_modal() -> void:
 	if modal_center == null: return
