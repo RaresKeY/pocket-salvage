@@ -7,17 +7,22 @@ const YardArt = preload("res://scripts/art/yard_art.gd")
 const RIM_PEAK := 10.0
 const RIM_NUDGE := Vector2(90, -30)
 const RIM_SETTLED_SPEED := 20.0
+const SIZE := Vector2(150, 100)
+## Rejected scrap arcs this high above its start, and the bin gives up waiting for it to land after this long.
+const EJECT_APEX := 240.0
+const EJECT_TIMEOUT := 1.5
+
+static func texture_name(material: StringName) -> String:
+	return "bin_%s" % material
 
 var material_id: StringName = &"steel"
 var enabled: bool = true
-var bin_size := Vector2(150, 100)
+var bin_size := SIZE
 var sensor: Area2D
 var rims: Array[Area2D] = []
-var eject_apex := 240.0
-var eject_timeout := 1.5
 var _ejecting: Dictionary = {}
 
-func configure(material: StringName, at: Vector2, size: Vector2 = Vector2(150, 100)) -> void:
+func configure(material: StringName, at: Vector2, size: Vector2 = SIZE) -> void:
 	material_id = material
 	position = at
 	bin_size = Vector2(maxf(size.x, 24), maxf(size.y, 24))
@@ -33,8 +38,8 @@ func _build() -> void:
 		child.queue_free()
 	rims.clear()
 	var sprite := Sprite2D.new()
-	if YardArt.exists("bin_%s" % material_id):
-		sprite.texture = YardArt.texture("bin_%s" % material_id)
+	if YardArt.exists(texture_name(material_id)):
+		sprite.texture = YardArt.texture(texture_name(material_id))
 		sprite.scale = bin_size / Vector2(sprite.texture.get_size())
 		sprite.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
 		add_child(sprite)
@@ -78,12 +83,12 @@ func eject(body: RigidBody2D, landing: Vector2) -> void:
 	var gravity := body.get_gravity().y
 	if gravity <= 0.0: gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
 	var start := body.global_position
-	var apex := minf(start.y, landing.y) - eject_apex
+	var apex := minf(start.y, landing.y) - EJECT_APEX
 	var rise := sqrt(2.0 * gravity * (start.y - apex))
 	var flight := (rise + sqrt(2.0 * gravity * (landing.y - apex))) / gravity
 	body.sleeping = false
 	body.linear_velocity = Vector2((landing.x - start.x) / flight, -rise)
-	_ejecting[body] = {"claim": eject_timeout, "flight": flight, "damp": body.linear_damp, "mode": body.linear_damp_mode}
+	_ejecting[body] = {"claim": EJECT_TIMEOUT, "flight": flight, "damp": body.linear_damp, "mode": body.linear_damp_mode}
 	body.linear_damp_mode = RigidBody2D.DAMP_MODE_REPLACE
 	body.linear_damp = 0.0
 

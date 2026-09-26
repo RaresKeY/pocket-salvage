@@ -2,7 +2,6 @@ extends Node2D
 ## One seagull: crosses the yard with uneven flight, or glides down to a perch, idles, and leaves when the crane comes near.
 enum State { CROSSING, LANDING, PERCHED, LEAVING }
 const Burst = preload("res://scripts/fx/burst_2d.gd")
-const YardArt = preload("res://scripts/art/yard_art.gd")
 const LAND_RANGE := 180.0
 const SCARE_DISTANCE := 90.0
 const HEIGHT_PX := 12
@@ -46,17 +45,14 @@ func setup(generator: RandomNumberGenerator, art_scale: float, yard_width: float
 	bob_rate = rng.randf_range(0.6, 1.4)
 	perch = landing_at
 	half_height = HEIGHT_PX * art_scale * 0.5
-	var frames := SpriteFrames.new()
-	frames.remove_animation(&"default")
+	var frames := Burst.empty_frames()
 	Burst.add_frames(frames, &"fly", "critter_gull", Burst.frame_numbers("critter_gull"), rng.randf_range(7, 11), true)
 	var perched := Burst.frame_numbers("critter_gull_perched")
 	if perched.is_empty():
 		Burst.add_frames(frames, &"perch", "critter_gull", [2], 1.0, true)
 	else:
 		Burst.add_frames(frames, &"perch", "critter_gull_perched", perched, 3.0, true)
-	sprite = AnimatedSprite2D.new()
-	sprite.sprite_frames = frames
-	YardArt.fit(sprite, art_scale)
+	sprite = Burst.animated(frames, art_scale)
 	add_child(sprite)
 	sprite.play(&"fly")
 	sprite.frame = rng.randi_range(0, frames.get_frame_count(&"fly") - 1)

@@ -39,8 +39,7 @@ static func for_material(material: StringName, reversed: bool = false) -> Kind:
 
 ## Animations: `open` at rest, `closing` once when gripping, then `held`. The bare hook is the chain link.
 static func sprite(kind: Kind, art_scale: float) -> AnimatedSprite2D:
-	var frames := SpriteFrames.new()
-	frames.remove_animation(&"default")
+	var frames := Burst.empty_frames()
 	if SPECS.has(kind):
 		var spec: Dictionary = SPECS[kind]
 		Burst.add_frames(frames, &"open", spec.prefix, spec.open, 1.0, false)
@@ -50,9 +49,7 @@ static func sprite(kind: Kind, art_scale: float) -> AnimatedSprite2D:
 		for animation in [&"open", &"closing", &"held"]:
 			frames.add_animation(animation)
 			frames.add_frame(animation, YardArt.texture("crane_chain_link"))
-	var result := AnimatedSprite2D.new()
-	result.sprite_frames = frames
+	var result := Burst.animated(frames, art_scale)
 	result.animation = &"open"
-	YardArt.fit(result, art_scale)
 	result.animation_finished.connect(func(): if result.animation == &"closing": result.play(&"held"))
 	return result

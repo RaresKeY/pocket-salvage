@@ -1,6 +1,8 @@
 extends Node
 ## Plays the generated effects in assets/audio/ (see tools/audio/make_sfx.py) from a small voice pool.
 const DIR := "res://assets/audio/"
+## The one loop that follows the music volume and keeps playing when effects are off.
+const MUSIC := &"music_yard"
 const VOICES := 8
 var _streams: Dictionary = {}
 var _voices: Array[AudioStreamPlayer] = []
@@ -24,12 +26,7 @@ static func playback_mode(web: bool = OS.has_feature("web")) -> AudioServer.Play
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
-	for index in VOICES:
-		var voice := AudioStreamPlayer.new()
-		voice.playback_type = playback_mode()
-		voice.bus = output_bus
-		add_child(voice)
-		_voices.append(voice)
+	for index in VOICES: _voices.append(_player())
 
 ## Headless runs use the Dummy driver, which never mixes, so its playbacks would outlive the game.
 func play(sound: StringName, volume_db: float = 0.0, pitch_jitter: float = 0.0) -> void:
@@ -38,8 +35,7 @@ func play(sound: StringName, volume_db: float = 0.0, pitch_jitter: float = 0.0) 
 	if played.size() > 256: played.pop_front()
 	if _silent: return
 	if not _streams.has(sound):
-		var path := DIR + String(sound) + ".wav"
-		_streams[sound] = load(path) if ResourceLoader.exists(path) else null
+		_streams[sound] = load(_path(sound)) if ResourceLoader.exists(_path(sound)) else null
 	if _streams[sound] == null or _voices.is_empty(): return
 	var voice := _voices[_next]
 	_next = (_next + 1) % _voices.size()
@@ -52,13 +48,9 @@ func play(sound: StringName, volume_db: float = 0.0, pitch_jitter: float = 0.0) 
 ## Sets how hard a looping sound runs (0 silent, 1 full); volume eases toward it so it never clicks.
 func set_loop(sound: StringName, level: float, pitch: float = 1.0, volume_db: float = -6.0) -> void:
 	if not loops.has(sound):
-		var player := AudioStreamPlayer.new()
-		player.playback_type = playback_mode()
-		player.bus = output_bus
-		add_child(player)
-		var path := DIR + String(sound) + ".wav"
-		if ResourceLoader.exists(path):
-			var stream: AudioStreamWAV = load(path)
+		var player := _player()
+		if ResourceLoader.exists(_path(sound)):
+			var stream: AudioStreamWAV = load(_path(sound))
 			stream.loop_mode = AudioStreamWAV.LOOP_FORWARD
 			stream.loop_end = int(stream.get_length() * stream.mix_rate)
 			player.stream = stream
@@ -76,7 +68,7 @@ func set_effects_enabled(value: bool) -> void:
 	if not value:
 		for voice in _voices: voice.stop()
 		for sound in loops:
-			if sound != &"music_yard":
+			if sound != MUSIC:
 				loops[sound].player.stop()
 				loops[sound].current = 0.0
 
@@ -88,17 +80,27 @@ func set_volumes(music: float, effects: float) -> void:
 		voice.volume_db = float(voice.get_meta("base_volume_db", 0.0)) + _gain_db(effects_volume)
 		if effects_volume == 0.0: voice.stop()
 
+static func _path(sound: StringName) -> String:
+	return DIR + String(sound) + ".wav"
+
+func _player() -> AudioStreamPlayer:
+	var player := AudioStreamPlayer.new()
+	player.playback_type = playback_mode()
+	player.bus = output_bus
+	add_child(player)
+	return player
+
 static func _gain_db(gain: float) -> float:
 	return linear_to_db(gain) if gain > 0.0 else -80.0
 
 func _process(delta: float) -> void:
 	for sound in loops:
 		var entry: Dictionary = loops[sound]
-		if sound != &"music_yard" and not effects_enabled: continue
+		if sound != MUSIC and not effects_enabled: continue
 		entry.current = move_toward(entry.current, entry.level, LOOP_FADE * delta)
 		var player: AudioStreamPlayer = entry.player
 		if _silent or player.stream == null: continue
-		var gain: float = music_volume if sound == &"music_yard" else effects_volume
+		var gain: float = music_volume if sound == MUSIC else effects_volume
 		if entry.current <= 0.01 or gain == 0.0:
 			if player.playing: player.stop()
 			continue

@@ -61,8 +61,8 @@ static func create_layout(variant: int = 0, scrap_count: int = 10) -> Dictionary
 	var materials := [&"copper", &"rubber", &"steel"]
 	for index in materials.size():
 		var material: StringName = materials[(index + posmod(variant, 2)) % materials.size()]
-		bins.append({"material": material, "position": Vector2(650 + index * (150 - SortingBin.WALL), 390),
-			"size": Vector2(150, 100), "texture": YardArt.path("bin_" + String(material))})
+		bins.append({"material": material, "position": Vector2(650 + index * (SortingBin.SIZE.x - SortingBin.WALL), 390),
+			"size": SortingBin.SIZE, "texture": YardArt.path(SortingBin.texture_name(material))})
 	return {"bounds": Rect2(Vector2.ZERO, SIZE), "ground_top": GROUND_TOP, "art_scale": 1.6,
 		"crane_anchor": Vector2(200, 45), "scrap": scrap, "bins": bins,
 		"variant": posmod(variant, 2), "pickup_bounds": Rect2(150, 240, 270, 200),

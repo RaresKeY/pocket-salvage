@@ -99,9 +99,9 @@ func run() -> void:
 	for sound in [&"magnet_on",&"magnet_off",&"claw_shut",&"claw_open",&"clank",&"pickup",&"land",&"correct",&"wrong",&"eject",&"tick",&"finish",&"start",&"trolley_loop",&"winch_loop"]:
 		assert(load("res://assets/audio/%s.wav" % sound) is AudioStreamWAV,"Generated sound %s imports" % sound)
 	assert(lab.world.process_mode == Node.PROCESS_MODE_DISABLED and lab.ambience.stars.size() == 70)
-	assert(load("res://assets/audio/music_yard.wav") is AudioStreamWAV and lab.sfx.loop_level(lab.MUSIC) == 1.0,"Music plays from the start screen")
+	assert(load("res://assets/audio/music_yard.wav") is AudioStreamWAV and lab.sfx.loop_level(lab.Sfx.MUSIC) == 1.0,"Music plays from the start screen")
 	lab.set_music(false)
-	assert(lab.sfx.loop_level(lab.MUSIC) == 0.0,"M mutes the music")
+	assert(lab.sfx.loop_level(lab.Sfx.MUSIC) == 0.0,"M mutes the music")
 	lab.set_music(true)
 	var scenery_clock: float = lab.ambience.time
 	for frame in 10: await process_frame

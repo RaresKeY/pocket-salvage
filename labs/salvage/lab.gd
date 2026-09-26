@@ -25,7 +25,6 @@ const BLOOD_GRADE = preload("res://shaders/blood_moon_grade.gdshader")
 
 const ROUND_SECONDS := 240.0
 const TICK_SECONDS := 10
-const MUSIC := &"music_yard"
 const MUSIC_DB := -17.0
 const BACKGROUND := Color("101d24")
 const DEFAULT_TIP := "Copper, rubber and steel each have a bin."
@@ -425,7 +424,7 @@ func _engage(closed: bool) -> void:
 
 func set_music(on: bool) -> void:
 	music_on = on
-	sfx.set_loop(MUSIC, 1.0 if on else 0.0, 1.0, MUSIC_DB)
+	sfx.set_loop(Sfx.MUSIC, 1.0 if on else 0.0, 1.0, MUSIC_DB)
 	refresh_hud()
 
 func toggle_music() -> void:
