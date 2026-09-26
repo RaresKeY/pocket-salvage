@@ -12,6 +12,8 @@ RaresKeY, 2026-09-25: [level-flow request](../prompts/source/level-flow.md) asks
 
 RaresKeY’s [lighting refinement](../prompts/source/blood-moon.md) restricts red emission to floodlight bulbs and corner-beacon lenses, and requests a red screen tint plus about 5% indirect/edge light on assets.
 
+RaresKeY, 2026-09-26: [approved screenshot values as defaults](../prompts/source/blood-moon.md): screen wash 0.02, asset edges 0.14, sky 0.19, light cones 1.76, bulbs 1.00. These supersede the initial tint defaults below.
+
 ## AI-inferred design
 
 Twelve numbered square slots, eight locked placeholders, no progression save or automatic unlocking. All four use the existing yard and four-minute timer, with progressively larger starting piles. Clear, Breezy and Violent are provisional names. Explicit restart retains the chosen level; victory Continue returns to selection with the next playable level highlighted. Pause and timeout results provide a Levels action. Mouse/touch selects tiles; controller directions select unlocked levels before A starts. Six columns, four on narrow screens.
@@ -30,7 +32,7 @@ Skyline variety (Dale asked, 2026-09-25: the skyline repeated over and over): Cl
 
 RaresKeY, 2026-09-25: [confirmed brief magnet inversion on Violent lightning](../prompts/source/lightning-rain.md). The 0.45s duration is AI-inferred; slight/normal/violent rain audio follows particle strength.
 
-Blood Moon tint controls (RaresKeY asked, 2026-09-25): the look is split into five strengths with developer-option sliders, defaulting to the shipped look. Ranges are Claude's choices: screen wash and asset edges 0 to 0.2 (default 0.05), sky 0 to 1 (default 1, blending night blue to blood red), light cones 0 to 2 (default 1), bulbs 0 to 1 (default 1). Session only, not saved.
+Blood Moon tint controls (RaresKeY asked, 2026-09-25): the look is split into five strengths with developer-option sliders, initially defaulting to the then-shipped look. Ranges and initial defaults were Claude's choices: screen wash and asset edges 0 to 0.2 (default 0.05), sky 0 to 1 (default 1, blending night blue to blood red), light cones 0 to 2 (default 1), bulbs 0 to 1 (default 1). Session only, not saved.
 
 ## Level 5 Storm
 

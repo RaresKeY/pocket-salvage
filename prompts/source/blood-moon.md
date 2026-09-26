@@ -30,3 +30,9 @@ Dale, 2026-09-25 (spelling corrected):
 
 > The tint looks okay, we might get better polish, but maybe segment them to assets/sky/screenspace/light/masked light bulbs
 > and add sliders in the developer options, minmax in between sensible values and default what we have atm, but honestly I think it looks okay, for dev options(they show on play.sh in pause menu, I put collision boxes there
+
+## Default tint approval — RaresKeY, 2026-09-26
+
+> set these as default and push commit
+
+Context: approved the values read from the supplied developer-options screenshot: screen wash 0.02, asset edges 0.14, sky 0.19, light cones 1.76, bulbs 1.00.

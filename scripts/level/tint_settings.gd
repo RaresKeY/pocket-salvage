@@ -1,10 +1,10 @@
 extends RefCounted
 ## The Blood Moon look split into separately tunable strengths for the developer options. Defaults are the shipped look.
 const SLIDERS := [
-	{"key": &"screen", "label": "Screen wash", "min": 0.0, "max": 0.2, "default": 0.05, "hint": "Red wash over the whole yard view."},
-	{"key": &"assets", "label": "Asset edges", "min": 0.0, "max": 0.2, "default": 0.05, "hint": "Red light picked up on asset edges."},
-	{"key": &"sky", "label": "Sky", "min": 0.0, "max": 1.0, "default": 1.0, "hint": "How far the sky and clouds go from night blue to blood red."},
-	{"key": &"lights", "label": "Light cones", "min": 0.0, "max": 2.0, "default": 1.0, "hint": "Strength of the floodlight beams."},
+	{"key": &"screen", "label": "Screen wash", "min": 0.0, "max": 0.2, "default": 0.02, "hint": "Red wash over the whole yard view."},
+	{"key": &"assets", "label": "Asset edges", "min": 0.0, "max": 0.2, "default": 0.14, "hint": "Red light picked up on asset edges."},
+	{"key": &"sky", "label": "Sky", "min": 0.0, "max": 1.0, "default": 0.19, "hint": "How far the sky and clouds go from night blue to blood red."},
+	{"key": &"lights", "label": "Light cones", "min": 0.0, "max": 2.0, "default": 1.76, "hint": "Strength of the floodlight beams."},
 	{"key": &"bulbs", "label": "Bulbs", "min": 0.0, "max": 1.0, "default": 1.0, "hint": "Red glow on masked bulbs and beacon lenses."},
 ]
 
