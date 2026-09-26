@@ -68,7 +68,7 @@ Reviewed: 2026-09-26, Level 6 change on top of `4cf0d3d`.
 
 `data/levels/electric_storm.tres`: wind 40, gust 60 every 6 to 10 s, grip 0.6, fog 0.15, rain 160, lightning every 7 to 12 s with a 0.8 s power cut (the level does not set `lightning_flips_magnet`), multiplier 1.8. 12 pieces.
 
-`scripts/level/power_event.gd` is the base for events that take the power out: `stutter(age)` (the eight-step failing-bulb pattern, 0.2 s a step), `cut_power(seconds, message)` (generator off, the round's `power_cut`, a message) and `restore_power()`. `blood_moon.gd` extends it with unchanged behaviour.
+`scripts/level/level_event.gd` is the base for every level event: `configure(round, seed)` stores the round, seeds `rng` and calls `_begin()`; `roll(span)` draws from a Vector2 range and `running()` is true while the round runs. Events talk to the player through the round's public `say(text, seconds)`. `scripts/level/power_event.gd` extends it for events that take the power out: `stutter(age)` (the eight-step failing-bulb pattern, 0.2 s a step; `stutter_time()` is its length), `cut_power(seconds, message)` (generator off, the round's `power_cut`, a message) and `restore_power()`. `blood_moon.gd` extends it with unchanged behaviour.
 
 `scripts/level/blackout.gd` runs only while the round is running: waiting (first 20 to 30 s, then 35 to 50 s), warning (2 s: both floodlights and the beacons follow `stutter`, `crackle` plays, a message), out (5 to 7 s: lights and beacons 0, a lightning strike through `weather.lightning`, `power_down`, `cut_power`; `ambience.blackout` rises to 1 over 0.3 s), then recovery (`restore_power`, lights 1, `power_up`, "Power's back."; the dark fades over 1 s).
 

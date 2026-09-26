@@ -84,3 +84,7 @@ Reply after playing the pushed build, forwarded by Dale:
 > I'll prep some music and sfx as well as a bit of UI polish to bring it together then push builds on release on gh, can you bring design and specs up to date? mainly since it lagged behind here and you have the logs I would ask the agent to look at chat logs and infer from that the human/AI inferred split to keep it up to date
 >
 > all in all very good work, I think we can work well together, also please let me know how the flow felt and if you want change in any direction
+
+## Code tidy (Dale, 2026-09-26, spelling corrected)
+
+> Can we do code polishing by making sure things are DRY and reusable and easily extendable etc. I want the code to be neat and tidy.
