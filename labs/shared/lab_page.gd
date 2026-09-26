@@ -1,6 +1,7 @@
 extends Control
 ## Responsive diagnostic page, sharing the art lab's existing theme.
 const ArtLab = preload("res://labs/pixel_scaling/lab.gd")
+const Layout = preload("res://scripts/level/yard_layout.gd")
 var controls: HFlowContainer
 var status: Label
 var viewport: SubViewport
@@ -55,9 +56,7 @@ func setup(title: String, help: String) -> void:
 	call_deferred("_fit_world")
 
 func _fit_world() -> void:
-	var available := Vector2(viewport.size)
-	var zoom := minf(available.x / 1200.0, available.y / 480.0)
-	viewport.canvas_transform = Transform2D(0.0, Vector2.ONE * zoom, 0.0, (available - Vector2(1200, 480) * zoom) * 0.5)
+	viewport.canvas_transform = Layout.fit_transform(Vector2(viewport.size))
 
 func button(title: String, action: Callable) -> Button:
 	var control := Button.new()

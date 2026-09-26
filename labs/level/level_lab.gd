@@ -72,6 +72,6 @@ func _add_label(value: String, point: Vector2) -> void:
 func _fit() -> void:
 	if not is_instance_valid(stage): return
 	var available := get_viewport_rect().size - Vector2(32, 130)
-	var ratio := minf(available.x / 1200.0, available.y / 480.0)
+	var ratio := Layout.fit_zoom(available)
 	stage.scale = Vector2.ONE * ratio
-	stage.position = Vector2((get_viewport_rect().size.x - 1200 * ratio) * 0.5, 115)
+	stage.position = Vector2((get_viewport_rect().size.x - Layout.SIZE.x * ratio) * 0.5, 115)

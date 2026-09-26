@@ -79,6 +79,6 @@ func _physics_process(delta: float) -> void:
 	if suspension == null: return
 	var horizontal := float(Input.is_physical_key_pressed(KEY_D)) - float(Input.is_physical_key_pressed(KEY_A))
 	var reel := float(Input.is_physical_key_pressed(KEY_S)) - float(Input.is_physical_key_pressed(KEY_W))
-	suspension.anchor.x = clampf(suspension.anchor.x + horizontal * 190 * delta, 80,1120)
-	suspension.cable_length = clampf(suspension.cable_length + reel * 150 * delta,50,335)
+	suspension.anchor.x = clampf(suspension.anchor.x + horizontal * 190 * delta, Layout.RAIL_X.x, Layout.RAIL_X.y)
+	suspension.cable_length = clampf(suspension.cable_length + reel * 150 * delta, Layout.CABLE.x, Layout.CABLE.y)
 	status.text = "Cable %.0f px · %s · %s" % [suspension.cable_length, "Attached" if suspension.attached_body != null else "Released", "Blocked" if suspension.blocked else "Free"]

@@ -1,12 +1,25 @@
 extends RefCounted
 ## Caller-owned, deterministic diagnostic layouts. Dimensions are prototype fixtures.
 const YardArt = preload("res://scripts/art/yard_art.gd")
+## The yard's world size; views scale it to fit (see fit_transform).
+const SIZE := Vector2(1200, 480)
 const GROUND_TOP := 440.0
+## The trolley's travel along the rail, and the cable's length range.
+const RAIL_X := Vector2(80, 1120)
+const CABLE := Vector2(50, 335)
 const PILE_CENTRE_X := 285.0
 const PILE_ROWS := {4: [3, 1], 6: [3, 2, 1], 10: [4, 3, 2, 1], 12: [4, 4, 4]}
 const PILE_GAP := 8.0
 ## Under half the gap, so neighbours never start overlapping.
 const PILE_JITTER := [0.0, 3.0, -3.0, 2.0, -2.0, 1.0, 3.0, -1.0, 2.0, -3.0]
+
+## Scale and centre the yard to fit `available`, keeping its shape.
+static func fit_zoom(available: Vector2) -> float:
+	return minf(available.x / SIZE.x, available.y / SIZE.y)
+
+static func fit_transform(available: Vector2) -> Transform2D:
+	var zoom := fit_zoom(available)
+	return Transform2D(0.0, Vector2.ONE * zoom, 0.0, (available - SIZE * zoom) * 0.5)
 
 static func create_layout(variant: int = 0, scrap_count: int = 10) -> Dictionary:
 	assert(PILE_ROWS.has(scrap_count), "Add a bounded pile recipe for this count")
@@ -50,7 +63,7 @@ static func create_layout(variant: int = 0, scrap_count: int = 10) -> Dictionary
 		var material: StringName = materials[(index + posmod(variant, 2)) % materials.size()]
 		bins.append({"material": material, "position": Vector2(650 + index * (150 - SortingBin.WALL), 390),
 			"size": Vector2(150, 100), "texture": YardArt.path("bin_" + String(material))})
-	return {"bounds": Rect2(0, 0, 1200, 480), "ground_top": GROUND_TOP, "art_scale": 1.6,
+	return {"bounds": Rect2(Vector2.ZERO, SIZE), "ground_top": GROUND_TOP, "art_scale": 1.6,
 		"crane_anchor": Vector2(200, 45), "scrap": scrap, "bins": bins,
 		"variant": posmod(variant, 2), "pickup_bounds": Rect2(150, 240, 270, 200),
 		"tool_stand": Vector2(96, GROUND_TOP - 16)}
