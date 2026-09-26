@@ -1,6 +1,8 @@
 extends Node
 ## Rolls one weather and runs its clock. Lives in the game world so it pauses with it.
 const Profile = preload("res://scripts/weather/weather_profile.gd")
+const Layout = preload("res://scripts/level/yard_layout.gd")
+const STRIKE_EDGE := 100.0
 const DIR := "res://data/weather/"
 ## Each effect enables itself only for profiles that use it; adding one is a file plus a line here.
 const EFFECTS := [
@@ -113,8 +115,12 @@ func _tick_lightning(delta: float) -> void:
 	if _strike_in <= 0.0:
 		_warned = false
 		_strike_in = _between(profile.lightning_every)
-		lightning.emit(rng.randf_range(100, 1100))
+		strike()
 		power_cut.emit(profile.power_cut)
+
+## A bolt somewhere over the yard, away from its edges. Level events call it for their own strikes.
+func strike() -> void:
+	lightning.emit(rng.randf_range(STRIKE_EDGE, Layout.SIZE.x - STRIKE_EDGE))
 
 func _tick_direction(delta: float) -> void:
 	if profile.direction_every == Vector2.ZERO: return

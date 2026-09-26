@@ -14,10 +14,10 @@ var age := 0.0
 var left := 0.0
 
 func _begin() -> void:
-	wait = rng.randf_range(FIRST_WAIT.x, FIRST_WAIT.y)
+	wait = roll(FIRST_WAIT)
 
 func _physics_process(delta: float) -> void:
-	if context.round_state.state != &"running": return
+	if not running(): return
 	match phase:
 		&"waiting":
 			wait -= delta
@@ -42,20 +42,20 @@ func _warn() -> void:
 	phase = &"warning"
 	age = 0.0
 	context.sfx.play(&"crackle", -6.0)
-	context._say("The lights are flickering. The power won't hold.", WARNING)
+	context.say("The lights are flickering. The power won't hold.", WARNING)
 
 func _black_out() -> void:
 	phase = &"out"
-	left = rng.randf_range(OUTAGE.x, OUTAGE.y)
+	left = roll(OUTAGE)
 	_set_lights(0.0)
-	context.weather.lightning.emit(rng.randf_range(200, 1000))
+	context.weather.strike()
 	context.sfx.play(&"power_down", -4.0)
 	cut_power(left, "Blackout! The magnet is dead. The claw still works.")
 
 func _recover() -> void:
 	phase = &"waiting"
-	wait = rng.randf_range(WAIT.x, WAIT.y)
+	wait = roll(WAIT)
 	restore_power()
 	_set_lights(1.0)
 	context.sfx.play(&"power_up", -6.0)
-	context._say("Power's back.", 2.0)
+	context.say("Power's back.", 2.0)

@@ -1,36 +1,32 @@
-extends Node
+extends "res://scripts/level/level_event.gd"
 ## Level 5's storm cycle: calm, building, storm, clearing, round again. Drives the weather's intensity and the
 ## sky's gloom, warns as each phase starts and sends one twister across at each storm's peak. Runs only while the
 ## round is running and pauses with the world.
 const Tornado = preload("res://scripts/level/tornado.gd")
 const CALM_INTENSITY := 0.12
-## Phase -> seconds range.
 ## The round opens with a short calm so the first storm arrives early.
 const FIRST_CALM := Vector2(10, 15)
+## Phase -> seconds range.
 const PHASES := {&"calm": Vector2(30, 40), &"building": Vector2(15, 15), &"storm": Vector2(30, 40), &"clearing": Vector2(10, 10)}
 const NEXT := {&"calm": &"building", &"building": &"storm", &"storm": &"clearing", &"clearing": &"calm"}
 const WARNINGS := {&"building": "Storm building. Get the light scrap in.", &"storm": "Storm! Lightning flips the magnet.", &"clearing": "The storm is passing."}
 ## The twister comes this long into the storm, leaving time for it to cross before the storm clears.
 const TORNADO_AFTER := Vector2(3, 6)
-var context: Node
-var rng := RandomNumberGenerator.new()
 var phase := &"calm"
 var length := 0.0
 var left := 0.0
 var tornado_in := INF
 
-func configure(owner_context: Node, seed: int) -> void:
-	context = owner_context
-	rng.seed = seed
+func _begin() -> void:
 	_enter(&"calm", FIRST_CALM)
 	_apply()
 
 func _enter(next: StringName, span: Vector2 = PHASES[next]) -> void:
 	phase = next
-	length = rng.randf_range(span.x, span.y)
+	length = roll(span)
 	left = length
-	tornado_in = rng.randf_range(TORNADO_AFTER.x, TORNADO_AFTER.y) if next == &"storm" else INF
-	if WARNINGS.has(next): context._say(WARNINGS[next], 4.0)
+	tornado_in = roll(TORNADO_AFTER) if next == &"storm" else INF
+	if WARNINGS.has(next): context.say(WARNINGS[next], 4.0)
 	if next == &"building": context.sfx.play(&"thunder", -18.0)
 
 ## How far through the current phase, 0 to 1.
@@ -45,14 +41,14 @@ func intensity() -> float:
 	return CALM_INTENSITY
 
 func _physics_process(delta: float) -> void:
-	if context.round_state.state != &"running": return
+	if not running(): return
 	tornado_in -= delta
 	if tornado_in <= 0.0:
 		tornado_in = INF
 		var twister := Tornado.new()
 		context.world.add_child(twister)
 		twister.configure(context, rng.randf() < 0.5)
-		context._say("Twister! It carries off light scrap.", 3.0)
+		context.say("Twister! It carries off light scrap.", 3.0)
 	left -= delta
 	if left <= 0.0: _enter(NEXT[phase])
 	_apply()

@@ -163,7 +163,7 @@ func run() -> void:
 		root.size = dimensions
 		lab.round_state.score = 4320
 		lab.round_state.remaining_time = 9
-		lab._say("The magnet won't hold rubber. Swap to the claw at the tool stands.", 10)
+		lab.say("The magnet won't hold rubber. Swap to the claw at the tool stands.", 10)
 		await settle()
 		var screen := Rect2(Vector2.ZERO, Vector2(dimensions))
 		for button in touch.buttons.values():

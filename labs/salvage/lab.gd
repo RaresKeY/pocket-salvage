@@ -344,14 +344,14 @@ func power_cut(seconds: float) -> void:
 			gripping = not gripping
 			if not gripping: release_load()
 		magnet_flicker_left = maxf(magnet_flicker_left, seconds)
-		_say("Lightning! Magnet briefly switched %s." % ("ON" if gripping else "OFF"), 1.5)
+		say("Lightning! Magnet briefly switched %s." % ("ON" if gripping else "OFF"), 1.5)
 		refresh_hud()
 		return
 	if Heads.function_kind(head, reversed_heads()) != Heads.Kind.MAGNET: return
 	power_out_left = maxf(power_out_left, seconds)
 	release_load()
 	if is_instance_valid(head_sprite): head_sprite.play(&"open")
-	_say("Power cut! The %s lost power." % _head_name(head), 2.5)
+	say("Power cut! The %s lost power." % _head_name(head), 2.5)
 
 func _head_name(kind: Heads.Kind) -> String:
 	return "hook" if kind == Heads.Kind.NONE else Heads.SPECS[kind].name.to_lower()
@@ -397,20 +397,20 @@ func use_stand() -> bool:
 	if round_state.state != &"running" or is_instance_valid(held_body): return false
 	var stand := stand_under_head()
 	if stand.is_empty():
-		_say("Lower the %s onto a tool stand, then use Swap." % _head_name(head), 4.0)
+		say("Lower the %s onto a tool stand, then use Swap." % _head_name(head), 4.0)
 		return false
 	if head != Heads.Kind.NONE and stand.holds == Heads.Kind.NONE:
 		gripping = false
 		_set_stand(stand, head)
 		_fit_head(Heads.Kind.NONE)
-		_say("Parked. Fetch the other head from its stand.", 4.0)
+		say("Parked. Fetch the other head from its stand.", 4.0)
 	elif head == Heads.Kind.NONE and stand.holds != Heads.Kind.NONE:
 		var fitted: Heads.Kind = stand.holds
 		_set_stand(stand, Heads.Kind.NONE)
 		_fit_head(fitted)
-		_say("%s fitted. It grips %s." % [Heads.SPECS[fitted].name, " and ".join(Heads.materials(fitted, reversed_heads()))], 4.0)
+		say("%s fitted. It grips %s." % [Heads.SPECS[fitted].name, " and ".join(Heads.materials(fitted, reversed_heads()))], 4.0)
 	else:
-		_say("That stand is taken. Park on the empty one." if head != Heads.Kind.NONE else "That stand is empty.", 3.0)
+		say("That stand is taken. Park on the empty one." if head != Heads.Kind.NONE else "That stand is empty.", 3.0)
 		return false
 	sfx.play(&"clank")
 	burst(stand.top, "fx_sparks")
@@ -435,7 +435,7 @@ func toggle_effects() -> void:
 	sfx.set_effects_enabled(not sfx.effects_enabled)
 	refresh_hud()
 
-func _say(text: String, seconds: float) -> void:
+func say(text: String, seconds: float) -> void:
 	feedback = text
 	feedback_left = seconds
 
@@ -472,7 +472,7 @@ func start_round() -> void:
 	if round_state.state != &"ready": return
 	round_state.start()
 	sfx.play(&"start")
-	_say(level("start_tip"), 7.0)
+	say(level("start_tip"), 7.0)
 	refresh_hud()
 
 func restart_round() -> void:
@@ -547,7 +547,7 @@ func drift_crane(dx: float) -> void:
 func toggle_grip() -> void:
 	if round_state.state != &"running": return
 	if head == Heads.Kind.NONE:
-		_say("No head fitted. Pick one up from a tool stand with Swap.", 4.0)
+		say("No head fitted. Pick one up from a tool stand with Swap.", 4.0)
 		refresh_hud()
 		return
 	magnet_flicker_left = 0.0 # An explicit player toggle supersedes automatic restoration.
@@ -579,10 +579,10 @@ func try_pickup() -> void:
 		if Heads.closes_on_catch(head): _engage(true)
 		sfx.play(&"pickup", -3.0, 0.1)
 		burst(candidate.grip_point(), "fx_sparks")
-		_say("Carrying %s. Lift it over the bin rim, then release." % candidate.material_id, 5.0)
+		say("Carrying %s. Lift it over the bin rim, then release." % candidate.material_id, 5.0)
 	elif candidate == null and refused != null and head != Heads.Kind.NONE:
 		var needed := Heads.for_material(refused.material_id, reversed_heads())
-		_say("The %s won't hold %s. Swap to the %s at the tool stands." % [_head_name(head), refused.material_id, _head_name(needed)], 3.0)
+		say("The %s won't hold %s. Swap to the %s at the tool stands." % [_head_name(head), refused.material_id, _head_name(needed)], 3.0)
 
 ## The underside of the fitted head, where it meets scrap or a stand.
 func head_mount() -> Vector2:
@@ -597,14 +597,14 @@ func _delivered(body: RigidBody2D, material: StringName, bin: Node2D) -> void:
 	match round_state.accept_delivery(body.item_id, body.material_id, material):
 		Round.Delivery.CORRECT:
 			sfx.play(&"correct", -3.0)
-			_say("Correct sort! +%d" % Round.CORRECT_POINTS, 4.0)
+			say("Correct sort! +%d" % Round.CORRECT_POINTS, 4.0)
 			burst(body.global_position, "fx_sparks")
 			popup(body.global_position, "+%d" % Round.CORRECT_POINTS, Color("f6d44a"))
 			body.call_deferred("queue_free")
 		Round.Delivery.WRONG:
 			sfx.play(&"wrong")
 			sfx.play(&"eject", -6.0)
-			_say("That %s bin won't take %s. −%d" % [material, body.material_id, Round.WRONG_PENALTY], 4.0)
+			say("That %s bin won't take %s. −%d" % [material, body.material_id, Round.WRONG_PENALTY], 4.0)
 			popup(body.global_position, "−%d" % Round.WRONG_PENALTY, Color("ff6b5b"))
 			bin.eject(body, reject_landing)
 		_: return

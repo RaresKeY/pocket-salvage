@@ -4,6 +4,8 @@ extends Node2D
 ## bins' edge and drops what it carries, so scrap stays in play and never lands in a bin.
 enum State { WARNING, CROSSING, GONE }
 const SoundLoops = preload("res://scripts/audio/sound_loops.gd")
+const HUM := &"twister_loop"
+const HUM_DB := -10.0
 const WARNING := 3.0
 const SPEED := 90.0
 const RADIUS := 70.0
@@ -51,7 +53,7 @@ func configure(owner_context: Node, from_left: bool) -> void:
 	z_index = 3
 	sounds.sfx = context.sfx
 	add_child(sounds)
-	sounds.loop_sound(&"twister_loop", 0.4, -10.0)
+	_hum(0.4)
 
 func _process(_delta: float) -> void:
 	queue_redraw()
@@ -63,7 +65,7 @@ func _physics_process(delta: float) -> void:
 			height = WARNING_HEIGHT * minf(age / WARNING, 1.0)
 			if age >= WARNING:
 				state = State.CROSSING
-				sounds.loop_sound(&"twister_loop", 1.0, -10.0)
+				_hum(1.0)
 		State.CROSSING:
 			_crossing_age += delta
 			height = lerpf(WARNING_HEIGHT, HEIGHT, smoothstep(0.0, RISE, _crossing_age))
@@ -123,8 +125,11 @@ func _apply_forces() -> void:
 		body.apply_central_force(push * body.mass)
 		body.apply_torque(direction * SPIN * body.mass)
 
+func _hum(level: float) -> void:
+	sounds.loop_sound(HUM, level, HUM_DB)
+
 func _break_up() -> void:
 	state = State.GONE
 	carried.clear()
-	sounds.loop_sound(&"twister_loop", 0.0, -10.0)
+	_hum(0.0)
 	create_tween().tween_property(self, "modulate:a", 0.0, 1.0).finished.connect(queue_free)
