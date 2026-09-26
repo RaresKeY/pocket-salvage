@@ -41,7 +41,7 @@ func run() -> void:
 
 	# Calm: the dial is low, so the weather is a fraction of its peak and lightning waits.
 	game.start_round()
-	assert(storm.phase == &"calm" and storm.left >= 40 and storm.left <= 60)
+	assert(storm.phase == &"calm" and storm.left >= 10 and storm.left <= 15, "The first storm comes soon")
 	storm._physics_process(0.1)
 	assert(is_equal_approx(game.weather.intensity, StormFront.CALM_INTENSITY))
 	var peak_wind: float = absf(game.weather.direction * game.weather.profile.wind)
@@ -71,6 +71,7 @@ func run() -> void:
 	assert(tornado_of(game) == null)
 	storm._physics_process(storm.tornado_in + 0.01)
 	var twister: Node2D = tornado_of(game)
+	assert(storm.length - storm.left <= 6.1, "The twister comes early in the storm")
 	assert(twister != null and twister.state == Tornado.State.WARNING and game.feedback.contains("Twister"))
 	storm._physics_process(1.0)
 	assert(tornado_of(game) == twister, "Only one twister per storm")
@@ -128,7 +129,7 @@ func run() -> void:
 	storm._physics_process(storm.left + 0.01)
 	assert(storm.phase == &"clearing" and game.feedback.contains("passing"))
 	storm._physics_process(storm.left + 0.01)
-	assert(storm.phase == &"calm")
+	assert(storm.phase == &"calm" and storm.left >= 30 and storm.left <= 40, "Later calms are longer")
 	storm._physics_process(0.01)
 	assert(is_equal_approx(game.weather.intensity, StormFront.CALM_INTENSITY))
 

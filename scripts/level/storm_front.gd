@@ -5,11 +5,13 @@ extends Node
 const Tornado = preload("res://scripts/level/tornado.gd")
 const CALM_INTENSITY := 0.12
 ## Phase -> seconds range.
-const PHASES := {&"calm": Vector2(40, 60), &"building": Vector2(15, 15), &"storm": Vector2(30, 40), &"clearing": Vector2(10, 10)}
+## The round opens with a short calm so the first storm arrives early.
+const FIRST_CALM := Vector2(10, 15)
+const PHASES := {&"calm": Vector2(30, 40), &"building": Vector2(15, 15), &"storm": Vector2(30, 40), &"clearing": Vector2(10, 10)}
 const NEXT := {&"calm": &"building", &"building": &"storm", &"storm": &"clearing", &"clearing": &"calm"}
 const WARNINGS := {&"building": "Storm building. Get the light scrap in.", &"storm": "Storm! Lightning flips the magnet.", &"clearing": "The storm is passing."}
 ## The twister comes this long into the storm, leaving time for it to cross before the storm clears.
-const TORNADO_AFTER := Vector2(4, 12)
+const TORNADO_AFTER := Vector2(3, 6)
 var context: Node
 var rng := RandomNumberGenerator.new()
 var phase := &"calm"
@@ -20,12 +22,12 @@ var tornado_in := INF
 func configure(owner_context: Node, seed: int) -> void:
 	context = owner_context
 	rng.seed = seed
-	_enter(&"calm")
+	_enter(&"calm", FIRST_CALM)
 	_apply()
 
-func _enter(next: StringName) -> void:
+func _enter(next: StringName, span: Vector2 = PHASES[next]) -> void:
 	phase = next
-	length = rng.randf_range(PHASES[next].x, PHASES[next].y)
+	length = rng.randf_range(span.x, span.y)
 	left = length
 	tornado_in = rng.randf_range(TORNADO_AFTER.x, TORNADO_AFTER.y) if next == &"storm" else INF
 	if WARNINGS.has(next): context._say(WARNINGS[next], 4.0)

@@ -20,3 +20,7 @@ Dale (spelling corrected), approving Claude's Level 5 design (storm cycle with w
 Dale, on the first twister art (spelling corrected):
 
 > Looks a little odd, the tornado?
+
+RaresKeY, relayed by Dale, 2026-09-26:
+
+> Storm looks interesting, is it in 3d? it looks pretty cool, but it takes too long for it to show up?
