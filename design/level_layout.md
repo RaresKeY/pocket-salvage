@@ -25,3 +25,13 @@ Open questions: whether layout variation adds enjoyment, and whether scenery eve
 User design: RaresKeY asks to follow Dale’s pile spawning with fewer pieces at the start and more in later levels ([exact request](../prompts/source/level-flow.md)).
 
 AI-inferred design: the shared layout accepts 4/6/10/12-piece pile recipes. Existing ten-piece lab fixtures remain the default; playable count comes from the level catalog. Pieces retain gaps, jitter, bounds, materials and physical settling.
+
+## Wind-driven clouds, 2026-09-26
+
+### User design
+
+RaresKeY requests clouds follow wind direction and speed, then commit/push without a rebuild or release ([exact words](../prompts/source/cloud-wind.md)).
+
+### AI-inferred design
+
+Remove the fixed −6 units/s leftward drift, which overpowered weak rightward wind. Retain the existing 0.15 background speed scale and signed live weather feed, making cloud speed proportional to wind strength with no motion at zero wind. Preserve two-edge wrapping and the existing scenery animation during pause at the last wind value.

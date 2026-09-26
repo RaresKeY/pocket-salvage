@@ -9,8 +9,7 @@ const SKY_BOTTOM := Color("181222")
 const SKYLINE_ROWS := 32
 const STAR_COUNT := 70
 const CLOUD_COUNT := 4
-const CLOUD_SPEED := Vector2(-6, 0)
-## Weather wind (world units/s², signed) also hurries the clouds along.
+## Map signed weather wind to background cloud speed; calm has no drift.
 const CLOUD_WIND := 0.15
 var wind := 0.0
 var blood_moon := false
@@ -140,7 +139,7 @@ func _process(delta: float) -> void:
 	time += delta
 	var width: float = layout.bounds.size.x
 	for cloud in clouds:
-		cloud.position += (CLOUD_SPEED + Vector2(wind * CLOUD_WIND, 0)) * delta
+		cloud.position += Vector2(wind * CLOUD_WIND, 0) * delta
 		if cloud.position.x < -60: cloud.position.x = width + 60
 		elif cloud.position.x > width + 60: cloud.position.x = -60
 	gull_wait -= delta

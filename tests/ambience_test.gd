@@ -9,11 +9,38 @@ func _initialize() -> void:
 func frames(count: int) -> void:
 	for index in count: await process_frame
 
+func check_cloud_wind(ambience: Node2D) -> void:
+	assert(ambience.clouds.size() == Ambience.CLOUD_COUNT)
+	var origin := Vector2(600, 120)
+	var displacements: Dictionary = {}
+	for speed in [18.0, 36.0, -18.0, -36.0, 0.0]:
+		for cloud in ambience.clouds: cloud.position = origin
+		ambience.wind = speed
+		ambience._process(0.25)
+		var dx: float = ambience.clouds[0].position.x - origin.x
+		if speed == 0.0:
+			assert(is_zero_approx(dx), "Clouds stop in calm wind")
+		else:
+			assert(signf(dx) == signf(speed), "Even light wind carries clouds downwind")
+		for cloud in ambience.clouds:
+			assert(cloud.position.is_equal_approx(origin + Vector2(dx, 0)), "All clouds follow horizontal wind")
+		displacements[speed] = dx
+	assert(is_equal_approx(displacements[36.0], displacements[18.0] * 2), "Cloud speed scales with wind strength")
+	assert(is_equal_approx(displacements[-36.0], -displacements[36.0]), "Reversing wind preserves speed")
+	for direction in [-1.0, 1.0]:
+		ambience.wind = direction * 100
+		for cloud in ambience.clouds: cloud.position.x = -59.0 if direction < 0 else 1259.0
+		ambience._process(1.0)
+		for cloud in ambience.clouds:
+			assert(cloud.position.x == (1260.0 if direction < 0 else -60.0), "Clouds wrap at either yard edge")
+	ambience.wind = 0.0
+
 func run() -> void:
 	var ambience := Ambience.new()
 	root.add_child(ambience)
 	ambience.configure(Layout.create_layout())
 	ambience.gull_wait = INF
+	check_cloud_wind(ambience)
 	assert(ambience.perches.size() == 9, "Two floodlights, four rail spots, the heap and two fence spots")
 	var crane := []
 	ambience.crane_points = func() -> Array: return crane
@@ -61,5 +88,5 @@ func run() -> void:
 	await frames(2)
 	assert(ambience.taken.is_empty(), "Perches are released when gulls go")
 	ambience.queue_free()
-	print("AMBIENCE_TEST_OK gull landing, perching, crane scare, departure, uneven crossing, spawn cap")
+	print("AMBIENCE_TEST_OK wind-driven clouds, gull landing, perching, crane scare, departure, uneven crossing, spawn cap")
 	quit()

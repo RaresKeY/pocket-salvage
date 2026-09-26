@@ -1,6 +1,6 @@
 # Prototype yard layout subsystem
 
-Reviewed: 2026-09-25. Implementation: level-flow change based on `575407c`.
+Reviewed: 2026-09-26. Implementation: cloud-wind change in this commit, based on `cdb77cb`.
 
 ## Layout data
 
@@ -24,8 +24,10 @@ Gulls (`scripts/level/yard_gull.gd`) arrive every 10 to 24 s, alone or in a loos
 
 `labs/level/main.tscn` shows the data without physics and switches variants with a button or Tab. `tests/level_test.gd` checks deterministic independent data, spawn separation and bounds, masses, unique IDs, all materials present, bins sharing walls and floor alignment, resources, and 29 staged lab nodes per variant. `tests/ambience_test.gd` checks nine perches, landing on a perch, staying put, a crane scare, leaving and freeing itself, a crossing gull that rises and dips then leaves, and the spawn cap with perches released. None of this is a reachability or fun claim.
 
-`yard_ambience.gd` exposes `wind` (set by the weather wind effect); clouds drift at their base speed plus `wind x 0.15` and wrap at either edge.
+`yard_ambience.gd` exposes `wind` (set by the weather wind effect); clouds move horizontally at signed `wind x 0.15` world units/s and wrap at either edge. No fixed drift is added: calm stops them, light wind always moves them downwind, and gusts, intensity changes and Blood Moon reversals scale their speed through the existing live wind feed. Pause retains the last wind value while scenery continues animating.
 
 Blood Moon ambience is configured by an optional flag before construction. It changes sky/moon/cloud/light colors and suppresses gulls/rats. Round-owned generator state drives right-lamp stutter, light-cone intensity and smoke emission. See [level rules](levels.md).
 
 The skyline is a mix, not one repeated tile. `skyline_set(name)` loads every existing variant (`name`, `name_b`, `name_c`) through `YardArt.match_sky(variant, name)`, which repaints each variant's painted sky and ground, row for row, with the first tile's colours (sky is the flat band filling at least 40% of a row and not the bottom row's ground colour; a row whose band is hidden inherits the band above), so tiles side by side join without seams and keep the original look. Originals on disk are untouched. `skyline_plan(widths, span, seed)` lays them out with a fixed seed (`SKYLINE_SEED`), never repeating a design twice in a row and mirroring tiles at random; a single design alternates its facing. Blood Moon uses the `backdrop_blood_skyline_tile` set. Mirrored tiles are drawn through a flipped `draw_set_transform`; a negative-width rect is silently skipped by Godot. `tests/level_test.gd` checks the plan; `tests/blood_moon_test.gd` checks which set each level uses; `tests/skyline_render_test.gd` (real rendering, outside the headless suite) checks the horizon is covered.
+
+Cloud-wind validation (2026-09-26): the new `ambience_test.gd` regression fails on the previous leftward-biased motion. The fix passes light wind in both directions, proportional speed, equal-speed reversal, calm and wrapping at both edges. Full managed Godot 4.7 suite passed (`CHECKS_OK`) from an isolated source copy; no export or release was created.
