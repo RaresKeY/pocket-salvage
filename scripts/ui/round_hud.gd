@@ -1,6 +1,11 @@
 extends Control
 ## Presentation-only round HUD. The caller owns game state and shortcuts.
 const TintSettings = preload("res://scripts/level/tint_settings.gd")
+const Levels = preload("res://scripts/level/level_catalog.gd")
+const TouchController = preload("res://scripts/ui/touch_controller.gd")
+const YardTheme = preload("res://scripts/ui/yard_theme.gd")
+const FullscreenControl = preload("res://scripts/ui/fullscreen_control.gd")
+
 signal level_selected(index: int)
 signal levels_requested
 signal start_requested
@@ -13,90 +18,115 @@ signal debug_requested(hitboxes: bool, masks: bool)
 signal tint_requested(key: StringName, value: float)
 signal layout_changed
 
-const Levels = preload("res://scripts/level/level_catalog.gd")
-var level_grid: GridContainer
-var level_buttons: Array[Button] = []
-var levels_button: Button
-var selected_level := 0
-const TouchController = preload("res://scripts/ui/touch_controller.gd")
+## Below this height the start card drops the weather tip so Start stays on screen.
+const SHORT_SCREEN := 420.0
+## Below this height (or width, for the level grid) menus go compact.
+const COMPACT := 500.0
+const TINY_WIDTH := 360.0
+const NARROW_WIDTH := 420.0
+const MENU_WIDTH := 740.0
+const STACKED_HEADER := 760.0
+const HURRY_SECONDS := 10
+const HURRY_COLOR := Color("ff6b5b")
+const HINTS := {
+	"keyboard": "A/D move · W/S lift · Space grip · E swap · P pause · R restart",
+	"gamepad": "Stick/D-pad move/lift · A grip · X swap · Start pause · Y restart · LB music · RB SFX",
+	"touch": "Drag the right stick to move/lift. Left buttons grip/swap.",
+}
+const CONTROL_HINTS: String = HINTS.keyboard
+const DEBUG_TOGGLES := [
+	{"text": "Hitboxes", "hint": "Green: physical shapes. Blue: Area2D sensors. Disabled shapes are omitted."},
+	{"text": "Masks (art / active)", "hint": "Pink: source art masks, not collision geometry. Orange: active visual occlusion masks."},
+]
+
 var developer_enabled := false
-var developer_section: VBoxContainer
-var developer_button: Button
-var developer_controls: HBoxContainer
-var tint_controls: VBoxContainer
-## Tint key -> slider, built from TintSettings.SLIDERS.
-var tint_sliders: Dictionary = {}
-var hitboxes_check: CheckButton
-var masks_check: CheckButton
 var touch_enabled := false
-var touch_controls: Control
-var modal_card: PanelContainer
-var modal_center: CenterContainer
-var modal_content: VBoxContainer
-var footer: BoxContainer
-var world_right_inset := 0.0
-const YardTheme = preload("res://scripts/ui/yard_theme.gd")
+var state := ""
+var selected_level := 0
+var _pending: Dictionary = {}
+var _displayed: Dictionary = {}
+
+var top_panel: PanelContainer
+var bottom_panel: PanelContainer
 var header_row: BoxContainer
 var counters: HBoxContainer
 var header_style: StyleBoxFlat
 var overlay_style := StyleBoxEmpty.new()
+var score_label: Label
+var time_label: Label
+var progress_label: Label
+var music_button: Button
+var effects_button: Button
+var pause_button: Button
+var magnet_label: Label
+var weather_badge: Label
+var feedback_label: Label
+var hints_label: Label
+var touch_controls: Control
+
+var modal: ColorRect
+var modal_center: CenterContainer
+var modal_card: PanelContainer
+var modal_content: VBoxContainer
+var heading: Label
+var details: Label
+var action: Button
+var levels_button: Button
+var level_grid: GridContainer
+var level_buttons: Array[Button] = []
 var audio_settings: VBoxContainer
 var music_slider: HSlider
 var effects_slider: HSlider
 var music_value: Label
 var effects_value: Label
-## Below this height the start card drops the weather tip so Start stays on screen.
-const SHORT_SCREEN := 420.0
-const HURRY_SECONDS := 10
-const HURRY_COLOR := Color("ff6b5b")
-const CONTROL_HINTS := "A/D move · W/S lift · Space grip · E swap · P pause · R restart"
-var top_panel: PanelContainer
-var bottom_panel: PanelContainer
-var music_button: Button
-var effects_button: Button
-var hints_label: Label
-var score_label: Label
-var time_label: Label
-var progress_label: Label
-var weather_badge: Label
-var magnet_label: Label
-var feedback_label: Label
-var modal: ColorRect
-var heading: Label
-var details: Label
-var action: Button
-var pause_button: Button
-var state := ""
-var _pending: Dictionary = {}
-var _displayed: Dictionary = {}
+var developer_section: VBoxContainer
+var developer_button: Button
+var developer_controls: HBoxContainer
+var hitboxes_check: CheckButton
+var masks_check: CheckButton
+var tint_controls: VBoxContainer
+## Tint key -> slider, built from TintSettings.SLIDERS.
+var tint_sliders: Dictionary = {}
 
 func _ready() -> void:
 	set_anchors_and_offsets_preset(PRESET_FULL_RECT)
 	mouse_filter = MOUSE_FILTER_IGNORE
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	theme = YardTheme.make()
-	var top := PanelContainer.new()
-	top_panel = top
-	top.set_anchors_and_offsets_preset(PRESET_TOP_WIDE)
-	top.offset_left = 8
-	top.offset_right = -60
-	top.offset_top = 6
-	var compact: StyleBoxFlat = theme.get_stylebox("panel", "PanelContainer").duplicate()
-	compact.set_content_margin_all(8)
-	header_style = compact
+	header_style = theme.get_stylebox("panel", "PanelContainer").duplicate()
+	header_style.set_content_margin_all(8)
 	for side in [SIDE_LEFT, SIDE_TOP, SIDE_RIGHT, SIDE_BOTTOM]: overlay_style.set_content_margin(side, 8)
-	top.add_theme_stylebox_override("panel", compact)
-	add_child(top)
-	var header := VBoxContainer.new()
-	header.add_theme_constant_override("separation", 4)
-	top.add_child(header)
-	header_row = BoxContainer.new()
-	header_row.add_theme_constant_override("separation", 12)
-	header.add_child(header_row)
-	counters = HBoxContainer.new()
+	_build_header()
+	_build_footer()
+	_build_modal()
+	_build_version()
+	# Audio controls stay available above the modal on ready, pause and results.
+	move_child(top_panel, get_child_count() - 1)
+	add_child(FullscreenControl.new())
+	_ignore_decoration(self)
+	modal.mouse_filter = MOUSE_FILTER_STOP
+	top_panel.resized.connect(func(): _layout_modal(); layout_changed.emit())
+	top_panel.minimum_size_changed.connect(func(): _fit_header.call_deferred())
+	bottom_panel.resized.connect(func(): layout_changed.emit())
+	resized.connect(_responsive_layout)
+	# Card text depends on screen height, and unchanged data is cached, so force a rebuild on resize.
+	resized.connect(func(): _displayed = {}; present(_pending))
+	_responsive_layout()
+	present(_pending)
+
+## Top bar: counters and audio/pause buttons, then the head status and weather.
+func _build_header() -> void:
+	top_panel = PanelContainer.new()
+	top_panel.set_anchors_and_offsets_preset(PRESET_TOP_WIDE)
+	top_panel.offset_left = 8
+	top_panel.offset_right = -FullscreenControl.RESERVED_WIDTH
+	top_panel.offset_top = 6
+	top_panel.add_theme_stylebox_override("panel", header_style)
+	add_child(top_panel)
+	var header := _box(top_panel, VBoxContainer.new(), 4)
+	header_row = _box(header, BoxContainer.new(), 12)
+	counters = _box(header_row, HBoxContainer.new(), 10)
 	counters.size_flags_horizontal = SIZE_EXPAND_FILL
-	counters.add_theme_constant_override("separation", 10)
-	header_row.add_child(counters)
 	score_label = _label(counters, "Score  0")
 	counters.add_child(VSeparator.new())
 	time_label = _label(counters, "Time  0:00")
@@ -106,19 +136,11 @@ func _ready() -> void:
 		label.size_flags_horizontal = SIZE_EXPAND_FILL
 		label.size_flags_vertical = SIZE_SHRINK_CENTER
 		label.autowrap_mode = TextServer.AUTOWRAP_OFF
-	var actions := HBoxContainer.new()
-	actions.add_theme_constant_override("separation", 4)
-	header_row.add_child(actions)
-	music_button = _audio_button(actions, "Music on", "Toggle music (M). Volume sliders are in Pause.", func(): music_requested.emit())
-	effects_button = _audio_button(actions, "SFX on", "Toggle effects. Volume sliders are in Pause.", func(): effects_requested.emit())
-	pause_button = Button.new()
-	pause_button.text = "Pause"
-	pause_button.custom_minimum_size = Vector2(70, 44)
-	pause_button.pressed.connect(func(): pause_requested.emit())
-	actions.add_child(pause_button)
-	var status_row := HBoxContainer.new()
-	status_row.add_theme_constant_override("separation", 12)
-	header.add_child(status_row)
+	var actions := _box(header_row, HBoxContainer.new(), 4)
+	music_button = _toggle_button(actions, "Music", "Toggle music (M). Volume sliders are in Pause.", func(): music_requested.emit())
+	effects_button = _toggle_button(actions, "SFX", "Toggle effects. Volume sliders are in Pause.", func(): effects_requested.emit())
+	pause_button = _button(actions, "Pause", Vector2(70, 44), func(): pause_requested.emit())
+	var status_row := _box(header, HBoxContainer.new(), 12)
 	magnet_label = _label(status_row, "Magnet OFF  ·  Empty")
 	magnet_label.size_flags_horizontal = SIZE_EXPAND_FILL
 	magnet_label.add_theme_font_size_override("font_size", 16)
@@ -127,98 +149,73 @@ func _ready() -> void:
 	weather_badge.add_theme_font_size_override("font_size", 16)
 	weather_badge.autowrap_mode = TextServer.AUTOWRAP_OFF
 	weather_badge.visible = false
-	var bottom := PanelContainer.new()
-	bottom_panel = bottom
-	bottom.add_theme_stylebox_override("panel", compact)
-	bottom.set_anchors_and_offsets_preset(PRESET_BOTTOM_WIDE)
-	bottom.grow_vertical = GROW_DIRECTION_BEGIN
-	bottom.offset_left = 8
-	bottom.offset_right = -8
-	bottom.offset_bottom = -28
-	add_child(bottom)
-	footer = BoxContainer.new()
-	footer.add_theme_constant_override("separation", 12)
-	bottom.add_child(footer)
-	var foot := VBoxContainer.new()
+	# On touch the feedback line sits in the header, since the footer is hidden.
+	feedback_label = _label(header if touch_enabled else null, "")
+	feedback_label.add_theme_color_override("font_color", YardTheme.FEEDBACK)
+	if touch_enabled: feedback_label.add_theme_font_size_override("font_size", 14)
+
+## Bottom bar: feedback and control hints (hidden on touch), plus the touch controls themselves.
+func _build_footer() -> void:
+	bottom_panel = PanelContainer.new()
+	bottom_panel.add_theme_stylebox_override("panel", header_style)
+	bottom_panel.set_anchors_and_offsets_preset(PRESET_BOTTOM_WIDE)
+	bottom_panel.grow_vertical = GROW_DIRECTION_BEGIN
+	bottom_panel.offset_left = 8
+	bottom_panel.offset_right = -8
+	bottom_panel.offset_bottom = -28
+	add_child(bottom_panel)
+	var foot := _box(bottom_panel, VBoxContainer.new(), 4)
 	foot.size_flags_horizontal = SIZE_EXPAND_FILL
 	foot.size_flags_vertical = SIZE_SHRINK_CENTER
-	footer.add_child(foot)
 	touch_controls = TouchController.new()
 	touch_controls.visible = touch_enabled
 	add_child(touch_controls)
-	feedback_label = _label(foot, "")
-	feedback_label.add_theme_color_override("font_color", Color("a1e8c1"))
-	if touch_enabled:
-		feedback_label.reparent(header)
-		feedback_label.add_theme_font_size_override("font_size", 14)
+	if not touch_enabled: foot.add_child(feedback_label)
 	hints_label = _label(foot, CONTROL_HINTS)
 	hints_label.add_theme_font_size_override("font_size", 16)
+
+## The dimmed card for level choice, start, pause and results.
+func _build_modal() -> void:
 	modal = ColorRect.new()
-	modal.color = Color(0.03, 0.06, 0.08, 0.65)
+	modal.color = YardTheme.SCRIM
 	modal.set_anchors_and_offsets_preset(PRESET_FULL_RECT)
 	add_child(modal)
-	var center := CenterContainer.new()
-	modal_center = center
-	center.set_anchors_and_offsets_preset(PRESET_FULL_RECT)
-	center.mouse_filter = MOUSE_FILTER_IGNORE
-	modal.add_child(center)
-	var card := PanelContainer.new()
-	modal_card = card
-	card.custom_minimum_size.x = 460
-	center.add_child(card)
-	var content := VBoxContainer.new()
-	modal_content = content
-	content.add_theme_constant_override("separation", 10)
-	card.add_child(content)
-	heading = _label(content, "Pocket Salvage")
+	modal_center = CenterContainer.new()
+	modal_center.set_anchors_and_offsets_preset(PRESET_FULL_RECT)
+	modal_center.mouse_filter = MOUSE_FILTER_IGNORE
+	modal.add_child(modal_center)
+	modal_card = PanelContainer.new()
+	modal_card.custom_minimum_size.x = 460
+	modal_center.add_child(modal_card)
+	modal_content = _box(modal_card, VBoxContainer.new(), 10)
+	heading = _label(modal_content, "Pocket Salvage")
 	heading.add_theme_font_size_override("font_size", 30)
 	heading.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	_build_level_grid(content)
-	details = _label(content, "")
-	details.custom_minimum_size.x = 0
+	_build_level_grid(modal_content)
+	details = _label(modal_content, "")
 	details.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	action = Button.new()
-	action.custom_minimum_size.y = 48
-	var primary: StyleBoxFlat = theme.get_stylebox("normal", "Button").duplicate()
-	primary.bg_color = Color("355c50")
-	action.add_theme_stylebox_override("normal", primary)
-	action.pressed.connect(_activate)
-	var action_row := HBoxContainer.new()
-	content.add_child(action_row)
+	var action_row := _box(modal_content, HBoxContainer.new(), 4)
+	action = _button(action_row, "", Vector2(0, 48), _activate)
 	action.size_flags_horizontal = SIZE_EXPAND_FILL
-	action_row.add_child(action)
-	levels_button = Button.new()
-	levels_button.text = "Levels"
-	levels_button.custom_minimum_size = Vector2(80, 44)
-	levels_button.pressed.connect(func(): levels_requested.emit())
-	action_row.add_child(levels_button)
-	_build_audio_settings(content)
-	if developer_enabled: _build_developer_options(content)
-	var version := Label.new()
+	var primary: StyleBoxFlat = theme.get_stylebox("normal", "Button").duplicate()
+	primary.bg_color = YardTheme.PRIMARY
+	action.add_theme_stylebox_override("normal", primary)
+	levels_button = _button(action_row, "Levels", Vector2(80, 44), func(): levels_requested.emit())
+	_build_audio_settings(modal_content)
+	if developer_enabled: _build_developer_options(modal_content)
+
+func _build_version() -> void:
+	var version := _label(self, "v" + str(ProjectSettings.get_setting("application/config/version", "0.1.0")))
 	version.name = "Version"
-	version.text = "v" + str(ProjectSettings.get_setting("application/config/version", "0.1.0"))
+	version.autowrap_mode = TextServer.AUTOWRAP_OFF
 	version.add_theme_font_size_override("font_size", 12)
-	version.add_theme_color_override("font_color", Color("b0bdc4"))
+	version.add_theme_color_override("font_color", YardTheme.FAINT)
 	version.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	version.set_anchors_and_offsets_preset(PRESET_BOTTOM_RIGHT)
 	version.offset_left = -90
 	version.offset_right = -12
 	version.offset_top = -22
 	version.offset_bottom = -4
-	add_child(version)
-	# Audio controls stay available above the modal on ready, pause and results.
-	move_child(top, get_child_count() - 1)
-	add_child(preload("res://scripts/ui/fullscreen_control.gd").new())
-	_ignore_decoration(self)
-	modal.mouse_filter = MOUSE_FILTER_STOP
-	top.resized.connect(func(): _layout_modal(); layout_changed.emit())
-	top.minimum_size_changed.connect(func(): _fit_header.call_deferred())
-	bottom.resized.connect(func(): layout_changed.emit())
-	resized.connect(_responsive_layout)
-	# Card text depends on screen height, and unchanged data is cached, so force a rebuild on resize.
-	resized.connect(func(): _displayed = {}; present(_pending))
-	_responsive_layout()
-	present(_pending)
 
 func _build_level_grid(parent: VBoxContainer) -> void:
 	level_grid = GridContainer.new()
@@ -227,17 +224,14 @@ func _build_level_grid(parent: VBoxContainer) -> void:
 	level_grid.add_theme_constant_override("v_separation", 4)
 	parent.add_child(level_grid)
 	for index in Levels.SLOT_COUNT:
-		var button := Button.new()
-		button.text = "%02d" % (index + 1) if Levels.unlocked(index) else "%02d\nLOCKED" % (index + 1)
+		var open := Levels.unlocked(index)
+		var button := _button(level_grid, "%02d" % (index + 1) if open else "%02d\nLOCKED" % (index + 1), Vector2(44, 44), func():
+			if Levels.unlocked(index): level_selected.emit(index))
 		button.tooltip_text = Levels.title(index)
-		button.disabled = not Levels.unlocked(index)
+		button.disabled = not open
 		button.toggle_mode = true
-		button.custom_minimum_size = Vector2(44, 44)
 		button.size_flags_horizontal = SIZE_EXPAND_FILL
 		button.add_theme_font_size_override("font_size", 16)
-		button.pressed.connect(func():
-			if Levels.unlocked(index): level_selected.emit(index))
-		level_grid.add_child(button)
 		level_buttons.append(button)
 
 func _unhandled_key_input(event: InputEvent) -> void:
@@ -248,17 +242,13 @@ func _unhandled_key_input(event: InputEvent) -> void:
 			get_viewport().set_input_as_handled()
 
 func _build_audio_settings(parent: VBoxContainer) -> void:
-	audio_settings = VBoxContainer.new()
-	audio_settings.add_theme_constant_override("separation", 0)
-	parent.add_child(audio_settings)
-	for name in ["Music", "SFX"]:
-		var parts := _slider_row(audio_settings, name, 55, 0, 100, 1, 100, name + " volume. Left/right adjusts; mute is separate.")
-		if name == "Music":
-			music_slider = parts[0]
-			music_value = parts[1]
-		else:
-			effects_slider = parts[0]
-			effects_value = parts[1]
+	audio_settings = _box(parent, VBoxContainer.new(), 0)
+	var music := _slider_row(audio_settings, "Music", 55, 0, 100, 1, 100, "Music volume. Left/right adjusts; mute is separate.")
+	var effects := _slider_row(audio_settings, "SFX", 55, 0, 100, 1, 100, "SFX volume. Left/right adjusts; mute is separate.")
+	music_slider = music[0]
+	music_value = music[1]
+	effects_slider = effects[0]
+	effects_value = effects[1]
 	for slider in [music_slider, effects_slider]:
 		slider.value_changed.connect(func(_value: float):
 			_update_volume_labels()
@@ -266,9 +256,7 @@ func _build_audio_settings(parent: VBoxContainer) -> void:
 
 ## A labelled slider with a readout: [slider, value label]. The caller formats the readout.
 func _slider_row(parent: Node, name: String, label_width: float, low: float, high: float, step: float, start: float, hint: String) -> Array:
-	var row := HBoxContainer.new()
-	row.add_theme_constant_override("separation", 10)
-	parent.add_child(row)
+	var row := _box(parent, HBoxContainer.new(), 10)
 	var label := _label(row, name)
 	label.custom_minimum_size.x = label_width
 	label.size_flags_vertical = SIZE_SHRINK_CENTER
@@ -292,40 +280,30 @@ func _update_volume_labels() -> void:
 	effects_value.text = "%d%%" % int(effects_slider.value)
 
 func _build_developer_options(parent: VBoxContainer) -> void:
-	developer_section = VBoxContainer.new()
-	developer_section.add_theme_constant_override("separation", 4)
-	parent.add_child(developer_section)
-	developer_button = Button.new()
-	developer_button.text = "Developer options"
+	developer_section = _box(parent, VBoxContainer.new(), 4)
+	developer_button = _button(developer_section, "Developer options", Vector2(0, 40))
 	developer_button.toggle_mode = true
-	developer_button.custom_minimum_size.y = 40
-	developer_section.add_child(developer_button)
-	developer_controls = HBoxContainer.new()
+	developer_controls = _box(developer_section, HBoxContainer.new(), 4)
 	developer_controls.visible = false
-	developer_section.add_child(developer_controls)
-	tint_controls = VBoxContainer.new()
+	var checks: Array[CheckButton] = []
+	for toggle in DEBUG_TOGGLES:
+		var check := CheckButton.new()
+		check.text = toggle.text
+		check.tooltip_text = toggle.hint
+		check.custom_minimum_size.y = 40
+		check.size_flags_horizontal = SIZE_EXPAND_FILL
+		developer_controls.add_child(check)
+		check.toggled.connect(func(_on: bool): debug_requested.emit(hitboxes_check.button_pressed, masks_check.button_pressed))
+		checks.append(check)
+	hitboxes_check = checks[0]
+	masks_check = checks[1]
+	tint_controls = _box(developer_section, VBoxContainer.new(), 0)
 	tint_controls.visible = false
-	tint_controls.add_theme_constant_override("separation", 0)
-	developer_section.add_child(tint_controls)
 	_build_tint_sliders()
 	developer_button.toggled.connect(func(open: bool):
 		developer_controls.visible = open
 		tint_controls.visible = open
-		audio_settings.visible = not open and state == "paused")
-	hitboxes_check = CheckButton.new()
-	hitboxes_check.text = "Hitboxes"
-	hitboxes_check.custom_minimum_size.y = 40
-	hitboxes_check.size_flags_horizontal = SIZE_EXPAND_FILL
-	developer_controls.add_child(hitboxes_check)
-	masks_check = CheckButton.new()
-	masks_check.text = "Masks (art / active)"
-	masks_check.custom_minimum_size.y = 40
-	masks_check.size_flags_horizontal = SIZE_EXPAND_FILL
-	developer_controls.add_child(masks_check)
-	for button in [hitboxes_check, masks_check]:
-		button.toggled.connect(func(_on: bool): debug_requested.emit(hitboxes_check.button_pressed, masks_check.button_pressed))
-	hitboxes_check.tooltip_text = "Green: physical shapes. Blue: Area2D sensors. Disabled shapes are omitted."
-	masks_check.tooltip_text = "Pink: source art masks, not collision geometry. Orange: active visual occlusion masks."
+		_show_audio_settings())
 
 ## Blood Moon tint strengths, one slider per TintSettings entry; defaults are the shipped look.
 func _build_tint_sliders() -> void:
@@ -338,31 +316,47 @@ func _build_tint_sliders() -> void:
 			readout.text = "%.2f" % value
 			tint_requested.emit(entry.key, value))
 		tint_sliders[entry.key] = slider
-	var reset := Button.new()
-	reset.text = "Reset tints"
-	reset.custom_minimum_size.y = 36
-	reset.pressed.connect(func():
+	_button(tint_controls, "Reset tints", Vector2(0, 36), func():
 		for entry in TintSettings.SLIDERS: tint_sliders[entry.key].value = entry.default)
-	tint_controls.add_child(reset)
 
-func _audio_button(parent: Node, text: String, hint: String, callback: Callable) -> Button:
+## Volume sliders show while paused, unless the developer options are open in their place.
+func _show_audio_settings() -> void:
+	audio_settings.visible = state == "paused" and (developer_button == null or not developer_button.button_pressed)
+
+## Adds `container` to `parent` with `separation` between its children.
+func _box(parent: Node, container: Container, separation: int) -> Container:
+	container.add_theme_constant_override("separation", separation)
+	parent.add_child(container)
+	return container
+
+func _button(parent: Node, text: String, min_size: Vector2, on_press := Callable()) -> Button:
 	var button := Button.new()
 	button.text = text
-	button.tooltip_text = hint
-	button.toggle_mode = true
-	button.custom_minimum_size = Vector2(78, 44)
-	button.add_theme_font_size_override("font_size", 20)
-	button.pressed.connect(func():
-		callback.call()
-		if state == "running": button.release_focus())
+	button.custom_minimum_size = min_size
+	if on_press.is_valid(): button.pressed.connect(on_press)
 	parent.add_child(button)
 	return button
 
+## An on/off button labelled "<name> on" or "<name> off"; see _set_toggle.
+func _toggle_button(parent: Node, name: String, hint: String, on_press: Callable) -> Button:
+	var button := _button(parent, name + " on", Vector2(78, 44), on_press)
+	button.set_meta("name", name)
+	button.tooltip_text = hint
+	button.toggle_mode = true
+	button.add_theme_font_size_override("font_size", 20)
+	button.pressed.connect(func(): if state == "running": button.release_focus())
+	return button
+
+func _set_toggle(button: Button, on: bool) -> void:
+	button.set_pressed_no_signal(on)
+	button.text = "%s %s" % [button.get_meta("name"), "on" if on else "off"]
+
+## A word-wrapping label, added to `parent` unless it is null.
 func _label(parent: Node, text: String) -> Label:
 	var result := Label.new()
 	result.text = text
 	result.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	parent.add_child(result)
+	if parent != null: parent.add_child(result)
 	return result
 
 func _ignore_decoration(node: Node) -> void:
@@ -381,23 +375,25 @@ func present(data: Dictionary) -> void:
 	# button state and theme overrides until a visible value actually changes.
 	if _displayed == _pending: return
 	_displayed = _pending.duplicate()
-	var scheme := str(data.get("control_scheme", "keyboard"))
-	var hints := CONTROL_HINTS
-	if scheme == "gamepad": hints = "Stick/D-pad move/lift · A grip · X swap · Start pause · Y restart · LB music · RB SFX"
-	elif touch_enabled: hints = "Drag the right stick to move/lift. Left buttons grip/swap."
-	hints_label.text = hints
 	var previous := state
 	state = str(data.get("state", "ready"))
 	if previous != state: _layout_header()
 	selected_level = int(data.get("selected_level", 0))
-	level_grid.visible = state == "ready" and bool(data.get("level_menu", false))
-	levels_button.visible = (state == "paused" or (state == "finished" and not bool(data.get("victory", false)))) and bool(data.get("level_menu", false))
-	for index in level_buttons.size(): level_buttons[index].set_pressed_no_signal(index == selected_level)
+	var scheme := "touch" if touch_enabled and data.get("control_scheme", "keyboard") != "gamepad" else str(data.get("control_scheme", "keyboard"))
+	hints_label.text = HINTS.get(scheme, CONTROL_HINTS)
 	touch_controls.enabled = state == "running"
-	music_button.set_pressed_no_signal(data.get("music_on", true))
-	music_button.text = "Music on" if music_button.button_pressed else "Music off"
-	effects_button.set_pressed_no_signal(data.get("effects_on", true))
-	effects_button.text = "SFX on" if effects_button.button_pressed else "SFX off"
+	_present_counters(data, seconds, hurry)
+	_present_audio(data)
+	_present_developer()
+	_present_modal(data)
+	if previous != state:
+		if modal.visible: action.grab_focus()
+		else:
+			var focused := get_viewport().gui_get_focus_owner()
+			if focused != null and is_ancestor_of(focused): focused.release_focus()
+	_fit_header.call_deferred()
+
+func _present_counters(data: Dictionary, seconds: int, hurry: bool) -> void:
 	var gap := " " if touch_enabled else "  "
 	score_label.text = "Score%s%d" % [gap, int(data.get("score", 0))]
 	time_label.text = "Time%s%d:%02d" % [gap, seconds / 60, seconds % 60]
@@ -412,15 +408,29 @@ func present(data: Dictionary) -> void:
 	magnet_label.text = "%s  ·  %s" % [grip, "Carrying " + held if not held.is_empty() else "Empty"]
 	feedback_label.text = str(data.get("feedback", ""))
 	feedback_label.visible = not feedback_label.text.is_empty() and (not landscape_overlay() or state == "running")
-	audio_settings.visible = state == "paused" and (developer_button == null or not developer_button.button_pressed)
+
+func _present_audio(data: Dictionary) -> void:
+	_set_toggle(music_button, data.get("music_on", true))
+	_set_toggle(effects_button, data.get("effects_on", true))
+	_show_audio_settings()
 	music_slider.set_value_no_signal(float(data.get("music_volume", 1.0)) * 100.0)
 	effects_slider.set_value_no_signal(float(data.get("effects_volume", 1.0)) * 100.0)
 	_update_volume_labels()
-	if developer_section != null:
-		developer_section.visible = state == "paused"
-		if state != "paused":
-			developer_button.set_pressed_no_signal(false)
-			developer_controls.hide()
+
+func _present_developer() -> void:
+	if developer_section == null: return
+	developer_section.visible = state == "paused"
+	if state != "paused":
+		developer_button.set_pressed_no_signal(false)
+		developer_controls.hide()
+
+func _present_modal(data: Dictionary) -> void:
+	var menu := bool(data.get("level_menu", false))
+	var won := bool(data.get("victory", false))
+	var weather := str(data.get("weather_label", ""))
+	level_grid.visible = state == "ready" and menu
+	levels_button.visible = (state == "paused" or (state == "finished" and not won)) and menu
+	for index in level_buttons.size(): level_buttons[index].set_pressed_no_signal(index == selected_level)
 	modal.visible = state != "running"
 	pause_button.visible = state == "running"
 	details.visible = true
@@ -431,14 +441,13 @@ func present(data: Dictionary) -> void:
 			details.visible = false
 			action.text = "Resume"
 		"finished":
-			heading.text = "Victory!" if bool(data.get("victory", false)) else "Round complete"
-			var reason := str(data.get("finish_reason", ""))
-			details.text = "%s\nScore  %d\nCorrect  %d  ·  Wrong  %d" % [reason, int(data.get("score", 0)), int(data.get("correct", 0)), int(data.get("wrong", 0))]
+			heading.text = "Victory!" if won else "Round complete"
+			details.text = "%s\nScore  %d\nCorrect  %d  ·  Wrong  %d" % [str(data.get("finish_reason", "")), int(data.get("score", 0)), int(data.get("correct", 0)), int(data.get("wrong", 0))]
 			var bonus := int(data.get("time_bonus", 0))
 			if bonus > 0: details.text += "\nTime bonus  +%d" % bonus
 			var weather_bonus := int(data.get("weather_bonus", 0))
 			if weather_bonus > 0: details.text += "\n%s  +%d" % [weather, weather_bonus]
-			action.text = "Continue" if bool(data.get("victory", false)) else ("Retry" if bool(data.get("level_menu", false)) else "Play again")
+			action.text = "Continue" if won else ("Retry" if menu else "Play again")
 		_:
 			heading.text = "Pocket Salvage"
 			details.text = "10 pieces · 4 minutes\nMagnet lifts steel. Claw lifts copper and rubber.\nPark and swap heads at the left stands.\nSort into matching bins. Wrong bin: −25."
@@ -449,13 +458,7 @@ func present(data: Dictionary) -> void:
 			if level_grid.visible:
 				heading.text = "Choose a level"
 				details.text = "%02d  %s · %d pieces" % [selected_level + 1, Levels.title(selected_level), Levels.scrap_count(selected_level)]
-				if get_viewport_rect().size.y >= 500: details.text += "\n" + str(data.get("weather_tip", ""))
-	if previous != state:
-		if modal.visible: action.grab_focus()
-		else:
-			var focused := get_viewport().gui_get_focus_owner()
-			if focused != null and is_ancestor_of(focused): focused.release_focus()
-	_fit_header.call_deferred()
+				if get_viewport_rect().size.y >= COMPACT: details.text += "\n" + str(data.get("weather_tip", ""))
 
 func _activate() -> void:
 	match state:
@@ -466,33 +469,34 @@ func _activate() -> void:
 func _responsive_layout() -> void:
 	if modal_card == null: return
 	touch_controls.release_all()
-	world_right_inset = 0.0
 	bottom_panel.visible = not touch_enabled
 	hints_label.visible = not touch_enabled
-	footer.vertical = false
-	level_grid.columns = 4 if size.x < 500 else 6
+	level_grid.columns = 4 if size.x < COMPACT else 6
 	_layout_header()
-	var compact_modal := size.y < 500
-	for button in level_buttons: button.add_theme_font_size_override("font_size", 14 if compact_modal or size.x < 360 else 16)
+	var compact_modal := size.y < COMPACT
+	for button in level_buttons: button.add_theme_font_size_override("font_size", 14 if compact_modal or size.x < TINY_WIDTH else 16)
 	modal_content.add_theme_constant_override("separation", 4 if compact_modal else 10)
 	heading.add_theme_font_size_override("font_size", 24 if compact_modal else 30)
 	details.add_theme_font_size_override("font_size", 16 if compact_modal else 20)
 	_layout_modal()
 	modal_card.custom_minimum_size.x = minf(460, maxf(280, size.x - 24))
-	score_label.custom_minimum_size.x = 0
-	time_label.custom_minimum_size.x = 0
 	layout_changed.emit()
 
 ## Mobile landscape fits the yard to the entire screen, even behind menu overlays.
 func landscape_overlay() -> bool:
 	return touch_enabled and size.x > size.y
 
+## Header text size outside the playing-yard overlay: smaller in landscape menus and on narrow screens.
+func _menu_font_size(compact_menu: bool, narrow_below: float) -> int:
+	if compact_menu: return 18
+	return 14 if size.x < narrow_below else 20
+
 func _layout_header() -> void:
 	var landscape := landscape_overlay()
 	var overlay := landscape and state == "running"
-	var compact_menu := landscape and not overlay and size.x < 740
+	var compact_menu := landscape and not overlay and size.x < MENU_WIDTH
 	top_panel.add_theme_stylebox_override("panel", overlay_style if overlay else header_style)
-	header_row.vertical = size.x < 760 and not landscape
+	header_row.vertical = size.x < STACKED_HEADER and not landscape
 	# During play, Pause provides access to audio without consuming the counter row.
 	music_button.visible = not overlay
 	effects_button.visible = not overlay
@@ -501,13 +505,13 @@ func _layout_header() -> void:
 	for label in [score_label, time_label, progress_label, magnet_label, weather_badge, feedback_label]:
 		label.theme_type_variation = &"YardOverlayLabel" if overlay else &""
 	for label in [score_label, time_label, progress_label]:
-		label.add_theme_font_size_override("font_size", (24 if size.x < 740 else 28) if overlay else (18 if compact_menu else (14 if size.x < 420 else 20)))
+		label.add_theme_font_size_override("font_size", (24 if size.x < MENU_WIDTH else 28) if overlay else _menu_font_size(compact_menu, NARROW_WIDTH))
 	for label in [magnet_label, weather_badge]:
 		label.add_theme_font_size_override("font_size", 20 if overlay else 16)
 	magnet_label.add_theme_color_override("font_color", YardTheme.INK if overlay else YardTheme.MUTED)
 	if touch_enabled: feedback_label.add_theme_font_size_override("font_size", 18 if overlay else 14)
 	for button in [music_button, effects_button, pause_button]:
-		button.add_theme_font_size_override("font_size", 24 if overlay else (18 if compact_menu else (14 if size.x < 360 else 20)))
+		button.add_theme_font_size_override("font_size", 24 if overlay else _menu_font_size(compact_menu, TINY_WIDTH))
 	pause_button.custom_minimum_size = Vector2(80, 52) if overlay else Vector2(70, 44)
 
 # PanelContainer grows to fit wrapped text but does not shrink its previous height

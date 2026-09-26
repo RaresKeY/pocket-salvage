@@ -159,7 +159,7 @@ func _fit() -> void:
 	if hud.touch_enabled: bottom = size.y
 	if hud.landscape_overlay(): top = 0.0
 	stage.position = Vector2(0, top)
-	stage.size = Vector2(maxf(1, size.x - hud.world_right_inset), maxf(1, bottom - top))
+	stage.size = Vector2(maxf(1, size.x), maxf(1, bottom - top))
 	stage_transform = Layout.fit_transform(stage.size)
 	viewport.canvas_transform = stage_transform
 

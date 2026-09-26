@@ -1,5 +1,10 @@
 extends Button
 ## Web requests run directly in the DOM click gesture, preserving user activation.
+const YardTheme = preload("res://scripts/ui/yard_theme.gd")
+const SIZE := 44.0
+const MARGIN := 8.0
+## Width the button takes from the top-right corner, so the HUD header stops short of it.
+const RESERVED_WIDTH := SIZE + MARGIN * 2
 const WEB_SETUP := """
 (() => {
  if (document.getElementById('salvage-fullscreen')) return;
@@ -40,10 +45,10 @@ const WEB_SETUP := """
 func _ready() -> void:
 	custom_minimum_size = Vector2(44, 44)
 	set_anchors_and_offsets_preset(PRESET_TOP_RIGHT)
-	offset_left = -52
-	offset_right = -8
-	offset_top = 8
-	offset_bottom = 52
+	offset_left = -(SIZE + MARGIN)
+	offset_right = -MARGIN
+	offset_top = MARGIN
+	offset_bottom = SIZE + MARGIN
 	tooltip_text = "Toggle fullscreen"
 	focus_mode = FOCUS_NONE
 	if OS.has_feature("web"):
@@ -59,5 +64,5 @@ func _draw() -> void:
 	for sign_x in [-1, 1]:
 		for sign_y in [-1, 1]:
 			var corner := center + Vector2(sign_x, sign_y) * 10
-			draw_line(corner, corner - Vector2(sign_x * 6, 0), Color("cdd2d4"), 2, true)
-			draw_line(corner, corner - Vector2(0, sign_y * 6), Color("cdd2d4"), 2, true)
+			draw_line(corner, corner - Vector2(sign_x * 6, 0), YardTheme.ICON, 2, true)
+			draw_line(corner, corner - Vector2(0, sign_y * 6), YardTheme.ICON, 2, true)
