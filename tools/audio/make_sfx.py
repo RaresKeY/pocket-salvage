@@ -1,126 +1,15 @@
-"""Synthesise the salvage round's retro sound effects into assets/audio/ as 16-bit mono WAVs.
+#!/usr/bin/env python3
+"""Compatibility entry point; implementation is pinned in game-dev-tools."""
+from pathlib import Path as _Path
+import importlib.util as _import
 
-Deterministic (fixed seed), standard library only. Rerun after changing a recipe:
-    python3 tools/audio/make_sfx.py
-"""
-import math
-import random
-import struct
-import wave
-from pathlib import Path
+_entry = _Path(__file__).resolve()
+_project = next(p for p in _entry.parents if (p / 'tools/game-dev-tools.json').is_file())
+_path = _project / 'tools/shared/game-dev-tools/src/context_consumer_loader.py'
+_spec = _import.spec_from_file_location('_game_dev_tools_loader', _path)
+_loader = _import.module_from_spec(_spec)
+_spec.loader.exec_module(_loader)
+_loader.export_tool(__name__, __file__, 'tools/audio-synthesis/src/pocket-salvage/tools/audio/make_sfx.py', globals())
 
-RATE = 22050
-OUT = Path(__file__).resolve().parents[2] / "assets" / "audio"
-
-
-def tone(freq, t, shape="square"):
-    phase = (freq * t) % 1.0
-    if shape == "square":
-        return 1.0 if phase < 0.5 else -1.0
-    if shape == "triangle":
-        return 4.0 * abs(phase - 0.5) - 1.0
-    if shape == "saw":
-        return 2.0 * phase - 1.0
-    return math.sin(2 * math.pi * phase)
-
-
-def render(seconds, sample):
-    """sample(t, progress, noise) -> float in [-1, 1]."""
-    rng = random.Random(7)
-    count = int(RATE * seconds)
-    return [sample(i / RATE, i / count, rng.uniform(-1, 1)) for i in range(count)]
-
-
-def envelope(progress, attack=0.02, decay_power=1.5):
-    if progress < attack:
-        return progress / attack
-    return (1.0 - (progress - attack) / (1.0 - attack)) ** decay_power
-
-
-def sweep(start, end, progress):
-    return start * (end / start) ** progress
-
-
-RECIPES = {
-    "ui_click": (0.09, lambda t, p, n: 0.3 * envelope(p, 0.03, 2.5) * (tone(740, t, "sine") * 0.8 + n * 0.12)),
-    "magnet_on": (0.35, lambda t, p, n: 0.35 * envelope(p, 0.05, 1.0) * (tone(sweep(90, 260, p), t, "saw") * 0.7 + tone(sweep(180, 520, p), t) * 0.3)),
-    "magnet_off": (0.25, lambda t, p, n: 0.3 * envelope(p, 0.01, 2.0) * tone(sweep(240, 70, p), t, "saw")),
-    "pickup": (0.18, lambda t, p, n: 0.5 * envelope(p, 0.005, 3.0) * (tone(sweep(160, 90, p), t, "square") * 0.6 + n * 0.4)),
-    "land": (0.22, lambda t, p, n: 0.55 * envelope(p, 0.002, 4.0) * (n * 0.7 + tone(sweep(90, 40, p), t, "sine") * 0.6)),
-    "correct": (0.45, lambda t, p, n: 0.3 * envelope(p, 0.01, 1.2) * tone([660, 880, 1320][min(2, int(p * 3.2))], t, "square")),
-    "wrong": (0.4, lambda t, p, n: 0.3 * envelope(p, 0.01, 0.8) * tone(110 if p < 0.5 else 92, t, "saw")),
-    "eject": (0.35, lambda t, p, n: 0.3 * envelope(p, 0.01, 1.2) * tone(sweep(180, 720, p), t, "triangle")),
-    "tick": (0.07, lambda t, p, n: 0.3 * envelope(p, 0.005, 2.0) * tone(1500, t, "square")),
-    "finish": (0.9, lambda t, p, n: 0.28 * envelope(p, 0.01, 1.0) * tone([523, 659, 784, 1047][min(3, int(p * 4.5))], t, "square")),
-    "claw_shut": (0.16, lambda t, p, n: 0.45 * envelope(p, 0.003, 3.0) * (tone(sweep(900, 500, p), t, "square") * 0.5 + n * 0.5)),
-    "claw_open": (0.18, lambda t, p, n: 0.3 * envelope(p, 0.01, 2.0) * (tone(sweep(400, 700, p), t, "triangle") * 0.6 + n * 0.3)),
-    "clank": (0.4, lambda t, p, n: 0.4 * envelope(p, 0.002, 2.5) * (n * 0.35 + tone(610, t, "square") * 0.3 + tone(1340, t, "sine") * 0.35)),
-    "thunder": (2.2, lambda t, p, n: 0.5 * envelope(p, 0.01, 1.3) * (n * 0.7 + tone(sweep(60, 35, p), t, "sine") * 0.4)),
-    "crackle": (1.2, lambda t, p, n: 0.32 * envelope(p, 0.02, 0.6) * (n * 0.7 * (tone(11, t, "square") > 0.2) + tone(100, t, "saw") * 0.25)),
-    "power_down": (0.9, lambda t, p, n: 0.4 * envelope(p, 0.005, 1.4) * (tone(sweep(240, 35, p), t, "saw") * 0.7 + n * 0.25)),
-    "power_up": (0.7, lambda t, p, n: 0.3 * envelope(p, 0.1, 1.2) * tone(sweep(45, 260, p), t, "saw")),
-    "start": (0.3, lambda t, p, n: 0.28 * envelope(p, 0.01, 1.0) * tone(440 if p < 0.45 else 880, t, "square")),
-}
-
-
-## Integer-Hz oscillators repeat each second; smooth the boundary for the noise layer too.
-LOOPS = {
-    "trolley_loop": lambda t, p, n: 0.32 * (tone(55, t, "saw") * 0.5 + tone(110, t, "square") * 0.2 + n * 0.25 * (0.5 + 0.5 * tone(12, t, "sine"))),
-    "twister_loop": lambda t, p, n: 0.34 * n * (0.6 + 0.4 * tone(2, t, "sine")) + 0.18 * tone(48, t, "saw") * (0.55 + 0.45 * tone(3, t, "sine")) + 0.06 * tone(96, t, "sine"),
-    "winch_loop": lambda t, p, n: 0.22 * (tone(220, t, "saw") * 0.45 + tone(330, t, "triangle") * 0.35 + tone(6, t, "sine") * tone(440, t, "sine") * 0.2),
-}
-
-
-def write(name, samples):
-    OUT.mkdir(parents=True, exist_ok=True)
-    frames = b"".join(struct.pack("<h", int(max(-1.0, min(1.0, s)) * 32767)) for s in samples)
-    with wave.open(str(OUT / f"{name}.wav"), "wb") as file:
-        file.setnchannels(1)
-        file.setsampwidth(2)
-        file.setframerate(RATE)
-        file.writeframes(frames)
-
-
-def seal_loop(samples, seconds):
-    """Bend the first and last `seconds` towards a shared midpoint so the loop seam doesn't click.
-    The taper keeps the rest of the sound untouched."""
-    overlap = int(RATE * seconds)
-    midpoint = (samples[0] + samples[-1]) * 0.5
-    first, last = samples[0], samples[-1]
-    for i in range(overlap):
-        weight = (1.0 - i / overlap) ** 2
-        samples[i] += (midpoint - first) * weight
-        samples[-1 - i] += (midpoint - last) * weight
-    return samples
-
-
-def normalise(samples, rms):
-    """Remove any DC offset, then scale to the given RMS loudness."""
-    mean = sum(samples) / len(samples)
-    samples = [value - mean for value in samples]
-    current = math.sqrt(sum(value * value for value in samples) / len(samples))
-    return [value * rms / current for value in samples]
-
-
-def lowpass(value, states, alpha):
-    """Run `value` through cascaded one-pole low-pass stages, updating `states` in place."""
-    for stage in range(len(states)):
-        states[stage] += alpha * (value - states[stage])
-        value = states[stage]
-    return value
-
-
-def loop_samples(sample):
-    """A one-second loop of a recipe, sealed at the seam."""
-    return seal_loop(render(1.0, sample), 0.02)
-
-
-if __name__ == "__main__":
-    for name, (seconds, sample) in RECIPES.items():
-        write(name, render(seconds, sample))
-    for name, sample in LOOPS.items():
-        write(name, loop_samples(sample))
-    from make_rain import generate as generate_rain
-    from make_wind import generate as generate_wind
-    extra = generate_rain() + generate_wind()
-    print(f"wrote {len(RECIPES) + len(LOOPS) + extra} sounds to {OUT}")
+if __name__ == '__main__':
+    raise SystemExit(main())

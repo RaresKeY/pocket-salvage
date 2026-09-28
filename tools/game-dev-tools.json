@@ -1,9 +1,10 @@
 {
   "schema": "game-dev-tools/consumer-v1",
   "owner": "../game-dev-tools",
-  "revision": "4df024008b256e9ded54d254f2225464b40882ba",
+  "revision": "803306073042b87561ee7a6d2561c0699c9b6417",
   "families": [
-    "pixel-scaling"
+    "pixel-scaling",
+    "audio-synthesis"
   ],
   "config": "tools/game-dev-tools-config.json",
   "world": "pocket-salvage",
@@ -12,16 +13,53 @@
     "src/consumer_loader.py": "29ef3f9f8afe95b0eeab33b50905cbec76089dd77c3280584a28acbfd8ae7013",
     "src/consumer_pin.gd": "9305511aa73e22bdd358af7500294412875506b1bf60a4be84e66e3373a8ed35",
     "src/consumer_pin.gd.uid": "98e557c78aacfaa5a2ec0cceb1b29f8c4e11400c3d26711bade4efe3a21c59e7",
+    "src/audio_profile.py": "6811e2399049d8f9b45359ad7478f07ef5a3540ea61c89ba645b7bb57431ed2d",
+    "src/audio_expression.py": "6aa3a5353208201c81b9eb7dc55a954fe6de43e9f1bf332e954d3c4c5b50c2b0",
+    "src/context_consumer_loader.py": "42d53ed710a5e82c906e35f8b0ccfcd03508c0a9e30070deb39d65342fca65a7",
     "tools/pixel-scaling/src/make_fixture.gd": "3ba7b76e9117313cb2c5002f29fc805d607bac83167278bc81e1bf45e498b531",
     "tools/pixel-scaling/src/make_fixture.gd.uid": "9a9691bdf36b7d9c40fbf9508fe6dcd5d6265c191790e1d69970777d989940d3",
     "tools/pixel-scaling/src/pixel_scaling.gd": "145dfbf65d426b7de56426baf65f020ee7cb545218ff3f3c6945b3ee32728740",
     "tools/pixel-scaling/src/pixel_scaling.gd.uid": "6722500c3c395c2a69e9b3b504e4266eb5deb0d5a9325ccaba03af4b9e6c14ec",
     "tools/pixel-scaling/src/superscale.gd": "28cabcc1ff924d8d0db2893085fa449ec09583c34d29b5859cb9bcab33419a30",
-    "tools/pixel-scaling/src/superscale.gd.uid": "1f1daf4060ce83d90205d9413fa2047c74892909570f7870d7771087f091f808"
+    "tools/pixel-scaling/src/superscale.gd.uid": "1f1daf4060ce83d90205d9413fa2047c74892909570f7870d7771087f091f808",
+    "tools/audio-synthesis/schemas/profile.schema.json": "6e926c014e18a97e9c821ea1ab0da39436af88e58ab0e1ff951c02ad6d4b24c2",
+    "tools/audio-synthesis/src/_audio_context.gd": "9a62604feab10e650553d84881f371982ee61782e965d94613faa55cb13a4c97",
+    "tools/audio-synthesis/src/_audio_context.gd.uid": "bd260c0c79a1e799260b43e45a047edf898794052db891d209db562a27733541",
+    "tools/audio-synthesis/src/code-review-simulator/tools/generate_audio_feedback_sfx.gd": "3aabcfcf5f93940be8091f72381674bb684dfc6e2e9d016720fe199e300df0a5",
+    "tools/audio-synthesis/src/code-review-simulator/tools/generate_audio_feedback_sfx.gd.uid": "955ed4c50a6ba056b494250c210ab5b0ebce75c4dbbe218be99a7b1005046b21",
+    "tools/audio-synthesis/src/code-review-simulator/tools/generate_diegetic_button_sfx.gd": "5ae4182803c373f741acab48379be20426ac458eb02da729518d6b9e68604584",
+    "tools/audio-synthesis/src/code-review-simulator/tools/generate_diegetic_button_sfx.gd.uid": "ff7bf65c51b8e7098e2a8e57dd380880f75675046fab7cd75faf14c167cdfa1c",
+    "tools/audio-synthesis/src/fog-mountain/tools/generate_audio.py": "fdc40b4149ab2a70ca58d65df4ca584b0016b21c75d48546794dd5e4f3be0297",
+    "tools/audio-synthesis/src/odd-spark/tools/audio/build_cup_plonk.py": "58580cf24ba48fa6b94d01006dbdd6a67d1d7d46a15c6e5009767c26bd26a938",
+    "tools/audio-synthesis/src/odd-spark/tools/audio/build_event_cues.py": "dc4a301077d54aa201c864507fc0a1a9babd6c183aad5da6b12f524546f0ace0",
+    "tools/audio-synthesis/src/odd-spark/vendored/cc0-event-audio.md": "ada40d344c54e7dfa6e37e9136e0932232fb1962d103db761200dcdef180078b",
+    "tools/audio-synthesis/src/pocket-salvage/tests/test_rain_audio.py": "a6c7fb4be33f53aaa7b908b7bf45342f3fda2523246e65a9661bcf3d10e955dd",
+    "tools/audio-synthesis/src/pocket-salvage/tests/test_wind_audio.py": "c90edb00f12c86b813136e36b14ec843ce7d60425f7867f07f1353f8cfe9cca7",
+    "tools/audio-synthesis/src/pocket-salvage/tools/audio/make_music.py": "19eb6292e418fb43c2cc7019b1fd672591da69191f4954b4e1d2ea9be0da9ab9",
+    "tools/audio-synthesis/src/pocket-salvage/tools/audio/make_rain.py": "bd57c4040112750ce84c8e31d56047745cf6188bdfff1dd00ee767716cb30d95",
+    "tools/audio-synthesis/src/pocket-salvage/tools/audio/make_sfx.py": "6c27a667ed8a3699b2a11c1033dfa8cf09899e94ce1b2f892fefc2ecf72ebde5",
+    "tools/audio-synthesis/src/pocket-salvage/tools/audio/make_wind.py": "3f4f49c724b340c47b1f3f38ba62e4ee180104c6efa699df3fa03c61bae10240",
+    "tools/audio-synthesis/src/rpg-1/tools/audio/generate_combat_sfx.py": "0ffb850de140b1825caedd952d7ed2f3b4dd59a8094e533652dbab6a76c59f9d",
+    "tools/audio-synthesis/src/rpg-1/tools/audio/validate_combat_sfx.py": "a310da4ddcb88899260c20aa468be7162a9fea46cba98bfe11325b76bb6c3573",
+    "tools/audio-synthesis/src/supper-guard/tools/audio/generate_kitchen_simmer.gd": "4e20c60b3d0b842309aab02211fd52723a9f5eb0b857e6bf766f2b513e66a41b",
+    "tools/audio-synthesis/src/supper-guard/tools/audio/generate_kitchen_simmer.gd.uid": "573167b1f145abe677163fc85f83d56c867cfe9c80ccac7655f981b071eb7908",
+    "tools/audio-synthesis/src/supper-guard/tools/audio/generate_reward_sfx.gd": "0b26bdbdc23eaac95d6f809594f16029ccc446f7ea403b8d783e59cbee6df6f9",
+    "tools/audio-synthesis/src/supper-guard/tools/audio/generate_reward_sfx.gd.uid": "37a4475e218a2645da95ca09825acf9a9adf9f7f9cc27f78e0083346056e1706",
+    "tools/audio-synthesis/src/trijam-2026-three-hour-ideas/black-seed-directive/tools/generate_audio.py": "b501b87734d9406762153b6bbe2a87e597a88c7bdadf8831948f505a2a39ed46",
+    "tools/audio-synthesis/src/trijam-2026-three-hour-ideas/ordinary-impossible/tools/generate_audio.py": "d2f8f32ab53e27be9a1aa90d1fd93fc5cca9d05199460220c50df68933cc67d1",
+    "tools/audio-synthesis/src/trijam-2026-three-hour-ideas/the-fifth-fold/tools/generate_audio.py": "0b43d3ec43ba7a1545319f788771e9f2e8965aa62b3dc28e2f45183546346592"
   },
   "entries": {
     "tools/pixel_art/superscale.gd": "tools/pixel-scaling/src/superscale.gd",
-    "scripts/art/pixel_scaling.gd": "tools/pixel-scaling/src/pixel_scaling.gd"
+    "scripts/art/pixel_scaling.gd": "tools/pixel-scaling/src/pixel_scaling.gd",
+    "tools/audio/make_sfx.py": "tools/audio-synthesis/src/pocket-salvage/tools/audio/make_sfx.py",
+    "tools/audio/make_music.py": "tools/audio-synthesis/src/pocket-salvage/tools/audio/make_music.py",
+    "tools/audio/make_rain.py": "tools/audio-synthesis/src/pocket-salvage/tools/audio/make_rain.py",
+    "tools/audio/make_wind.py": "tools/audio-synthesis/src/pocket-salvage/tools/audio/make_wind.py"
   },
-  "offline_bundle": "tools/shared/game-dev-tools"
+  "offline_bundle": "tools/shared/game-dev-tools",
+  "context_modules": [
+    "audio_profile",
+    "audio_expression"
+  ]
 }

@@ -1,6 +1,8 @@
 # Shared game-developed tools
 
-Canonical owner: `../game-dev-tools`; families: pixel-scaling. This project retains its original entry points as compatibility adapters and its product-specific inputs/configuration. Implementation revision: `4df024008b256e9ded54d254f2225464b40882ba`. [Consumer manifest](../tools/game-dev-tools.json) pins every required code/schema file by SHA-256; [configuration](../tools/game-dev-tools-config.json) preserves source settings.
+Reviewed: 2026-09-29. Implementation: `803306073042b87561ee7a6d2561c0699c9b6417` audio method port.
+
+Canonical owner: `../game-dev-tools`; families: pixel-scaling, audio-synthesis. This project retains its original active entry points as compatibility adapters and its product-specific inputs/configuration. Implementation revision: `803306073042b87561ee7a6d2561c0699c9b6417`. [Consumer manifest](../tools/game-dev-tools.json) pins all 39 required code/schema/resource files by SHA-256 and maps 6 active entry points; [configuration](../tools/game-dev-tools-config.json) preserves source settings.
 
 - `tools/pixel_art/superscale.gd` → `../game-dev-tools/tools/pixel-scaling/src/superscale.gd`
 - `scripts/art/pixel_scaling.gd` → `../game-dev-tools/tools/pixel-scaling/src/pixel_scaling.gd`
@@ -10,3 +12,14 @@ Python adapters prefer an explicit GAME_DEV_TOOLS_ROOT or sibling checkout and o
 Pixel lab/playground scenes and nearest/linear sampling conventions remain local. scripts/art/pixel_scaling.gd preserves its static API by extending the pinned core; superscale.gd verifies all pins before delegation. Run the complete ./tests/check contract after changes.
 
 Change shared method code in the canonical repository, run full original-versus-ported and independent reuse tests, commit it, then explicitly sync this consumer and commit its reviewed adapter/config/pin/spec changes together. Use the project's prescribed managed container runtime; the canonical tool image contains FFmpeg/NumPy/OpenCV/Pillow/jsonschema for generalized CPU jobs. Keep gameplay and final audio/visual/renderer acceptance in this project. Complete revalidation is recorded in the canonical reports/port-verification.json and its specs/verification.md.
+
+## Audio authoring ownership
+
+All four procedural commands delegate to the complete shared effects, wrapped music, filtered rain and wind methods. The complete 26-file collection matches byte for byte; the original rain/wind signal regressions pass against both implementations. Exact expressions, chords, arpeggio, seeds, names, rates and output paths remain in this configuration. `make_sfx.py` retains its rain/wind follow-up generation. Source regeneration retains replacement; independent callers reject existing outputs by default. Runtime playback and current masters stay owned here.
+
+- `tools/audio/make_sfx.py` → `../game-dev-tools/tools/audio-synthesis/src/pocket-salvage/tools/audio/make_sfx.py`
+- `tools/audio/make_music.py` → `../game-dev-tools/tools/audio-synthesis/src/pocket-salvage/tools/audio/make_music.py`
+- `tools/audio/make_rain.py` → `../game-dev-tools/tools/audio-synthesis/src/pocket-salvage/tools/audio/make_rain.py`
+- `tools/audio/make_wind.py` → `../game-dev-tools/tools/audio-synthesis/src/pocket-salvage/tools/audio/make_wind.py`
+
+All active audio adapters were replayed from the complete pinned offline bundle in isolated fixtures with the canonical checkout unavailable. Source output folders were never regenerated. Complete method review, original-versus-shared output parity and independent reuse are recorded in the canonical `specs/audio-synthesis.md` and `reports/audio-synthesis-verification.json`. These are authoring checks; existing full-game and release evidence retains its original scope.

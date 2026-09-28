@@ -24,3 +24,5 @@ Design captures evolving intent. Every design document distinguishes explicit **
 | [Weather](weather.md) | Per-round weather (Clear, Fog, Wind, Rain, Storm) as data profiles plus reusable effects; approved, not yet built | Adding weathers or weather effects |
 
 Current behavior lives in [specs/](../specs/_readme.md); deferred work lives in [TODO.md](../TODO.md).
+
+[Shared tool ownership](shared-game-dev-tools.md): requested project-born ports, reusable presets and source compatibility.

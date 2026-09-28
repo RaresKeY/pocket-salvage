@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": ["audio-synthesis"],
+  "properties": {
+    "audio-synthesis": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "rate": {"type": "integer", "minimum": 1},
+          "output": {"type": "string", "minLength": 1},
+          "allow_replace": {"type": "boolean"},
+          "duration": {"type": "number", "exclusiveMinimum": 0},
+          "seconds": {"type": "number", "exclusiveMinimum": 0},
+          "seed": {"type": "integer"},
+          "bpm": {"type": "number", "exclusiveMinimum": 0},
+          "recipes": {"type": "object"},
+          "loops": {"type": ["array", "object"]},
+          "cues": {"type": ["array", "object"]},
+          "jobs": {"type": "array"},
+          "music_plans": {"type": "object"},
+          "ambience_plans": {"type": "object"},
+          "effect_specs": {"type": "object"},
+          "music_jobs": {"type": "array"},
+          "ambience_jobs": {"type": "array"},
+          "effect_jobs": {"type": "array"}
+        }
+      }
+    }
+  }
+}
