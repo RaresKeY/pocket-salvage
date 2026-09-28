@@ -29,3 +29,7 @@ The responsive grid uses four columns at widths of at least 1700, two from 1000,
 No controller interaction, arbitrary 3D-material case, or exported-game comparison is claimed by these checks. Native GPU captures and headless control/input checks cover the stated paths; the contributed scrapyard art has a separate composition check in the main scene.
 
 The **Sprite playground** button opens [the enlarged-art physics scene](sprite_playground.md), which renders stored 8× textures at smaller sizes.
+
+## Shared implementation ownership
+
+The reusable method now lives in `../game-dev-tools`; the original command/API is a pinned compatibility adapter with a tracked offline code closure. Product inputs, fixtures, validation and final quality acceptance remain here. See `specs/shared-game-dev-tools.md` and `tools/game-dev-tools.json` for the complete implementation/configuration references and verified update procedure.

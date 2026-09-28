@@ -21,3 +21,9 @@ The user requested enlarged copies in a new folder, then a scene displaying them
 ## AI-inferred playground details
 
 Use the existing Bitwright sprites and masks, a gallery, and a washing machine with a spring-based mouse grab. Expose display size and linear/nearest filtering; Q/E turns the grabbed object. The rectangular collision approximation is a lab fixture, not final gameplay geometry. Current behavior lives in [the playground spec](../specs/art/sprite_playground.md).
+
+## Shared implementation ownership
+
+The reusable method now lives in `../game-dev-tools`; the original command/API is a pinned compatibility adapter with a tracked offline code closure. Product inputs, fixtures, validation and final quality acceptance remain here. See `specs/shared-game-dev-tools.md` and `tools/game-dev-tools.json` for the complete implementation/configuration references and verified update procedure.
+
+User-requested direction: copy the game-developed working tool, test the complete port and generalized use, and redirect origin references. AI-inferred organization: method-family ownership plus pinned local adapters; retain this game's filtering/lab design. The exact session directive is preserved in `prompts/source/2026-09-28-game-developed-tools.md`.

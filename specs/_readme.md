@@ -33,3 +33,5 @@ Reviewed: 2026-09-25. Implementation: mobile-overlay change based on `285719e`.
 - Keep plans, TODOs, work logs, and merge handoffs outside `specs/`.
 - Label planned behavior and open decisions; do not present them as implemented facts.
 - Date each spec review and identify the implementation commit reviewed, rather than the documentation-only commit that records the review.
+
+[Shared game-developed tools](shared-game-dev-tools.md): canonical ownership, pinned adapters, complete offline closures, compatibility and source-specific verification.

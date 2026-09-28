@@ -1,0 +1,27 @@
+{
+  "schema": "game-dev-tools/consumer-v1",
+  "owner": "../game-dev-tools",
+  "revision": "4df024008b256e9ded54d254f2225464b40882ba",
+  "families": [
+    "pixel-scaling"
+  ],
+  "config": "tools/game-dev-tools-config.json",
+  "world": "pocket-salvage",
+  "files": {
+    "src/game_dev_tools_context.py": "61518d1318afc735516fdec1c731f0b1897803e482880c9c35e04d1289902508",
+    "src/consumer_loader.py": "29ef3f9f8afe95b0eeab33b50905cbec76089dd77c3280584a28acbfd8ae7013",
+    "src/consumer_pin.gd": "9305511aa73e22bdd358af7500294412875506b1bf60a4be84e66e3373a8ed35",
+    "src/consumer_pin.gd.uid": "98e557c78aacfaa5a2ec0cceb1b29f8c4e11400c3d26711bade4efe3a21c59e7",
+    "tools/pixel-scaling/src/make_fixture.gd": "3ba7b76e9117313cb2c5002f29fc805d607bac83167278bc81e1bf45e498b531",
+    "tools/pixel-scaling/src/make_fixture.gd.uid": "9a9691bdf36b7d9c40fbf9508fe6dcd5d6265c191790e1d69970777d989940d3",
+    "tools/pixel-scaling/src/pixel_scaling.gd": "145dfbf65d426b7de56426baf65f020ee7cb545218ff3f3c6945b3ee32728740",
+    "tools/pixel-scaling/src/pixel_scaling.gd.uid": "6722500c3c395c2a69e9b3b504e4266eb5deb0d5a9325ccaba03af4b9e6c14ec",
+    "tools/pixel-scaling/src/superscale.gd": "28cabcc1ff924d8d0db2893085fa449ec09583c34d29b5859cb9bcab33419a30",
+    "tools/pixel-scaling/src/superscale.gd.uid": "1f1daf4060ce83d90205d9413fa2047c74892909570f7870d7771087f091f808"
+  },
+  "entries": {
+    "tools/pixel_art/superscale.gd": "tools/pixel-scaling/src/superscale.gd",
+    "scripts/art/pixel_scaling.gd": "tools/pixel-scaling/src/pixel_scaling.gd"
+  },
+  "offline_bundle": "tools/shared/game-dev-tools"
+}
