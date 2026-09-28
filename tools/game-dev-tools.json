@@ -1,7 +1,7 @@
 {
   "schema": "game-dev-tools/consumer-v1",
   "owner": "../game-dev-tools",
-  "revision": "8f300cd2d21eb81ae8ec9d3d76104c5e1cda1026",
+  "revision": "440e96cca23cb3747b1baeb68813801ace19457b",
   "families": [
     "pixel-scaling",
     "audio-synthesis"
@@ -13,7 +13,7 @@
     "src/consumer_loader.py": "29ef3f9f8afe95b0eeab33b50905cbec76089dd77c3280584a28acbfd8ae7013",
     "src/consumer_pin.gd": "9305511aa73e22bdd358af7500294412875506b1bf60a4be84e66e3373a8ed35",
     "src/consumer_pin.gd.uid": "98e557c78aacfaa5a2ec0cceb1b29f8c4e11400c3d26711bade4efe3a21c59e7",
-    "src/audio_profile.py": "6811e2399049d8f9b45359ad7478f07ef5a3540ea61c89ba645b7bb57431ed2d",
+    "src/audio_profile.py": "e65e395ee7a9700e079e9b7580f958638b129c4542deefaf484532a6f9c3d2e5",
     "src/audio_expression.py": "6aa3a5353208201c81b9eb7dc55a954fe6de43e9f1bf332e954d3c4c5b50c2b0",
     "src/context_consumer_loader.py": "b0b66663513286183cc9a8442115fdc9e0222e6ace704d1d45be2af74c9d0f53",
     "tools/pixel-scaling/src/make_fixture.gd": "3ba7b76e9117313cb2c5002f29fc805d607bac83167278bc81e1bf45e498b531",
@@ -35,10 +35,10 @@
     "tools/audio-synthesis/src/odd-spark/vendored/cc0-event-audio.md": "ada40d344c54e7dfa6e37e9136e0932232fb1962d103db761200dcdef180078b",
     "tools/audio-synthesis/src/pocket-salvage/tests/test_rain_audio.py": "a6c7fb4be33f53aaa7b908b7bf45342f3fda2523246e65a9661bcf3d10e955dd",
     "tools/audio-synthesis/src/pocket-salvage/tests/test_wind_audio.py": "c90edb00f12c86b813136e36b14ec843ce7d60425f7867f07f1353f8cfe9cca7",
-    "tools/audio-synthesis/src/pocket-salvage/tools/audio/make_music.py": "19eb6292e418fb43c2cc7019b1fd672591da69191f4954b4e1d2ea9be0da9ab9",
-    "tools/audio-synthesis/src/pocket-salvage/tools/audio/make_rain.py": "bd57c4040112750ce84c8e31d56047745cf6188bdfff1dd00ee767716cb30d95",
+    "tools/audio-synthesis/src/pocket-salvage/tools/audio/make_music.py": "1d3303f0d43b4bf6a9534fd7755201257f05ccc86136db64cd618c27c3788e08",
+    "tools/audio-synthesis/src/pocket-salvage/tools/audio/make_rain.py": "5e3522c44aeeb20ea2ca04dd107d232350aa9d47a3a303c556e5f6f529cd143a",
     "tools/audio-synthesis/src/pocket-salvage/tools/audio/make_sfx.py": "6c27a667ed8a3699b2a11c1033dfa8cf09899e94ce1b2f892fefc2ecf72ebde5",
-    "tools/audio-synthesis/src/pocket-salvage/tools/audio/make_wind.py": "3f4f49c724b340c47b1f3f38ba62e4ee180104c6efa699df3fa03c61bae10240",
+    "tools/audio-synthesis/src/pocket-salvage/tools/audio/make_wind.py": "ae15b4d24f28054d39e843a4740a9ce93b1a3d54f47a392992c482413ba3eab8",
     "tools/audio-synthesis/src/rpg-1/tools/audio/generate_combat_sfx.py": "0ffb850de140b1825caedd952d7ed2f3b4dd59a8094e533652dbab6a76c59f9d",
     "tools/audio-synthesis/src/rpg-1/tools/audio/validate_combat_sfx.py": "a310da4ddcb88899260c20aa468be7162a9fea46cba98bfe11325b76bb6c3573",
     "tools/audio-synthesis/src/supper-guard/tools/audio/generate_kitchen_simmer.gd": "4e20c60b3d0b842309aab02211fd52723a9f5eb0b857e6bf766f2b513e66a41b",

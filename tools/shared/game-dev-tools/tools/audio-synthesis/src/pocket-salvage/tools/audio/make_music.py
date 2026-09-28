@@ -40,7 +40,7 @@ def add_note(buffer, start, seconds, voice, attack, release):
 
 
 def main():
-    _sfx.OUT = select_output('pocket-music', _sfx.OUT)
+    _sfx.OUT = select_output('pocket-music', _sfx.OUT, configured_default=True)
     if not CHORDS:
         raise ValueError('Declare chords for the pocket-music method')
     buffer = [0.0] * int(LENGTH * RATE)

@@ -39,7 +39,7 @@ def generate():
 
 
 def main():
-    _sfx.OUT = select_output('pocket-rain', _sfx.OUT)
+    _sfx.OUT = select_output('pocket-rain', _sfx.OUT, configured_default=True)
     generate()
     print('Wrote slight, normal and violent soft rain loops.')
     return 0

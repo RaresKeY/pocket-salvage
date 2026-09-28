@@ -39,12 +39,18 @@ def destination(path, program):
     return path
 
 
-def select_output(program, default):
+def select_output(program, default, *, configured_default=False):
     parser = argparse.ArgumentParser()
     parser.add_argument('--output', help='Project-relative output directory')
     args = parser.parse_args()
     require_program(program)
-    return project_path(args.output) if args.output else output_path(program, default.relative_to(ROOT).as_posix())
+    if args.output:
+        return project_path(args.output)
+    relative = Path(default).relative_to(ROOT).as_posix()
+    # Standalone generators initialize their globals from the profile once.
+    # Preserve a caller's later rebinding. Pocket companion scripts share the
+    # effects writer and explicitly choose their own profile at invocation.
+    return output_path(program, relative) if configured_default else project_path(relative)
 
 
 for program, value in PROFILES.items():

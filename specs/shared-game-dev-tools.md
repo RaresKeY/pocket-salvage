@@ -1,8 +1,8 @@
 # Shared game-developed tools
 
-Reviewed: 2026-09-29. Implementation: `8f300cd2d21eb81ae8ec9d3d76104c5e1cda1026` audio method port.
+Reviewed: 2026-09-29. Implementation: `440e96cca23cb3747b1baeb68813801ace19457b` audio method port.
 
-Canonical owner: `../game-dev-tools`; families: pixel-scaling, audio-synthesis. This project retains its original active entry points as compatibility adapters and its product-specific inputs/configuration. Implementation revision: `8f300cd2d21eb81ae8ec9d3d76104c5e1cda1026`. [Consumer manifest](../tools/game-dev-tools.json) pins all 39 required code/schema/resource files by SHA-256 and maps 6 active entry points; [configuration](../tools/game-dev-tools-config.json) preserves source settings.
+Canonical owner: `../game-dev-tools`; families: pixel-scaling, audio-synthesis. This project retains its original active entry points as compatibility adapters and its product-specific inputs/configuration. Implementation revision: `440e96cca23cb3747b1baeb68813801ace19457b`. [Consumer manifest](../tools/game-dev-tools.json) pins all 39 required code/schema/resource files by SHA-256 and maps 6 active entry points; [configuration](../tools/game-dev-tools-config.json) preserves source settings.
 
 - `tools/pixel_art/superscale.gd` → `../game-dev-tools/tools/pixel-scaling/src/superscale.gd`
 - `scripts/art/pixel_scaling.gd` → `../game-dev-tools/tools/pixel-scaling/src/pixel_scaling.gd`

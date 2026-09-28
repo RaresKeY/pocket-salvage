@@ -41,7 +41,7 @@ def generate():
 
 
 def main():
-    _sfx.OUT = select_output('pocket-wind', _sfx.OUT)
+    _sfx.OUT = select_output('pocket-wind', _sfx.OUT, configured_default=True)
     generate()
     print('Wrote soft 24-second wind loop.')
     return 0
