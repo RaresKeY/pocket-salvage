@@ -1,7 +1,7 @@
 {
   "schema": "game-dev-tools/consumer-v1",
   "owner": "../game-dev-tools",
-  "revision": "803306073042b87561ee7a6d2561c0699c9b6417",
+  "revision": "8f300cd2d21eb81ae8ec9d3d76104c5e1cda1026",
   "families": [
     "pixel-scaling",
     "audio-synthesis"
@@ -15,7 +15,7 @@
     "src/consumer_pin.gd.uid": "98e557c78aacfaa5a2ec0cceb1b29f8c4e11400c3d26711bade4efe3a21c59e7",
     "src/audio_profile.py": "6811e2399049d8f9b45359ad7478f07ef5a3540ea61c89ba645b7bb57431ed2d",
     "src/audio_expression.py": "6aa3a5353208201c81b9eb7dc55a954fe6de43e9f1bf332e954d3c4c5b50c2b0",
-    "src/context_consumer_loader.py": "42d53ed710a5e82c906e35f8b0ccfcd03508c0a9e30070deb39d65342fca65a7",
+    "src/context_consumer_loader.py": "b0b66663513286183cc9a8442115fdc9e0222e6ace704d1d45be2af74c9d0f53",
     "tools/pixel-scaling/src/make_fixture.gd": "3ba7b76e9117313cb2c5002f29fc805d607bac83167278bc81e1bf45e498b531",
     "tools/pixel-scaling/src/make_fixture.gd.uid": "9a9691bdf36b7d9c40fbf9508fe6dcd5d6265c191790e1d69970777d989940d3",
     "tools/pixel-scaling/src/pixel_scaling.gd": "145dfbf65d426b7de56426baf65f020ee7cb545218ff3f3c6945b3ee32728740",

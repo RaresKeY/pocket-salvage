@@ -1,8 +1,8 @@
 # Shared game-developed tools
 
-Reviewed: 2026-09-29. Implementation: `803306073042b87561ee7a6d2561c0699c9b6417` audio method port.
+Reviewed: 2026-09-29. Implementation: `8f300cd2d21eb81ae8ec9d3d76104c5e1cda1026` audio method port.
 
-Canonical owner: `../game-dev-tools`; families: pixel-scaling, audio-synthesis. This project retains its original active entry points as compatibility adapters and its product-specific inputs/configuration. Implementation revision: `803306073042b87561ee7a6d2561c0699c9b6417`. [Consumer manifest](../tools/game-dev-tools.json) pins all 39 required code/schema/resource files by SHA-256 and maps 6 active entry points; [configuration](../tools/game-dev-tools-config.json) preserves source settings.
+Canonical owner: `../game-dev-tools`; families: pixel-scaling, audio-synthesis. This project retains its original active entry points as compatibility adapters and its product-specific inputs/configuration. Implementation revision: `8f300cd2d21eb81ae8ec9d3d76104c5e1cda1026`. [Consumer manifest](../tools/game-dev-tools.json) pins all 39 required code/schema/resource files by SHA-256 and maps 6 active entry points; [configuration](../tools/game-dev-tools-config.json) preserves source settings.
 
 - `tools/pixel_art/superscale.gd` → `../game-dev-tools/tools/pixel-scaling/src/superscale.gd`
 - `scripts/art/pixel_scaling.gd` → `../game-dev-tools/tools/pixel-scaling/src/pixel_scaling.gd`
@@ -23,3 +23,5 @@ All four procedural commands delegate to the complete shared effects, wrapped mu
 - `tools/audio/make_wind.py` → `../game-dev-tools/tools/audio-synthesis/src/pocket-salvage/tools/audio/make_wind.py`
 
 All active audio adapters were replayed from the complete pinned offline bundle in isolated fixtures with the canonical checkout unavailable. Source output folders were never regenerated. Complete method review, original-versus-shared output parity and independent reuse are recorded in the canonical `specs/audio-synthesis.md` and `reports/audio-synthesis-verification.json`. These are authoring checks; existing full-game and release evidence retains its original scope.
+
+Imported Python adapters execute in their own module globals. Rebinding public settings (`RATE`, `OUT`) or functions preserves original module behavior; explicit unregistered imports and dataclass namespaces are covered by the shared regression suite. The complete 15-test audio suite passes; bootstrap code remains trusted local code, and closure hashes verify consistency before the selected method executes.
