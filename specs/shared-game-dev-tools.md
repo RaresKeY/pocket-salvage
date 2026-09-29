@@ -1,8 +1,8 @@
 # Shared game-developed tools
 
-Reviewed: 2026-09-29. Implementation: `d9eb7b5c0da9ad9055c06249e57f044fdbb9ef30` audio method port.
+Reviewed: 2026-09-29. Implementation: `2bdab774a7af7f81aac84fc9c7432124188e20c6` audio method port.
 
-Canonical owner: `../game-dev-tools`; families: pixel-scaling, audio-synthesis. This project retains its original active entry points as compatibility adapters and its product-specific inputs/configuration. Implementation revision: `d9eb7b5c0da9ad9055c06249e57f044fdbb9ef30`. [Consumer manifest](../tools/game-dev-tools.json) pins all 39 required code/schema/resource files by SHA-256 and maps 6 active entry points; [configuration](../tools/game-dev-tools-config.json) preserves source settings.
+Canonical owner: `../game-dev-tools`; families: pixel-scaling, audio-synthesis. This project retains its original active entry points as compatibility adapters and its product-specific inputs/configuration. Implementation revision: `2bdab774a7af7f81aac84fc9c7432124188e20c6`. [Consumer manifest](../tools/game-dev-tools.json) pins all 39 required code/schema/resource files by SHA-256 and maps 6 active entry points; [configuration](../tools/game-dev-tools-config.json) preserves source settings.
 
 - `tools/pixel_art/superscale.gd` → `../game-dev-tools/tools/pixel-scaling/src/superscale.gd`
 - `scripts/art/pixel_scaling.gd` → `../game-dev-tools/tools/pixel-scaling/src/pixel_scaling.gd`
@@ -28,4 +28,4 @@ Imported Python adapters execute in their own module globals. Rebinding public s
 
 ## Current complete consumer closure
 
-Reviewed 2026-09-29. Implementation `d9eb7b5c0da9ad9055c06249e57f044fdbb9ef30`; 39 pinned files and 6 active entry points. Complete declared families: pixel-scaling, audio-synthesis. Earlier numerical test checkpoints above retain their stated historical scope. Current full method/resource/license closure and source-specific limits are in the canonical focused specs/reports.
+Reviewed 2026-09-29. Implementation `2bdab774a7af7f81aac84fc9c7432124188e20c6`; 39 pinned files and 6 active entry points. Complete declared families: pixel-scaling, audio-synthesis. Earlier numerical test checkpoints above retain their stated historical scope. Current full method/resource/license closure and source-specific limits are in the canonical focused specs/reports.

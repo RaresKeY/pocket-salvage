@@ -32,7 +32,12 @@ def export_tool(module_name, entry_path, tool_path, namespace):
         os.environ['GAME_DEV_TOOLS_WORLD'] = manifest['world']
     path = shared / tool_path
     previous_path = list(sys.path)
-    isolated_names = {'game_dev_tools_context', *[file.stem for file in path.parent.glob('*.py')]}
+    # Every pinned shared helper can bind caller state at import time. Isolate
+    # the complete declared helper closure, so importing a second project does
+    # not reuse another project's alignment (or later family) profile.
+    pinned_helpers = {Path(relative).stem for relative in manifest['files']
+                      if Path(relative).parent == Path('src') and Path(relative).suffix == '.py'}
+    isolated_names = {'game_dev_tools_context', *pinned_helpers, *[file.stem for file in path.parent.glob('*.py')]}
     previous_modules = {name: sys.modules.pop(name) for name in isolated_names if name in sys.modules}
     sys.path[:0] = [str(path.parent), str(shared / 'src')]
     try:

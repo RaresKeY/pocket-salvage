@@ -1,7 +1,7 @@
 {
   "schema": "game-dev-tools/consumer-v1",
   "owner": "../game-dev-tools",
-  "revision": "d9eb7b5c0da9ad9055c06249e57f044fdbb9ef30",
+  "revision": "2bdab774a7af7f81aac84fc9c7432124188e20c6",
   "families": [
     "pixel-scaling",
     "audio-synthesis"
@@ -10,7 +10,7 @@
   "world": "pocket-salvage",
   "files": {
     "src/game_dev_tools_context.py": "61518d1318afc735516fdec1c731f0b1897803e482880c9c35e04d1289902508",
-    "src/consumer_loader.py": "29ef3f9f8afe95b0eeab33b50905cbec76089dd77c3280584a28acbfd8ae7013",
+    "src/consumer_loader.py": "8fa4171390904b5d212230f19248c2a3ea29e9b94a5bcf2e59d8c5143b06213b",
     "src/consumer_pin.gd": "9305511aa73e22bdd358af7500294412875506b1bf60a4be84e66e3373a8ed35",
     "src/consumer_pin.gd.uid": "98e557c78aacfaa5a2ec0cceb1b29f8c4e11400c3d26711bade4efe3a21c59e7",
     "src/audio_profile.py": "e65e395ee7a9700e079e9b7580f958638b129c4542deefaf484532a6f9c3d2e5",
