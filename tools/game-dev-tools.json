@@ -1,7 +1,7 @@
 {
   "schema": "game-dev-tools/consumer-v1",
   "owner": "../game-dev-tools",
-  "revision": "440e96cca23cb3747b1baeb68813801ace19457b",
+  "revision": "d9eb7b5c0da9ad9055c06249e57f044fdbb9ef30",
   "families": [
     "pixel-scaling",
     "audio-synthesis"

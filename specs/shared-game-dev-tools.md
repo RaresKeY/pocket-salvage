@@ -1,8 +1,8 @@
 # Shared game-developed tools
 
-Reviewed: 2026-09-29. Implementation: `440e96cca23cb3747b1baeb68813801ace19457b` audio method port.
+Reviewed: 2026-09-29. Implementation: `d9eb7b5c0da9ad9055c06249e57f044fdbb9ef30` audio method port.
 
-Canonical owner: `../game-dev-tools`; families: pixel-scaling, audio-synthesis. This project retains its original active entry points as compatibility adapters and its product-specific inputs/configuration. Implementation revision: `440e96cca23cb3747b1baeb68813801ace19457b`. [Consumer manifest](../tools/game-dev-tools.json) pins all 39 required code/schema/resource files by SHA-256 and maps 6 active entry points; [configuration](../tools/game-dev-tools-config.json) preserves source settings.
+Canonical owner: `../game-dev-tools`; families: pixel-scaling, audio-synthesis. This project retains its original active entry points as compatibility adapters and its product-specific inputs/configuration. Implementation revision: `d9eb7b5c0da9ad9055c06249e57f044fdbb9ef30`. [Consumer manifest](../tools/game-dev-tools.json) pins all 39 required code/schema/resource files by SHA-256 and maps 6 active entry points; [configuration](../tools/game-dev-tools-config.json) preserves source settings.
 
 - `tools/pixel_art/superscale.gd` → `../game-dev-tools/tools/pixel-scaling/src/superscale.gd`
 - `scripts/art/pixel_scaling.gd` → `../game-dev-tools/tools/pixel-scaling/src/pixel_scaling.gd`
@@ -25,3 +25,7 @@ All four procedural commands delegate to the complete shared effects, wrapped mu
 All active audio adapters were replayed from the complete pinned offline bundle in isolated fixtures with the canonical checkout unavailable. Source output folders were never regenerated. Complete method review, original-versus-shared output parity and independent reuse are recorded in the canonical `specs/audio-synthesis.md` and `reports/audio-synthesis-verification.json`. These are authoring checks; existing full-game and release evidence retains its original scope.
 
 Imported Python adapters execute in their own module globals. Rebinding public settings (`RATE`, `OUT`) or functions preserves original module behavior; explicit unregistered imports and dataclass namespaces are covered by the shared regression suite. The complete 15-test audio suite passes; bootstrap code remains trusted local code, and closure hashes verify consistency before the selected method executes.
+
+## Current complete consumer closure
+
+Reviewed 2026-09-29. Implementation `d9eb7b5c0da9ad9055c06249e57f044fdbb9ef30`; 39 pinned files and 6 active entry points. Complete declared families: pixel-scaling, audio-synthesis. Earlier numerical test checkpoints above retain their stated historical scope. Current full method/resource/license closure and source-specific limits are in the canonical focused specs/reports.
